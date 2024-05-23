@@ -8,6 +8,6 @@ public class onlyForTest {
 
     @GetMapping("/")
     public String forTest() {
-        return "민들레";
+        return "민들레 테스트 입니다";
     }
 }
