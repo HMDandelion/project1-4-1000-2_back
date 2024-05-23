@@ -48,3 +48,11 @@ tasks.named('asciidoctor') {
     inputs.dir snippetsDir
     dependsOn test
 }
+
+tasks.register('copyPrivate'){
+    copy{
+        from './project_1410002_settings'
+        include "application.yml"
+        into 'src/main/resources'
+    }
+}
