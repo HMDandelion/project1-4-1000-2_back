@@ -353,8 +353,8 @@ CREATE TABLE IF NOT EXISTS `tbl_release_change`
 (
     `release_change_code`    INT NOT NULL AUTO_INCREMENT
         COMMENT '출고 상태 변경 이력 코드',
-    `status`    VARCHAR DEFAULT 'SHIPPING' NOT NULL COMMENT '상태',
-    `change_at`    VARCHAR NOT NULL COMMENT '시간',
+    `status`    VARCHAR(20) DEFAULT 'SHIPPING' NOT NULL COMMENT '상태',  /*vachar 길이지정*/
+    `change_at`    VARCHAR(20) NOT NULL COMMENT '시간',                   /*vachar 길이지정*/
     `release_code`    BIGINT NOT NULL COMMENT '출고 코드',
     PRIMARY KEY ( `release_change_code` )
 ) COMMENT = '출고 상태 변경 이력';
