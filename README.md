@@ -16,6 +16,53 @@
 | 계정, 주문 | 생산 계획 | 원자재 | 생산, 품질 | 재고, 출고 |
 
 
+## 개발 환경
+
+![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
+![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat-square&logo=intellij-idea&logoColor=white)
+![Notion](https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white)
+![Discord](https://img.shields.io/badge/Discord-5865F2?style=flat-square&logo=discord&logoColor=white)
+![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white)
+
+
+## 주요 기능
+
+### 계정
+-   `Spring Security`를 활용한 로그인, 회원가입
+### 주문
+- 거래처 관리
+- 주문 상태 추적
+- 반품 및 교환 관리
+- 비용 분석
+- 요청 및 주문서 발행
+### 생산 기획
+- 생산 계획 및 일정 관리
+- 작업 지시서 생성 및 관리
+### 원자재
+- 구매 요청 및 주문서 발행
+- 공급업체 관리
+- 입고 및 출고(반품) 관리
+- 구매 비용 분석
+### 생산
+- 샐산 공정 모니터링
+- 품질관리 및 불량품 처리
+- 생산 과정에서 발생한 불량률 모니터링
+### 재고
+- 재고 수준 모니터링
+- 재고 이동 및 추적
+- 재고 보충 및 다오 주문 생성
+### 물류
+- 창고 관리
+- 출고 관리
+- 출고 및 재고 관리
+- 운송 과정 관리
+
+
+## ERD
+![787b23c5-5ad6-4c4e-aa08-65cd668b725d](https://github.com/HMDandelion/project1-4-1000-2_back/assets/154950075/7521fed5-b37c-4fb7-94e6-af142573bf95)
+
+
 ## 규칙
 ### Pull Request
 - 변경한 내용은 간결하게 설명
@@ -43,48 +90,28 @@
 - 필요한 경우 추가 정보 작성 (스크린샷, 링크, 코드 등)
 
 
-## 개발 환경
-
-![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
-![IntelliJ IDEA](https://img.shields.io/badge/IntelliJ_IDEA-000000?style=flat-square&logo=intellij-idea&logoColor=white)
-![Notion](https://img.shields.io/badge/Notion-000000?style=flat-square&logo=notion&logoColor=white)
-![Discord](https://img.shields.io/badge/Discord-5865F2?style=flat-square&logo=discord&logoColor=white)
-![Figma](https://img.shields.io/badge/Figma-F24E1E?style=flat-square&logo=figma&logoColor=white)
-
-
-## 주요 기능
-
-### 계정
--   `Spring Security`를 활용한 로그인, 회원가입
-
-
-### 주문
--   거래처 등록
-
-### 생산 기획
--   생산 기능
--   
-
-### 원자재
--   원자재 관리
-
-### 생산
--   생산 관리
-
-### 품질
--   품질 관리
-
-### 재고
--   상품 재고 관리
-
-### 출고
--   주문에 의거한 출고 관리
-
-
-## ERD
+### Github
+- 이슈(issue) 등록
+- 개발할 기능을 이슈에 발행
+- 발생 시 마일스톤, 프로젝트, 라벨 등을 추가
+### 브랜치(branch) 생성 규칙
+- { 라벨 }/{ 이슈번호 }-{ 이슈설명 } (ex. settings/1-start-project)
+- 브랜치의 커밋 메시지(Commit Message)
+- 키워드를 접두사(prefix)로 추가 후 내용을 입력
+### 메시지 형식
+- { PREFIXKEYWORD }: { COMMIT_MSG } (ex. feat: 로그인 개발)
+### 접두사 목록
+- feat : 기능 추가
+- refactor : 동일 기능이나 코드 개선 시
+- fix : 오타, 공백, 마크다운 파일 수정, reafactor 붙이기 애매할 때
+- test  : 테스트 관련 사항 모두
+- chore : 설정, 의존성, 파일 및 디렉터리 구조 변경/삭제 등
+- 개발 완료 후에는 풀 리퀘스트(Pull Request) 등록
+- #{이슈번호} {기능_설명} (ex.  #1 기본 프로젝트 설정)
+- 풀 리퀘스트 리뷰 및 병합(Merge)
+- 리뷰 후에는 Squash Merge
 
 
 ## 개선목표
-
+### 작성 예정
 
