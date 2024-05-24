@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.material.domain.entity;
+package com.hmdandelion.project_1410002.production.domain.entity.material;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -6,14 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@Table(name = "tbl_material_usage")
 @Entity
-@Table(name = "tbl_spec_category")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class SpecCategory {
+public class MaterialUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long specCategoryCode;
-    private String specCategoryName;
+    private Long usageCode;
 }
