@@ -39,8 +39,8 @@ jobs:
           arguments: build -x test
 
       # 테스트 진행
-      # - name: Test
-      #  run: ./gradlew test
+      - name: Test
+        run: ./gradlew test
 
       # Docker 로그인
       - name: Docker Login
