@@ -69,5 +69,5 @@ jobs:
             sudo docker stop spring-container
             sudo docker rm spring-container
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}:latest
-            sudo docker run --name spring-container -d -p 80:8002 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+            sudo docker run --name spring-container -d -p 80:8001 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
             sudo docker image prune -f
