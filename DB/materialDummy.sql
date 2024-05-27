@@ -54,3 +54,22 @@ VALUES
     ('Category4'),
     ('Category5');
 
+-- 오더 코드를 1부터 50까지 순차적으로 생성하고 specCode는 1부터 45까지의 랜덤한 값으로 설정합니다.
+INSERT INTO tbl_material_stock (division, spec_code, warehouse_code, incoming_quantity, actual_quantity, storage_datetime, remarks, inspection_datetime, modification_datetime, modification_reason, order_code)
+SELECT
+    'STOCK',
+    FLOOR(RAND() * 45) + 1, -- specCode를 1부터 45까지의 랜덤한 값으로 설정
+    1, -- 임의의 창고 코드
+    100, -- 임의의 입고 수량
+    80, -- 임의의 실수량
+    '2024-05-01 08:00:00', -- 임의의 적재 일시
+    '비고', -- 임의의 비고
+    '2024-05-03 10:00:00', -- 임의의 점검 일시
+    '2024-05-05 14:00:00', -- 임의의 수정 일시
+    '수정사유', -- 임의의 수정 사유
+    t.n + 1 as order_code -- 오더 코드를 1부터 50까지 순차적으로 생성
+  FROM
+      (SELECT n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) as nums) as t
+          CROSS JOIN
+      (SELECT n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) as nums) as t2;
+

@@ -1,0 +1,8 @@
+### 안전재고 대비 실 재고량 조회
+GET http://localhost:8001/api/v1/material/safety-stock
+
+### 창고별 적재현황 조회
+GET http://localhost:8001/api/v1/material/warehouses/1
+
+
+

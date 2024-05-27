@@ -24,7 +24,7 @@ public class MaterialStock {
     @JoinColumn(name = "spec_code")
     private MaterialSpec materialSpec;
     private int warehouseCode;  //TODO 수정필
-    private int oncomingQuantity;
+    private int incomingQuantity;
     private int actualQuantity;
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime storageDatetime;
