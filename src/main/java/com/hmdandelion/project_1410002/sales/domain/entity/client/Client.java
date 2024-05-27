@@ -25,8 +25,8 @@ public class Client {
     private String phone;
     @Enumerated(value = EnumType.STRING)
     private ClientType clientType;
-    // @Enumerated(value = EnumType.STRING)
-    // private ClientStatus status;
+    @Enumerated(value = EnumType.STRING)
+    private ClientStatus status = ClientStatus.ACTIVE;
 
     public Client(
             String clientName, String address, String addressDetail, String postcode,

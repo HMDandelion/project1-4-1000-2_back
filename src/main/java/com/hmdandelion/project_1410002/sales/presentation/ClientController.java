@@ -4,6 +4,7 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
+import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
 import com.hmdandelion.project_1410002.sales.model.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
@@ -33,6 +34,12 @@ public class ClientController {
         final PagingResponse pagingResponse = PagingResponse.of(clients.getContent(), pagingButtonInfo);
 
         return ResponseEntity.ok(pagingResponse);
+    }
+
+    @GetMapping("/clients/{clientCode}")
+    public ResponseEntity<SalesClientResponse> getSalesClient(@PathVariable final Long clientCode) {
+        final SalesClientResponse salesClientResponse = clientService.getSalesClient(clientCode);
+        return ResponseEntity.ok(salesClientResponse);
     }
 
     @PostMapping("/clients")

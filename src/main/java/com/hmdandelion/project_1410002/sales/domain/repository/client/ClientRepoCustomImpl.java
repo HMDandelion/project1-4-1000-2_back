@@ -2,6 +2,8 @@ package com.hmdandelion.project_1410002.sales.domain.repository.client;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.QClient;
+import com.hmdandelion.project_1410002.sales.model.ClientStatus;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +21,9 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
     public Page<Client> search(Pageable pageable) {
         List<Client> clients = queryFactory
                 .selectFrom(QClient.client)
-                // .where
+                .where(
+                        QClient.client.status.eq(ClientStatus.ACTIVE)
+                )
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
@@ -27,5 +31,9 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .from(QClient.client);
 
         return PageableExecutionUtils.getPage(clients, pageable, countQuery::fetchOne);
+    }
+
+    private BooleanExpression clientNameEq(String clientName) {
+        return null;
     }
 }
