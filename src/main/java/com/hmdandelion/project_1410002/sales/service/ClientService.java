@@ -1,9 +1,7 @@
 package com.hmdandelion.project_1410002.sales.service;
 
-import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
-import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderRepo;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
@@ -24,7 +22,6 @@ import java.util.List;
 public class ClientService {
 
     private final ClientRepo clientRepo;
-    private final OrderRepo orderRepo;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
@@ -58,8 +55,8 @@ public class ClientService {
         Client client = clientRepo.findByClientCodeAndStatusNot(clientCode, ClientStatus.DELETED)
                 .orElseThrow(() -> new RuntimeException());
 
-        List<Order> orders = orderRepo.findByClientCode(clientCode);
+        List<ClientOrderDTO> orders = clientRepo.getOrderList(clientCode);
 
-        return SalesClientResponse.from(client, orders.stream().map(ClientOrderDTO::from).toList());
+        return SalesClientResponse.from(client, orders);
     }
 }

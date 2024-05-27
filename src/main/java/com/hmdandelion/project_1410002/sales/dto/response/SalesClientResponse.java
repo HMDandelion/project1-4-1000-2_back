@@ -1,7 +1,6 @@
 package com.hmdandelion.project_1410002.sales.dto.response;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
-import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

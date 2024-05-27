@@ -18,15 +18,6 @@ public class ClientOrderDTO {
     private final LocalDateTime orderDatetime;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate deadline;
-    // private final Integer totalPrice;
+    private final Integer totalPrice;
     private final OrderStatus status;
-
-    public static ClientOrderDTO from(Order order) {
-        return new ClientOrderDTO(
-                order.getOrderCode(),
-                order.getOrderDatetime(),
-                order.getDeadline(),
-                order.getStatus()
-        );
-    }
 }

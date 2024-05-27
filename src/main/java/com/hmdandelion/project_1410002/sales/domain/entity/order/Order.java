@@ -11,12 +11,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "tbl_order")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EntityListeners(AuditingEntityListener.class)
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,4 +32,6 @@ public class Order {
     private LocalDateTime completedAt;
     private Long clientCode;
     private Long estimateCode;
+    @OneToMany(mappedBy = "order")
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 }
