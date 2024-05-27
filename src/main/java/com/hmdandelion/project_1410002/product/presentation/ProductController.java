@@ -6,14 +6,18 @@ import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.product.domain.dto.request.ProductRequest;
 import com.hmdandelion.project_1410002.product.domain.dto.response.ProductsResponse;
 import com.hmdandelion.project_1410002.product.domain.entity.Product;
+import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
 import com.hmdandelion.project_1410002.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -23,14 +27,14 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/product")
-    public ResponseEntity<PagingResponse> getProducts(
-            @RequestParam(defaultValue = "1") Integer page
+    public List<Product> getProducts(
+            @RequestParam (defaultValue = "1")final Integer page,
+            @RequestParam(required = false)  final String productName,
+            @RequestParam(required = false)  final String unit,
+            @RequestParam(required = false) final ProductStatus status
     ){
-        final Page<ProductsResponse> products = productService.getProducts(page);
-        final PagingButtonInfo pagingButtonInfo = Pagenation.getPagingButtonInfo(products);
-        final PagingResponse pagingResponse = PagingResponse.of(products.getContent(), pagingButtonInfo);
-
-        return ResponseEntity.ok(pagingResponse);
+        Pageable pageable = PageRequest.of(page-1,10);
+        return productService.searchProducts(pageable,productName,unit,status);
     }
 
     @GetMapping("/product/{productCode}")
@@ -63,4 +67,7 @@ public class ProductController {
         productService.updateStatus(productCode);
         return ResponseEntity.noContent().build();
     }
+
+
+
 }
