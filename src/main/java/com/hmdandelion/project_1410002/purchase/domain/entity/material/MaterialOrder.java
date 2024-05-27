@@ -35,16 +35,4 @@ public class MaterialOrder {
     private Long planCode;//TODO 수정필
     private boolean isDeleted;
     private String deletionReason;
-    @OneToMany(mappedBy = "materialOrder")
-    private List<OrderSpec> orderSpecs;
-
-    public double getPriceAvgBySpecCode(long specCode) {
-        double temp = 0d;
-        for (OrderSpec order : orderSpecs) {
-            if (order.getMaterialSpec().getSpecCode() == specCode) {
-                temp += order.getPrice();
-            }
-        }
-        return temp / orderSpecs.size();
-    }
 }

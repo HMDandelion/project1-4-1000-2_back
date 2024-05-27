@@ -23,10 +23,6 @@ public class OrderSpec {
     private Long orderCode;
 
     @ManyToOne
-    @JoinColumn(name = "order_code")
-    private MaterialOrder materialOrder;
-
-    @ManyToOne
     @JoinColumn(name = "spec_code")
     private MaterialSpec materialSpec;
 }

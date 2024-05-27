@@ -40,13 +40,4 @@ public class MaterialStockController {
         final MaterialObjectListRes res = MaterialObjectListRes.from(Collections.singletonList(list));
         return ResponseEntity.ok(res);
     }
-
-    //스펙별 거래내역 조회
-    @GetMapping("/transactions/{specCode}")
-    public ResponseEntity<MaterialTransactionsRes> findTransactions(
-            @PathVariable long specCode
-    ) {
-        Map<String, Double> monthTransactionMap = materialOrderService.findMonthlyAverageBySpecCode(specCode);
-        return null;
-    }
 }

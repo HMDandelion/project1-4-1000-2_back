@@ -8,11 +8,4 @@ import java.util.List;
 
 public interface MaterialOrderRepo extends JpaRepository<MaterialOrder,Long> {
 
-    @Query("SELECT mo " +
-            "FROM MaterialOrder mo " +
-            "JOIN OrderSpec oc ON mo.orderCode = oc.orderCode " +
-            "WHERE FUNCTION('YEAR', mo.orderDate) = :year " +
-            "AND FUNCTION('MONTH', mo.orderDate) = :month " +
-            "AND oc.materialSpec.specCode = :speCode")
-    List<MaterialOrder> findOrdersByYearAndMonth(int year, int month, long specCode);
 }
