@@ -25,6 +25,34 @@ public class Client {
     private String phone;
     @Enumerated(value = EnumType.STRING)
     private ClientType clientType;
-    @Enumerated(value = EnumType.STRING)
-    private ClientStatus status;
+    // @Enumerated(value = EnumType.STRING)
+    // private ClientStatus status;
+
+    public Client(
+            String clientName, String address, String addressDetail, String postcode,
+            String representativeName, String phone, ClientType clientType)
+    {
+        this.clientName = clientName;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.postcode = postcode;
+        this.representativeName = representativeName;
+        this.phone = phone;
+        this.clientType = clientType;
+    }
+
+    public static Client of(
+            String clientName, String address, String addressDetail, String postcode,
+            String representativeName, String phone, ClientType clientType)
+    {
+        return new Client(
+                clientName,
+                address,
+                addressDetail,
+                postcode,
+                representativeName,
+                phone,
+                clientType
+        );
+    }
 }
