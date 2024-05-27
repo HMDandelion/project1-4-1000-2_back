@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.HMDandelion'
@@ -24,6 +25,8 @@ repositories {
 
 ext {
     set('snippetsDir', file("build/generated-snippets"))
+    set('querydslDir', file("build/generated/sources/annotationProcessor/java/main")) // 추가된 줄
+
 }
 
 dependencies {
@@ -36,6 +39,34 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    //이하 queryDSL
+    implementation "com.querydsl:querydsl-jpa:4.4.0"
+    implementation "com.querydsl:querydsl-apt:4.4.0"
+}
+//queryDSL
+querydsl {
+    jpa = true
+    querydslSourcesDir = "$buildDir/generated/sources/annotationProcessor/java/main" // 수정된 줄
+
+}
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/sources/annotationProcessor/java/main" // 수정된 줄
+        }
+    }
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.annotationProcessor // 추가된 줄
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+//queryDSL END....
+
+sourceSets {
+    main.java.srcDir querydslDir
 }
 
 tasks.named('test') {
