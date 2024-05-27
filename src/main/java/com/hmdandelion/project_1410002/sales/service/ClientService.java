@@ -78,4 +78,8 @@ public class ClientService {
                 clientRequest.getPhone()
         );
     }
+
+    public void remove(Long clientCode) {
+        clientRepo.deleteById(clientCode);
+    }
 }

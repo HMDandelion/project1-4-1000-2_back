@@ -62,5 +62,10 @@ public class ClientController {
         return ResponseEntity.created(URI.create("/api/v1/clients/" + clientCode)).build();
     }
 
+    @DeleteMapping("/clients/{clientCode}")
+    public ResponseEntity<Void> remove(@PathVariable final Long clientCode) {
+        clientService.remove(clientCode);
+        return ResponseEntity.noContent().build();
+    }
 
 }
