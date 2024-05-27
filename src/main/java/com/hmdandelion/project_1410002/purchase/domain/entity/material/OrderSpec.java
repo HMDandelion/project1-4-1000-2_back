@@ -17,9 +17,15 @@ public class OrderSpec {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderSpecCode;
+
     private int orderQuantity;
     private int price;
     private Long orderCode;
+
+    @ManyToOne
+    @JoinColumn(name = "order_code")
+    private MaterialOrder materialOrder;
+
     @ManyToOne
     @JoinColumn(name = "spec_code")
     private MaterialSpec materialSpec;
