@@ -6,24 +6,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.List;
+
 @Entity
-@Table(name = "tbl_planned_order_list")
+@Table(name = "tbl_production_plan_list")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @EntityListeners(AuditingEntityListener.class)
-public class PlannedOrderList {
+public class ProductionPlannedList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "planned_list_code")
-    private Long plannedListCode;
+    @Column(name = "plan_list_code")
+    private Long planListCode;
+
+    @Column(name = "required_quantity")
+    private String requiredQuantity;
+
+    @Column(name = "planned_quantity")
+    private String plannedQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_code", nullable = false)
     private ProductionPlan productionPlan;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "order_code", nullable = false)
-//    private Order orderCode; <- order 엔티티 필요
+//    @JoinColumn(name = "product_code", nullable = false)
+//    private Product product; <- product 엔티티 필요
+
+
+
+
 
 }

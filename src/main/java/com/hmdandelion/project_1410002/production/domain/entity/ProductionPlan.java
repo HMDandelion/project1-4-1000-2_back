@@ -27,20 +27,32 @@ public class ProductionPlan {
     @Column(name = "creation_at", nullable = false, updatable = false)
     private LocalDateTime creationAt;
 
-    @Column(name = "start_at")
+    @Column(name = "start_at", nullable = false)
     private LocalDateTime startAt;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @LastModifiedDate
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(name = "end_at")
+    @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
     @OneToMany(mappedBy = "productionPlan")
     private List<PlannedOrderList> plannedOrderList;
 
+    @OneToMany(mappedBy = "productionPlan")
+    private List<ProductionPlannedList> productionPlannedList;
+
+    public ProductionPlan(LocalDateTime startAt, String description, LocalDateTime endAt) {
+        this.startAt = startAt;
+        this.description = description;
+        this.endAt = endAt;
+    }
+    public static ProductionPlan of(LocalDateTime startAt, String description, LocalDateTime endAt) {
+        return new ProductionPlan(startAt, description, endAt);
+
+    }
 }
