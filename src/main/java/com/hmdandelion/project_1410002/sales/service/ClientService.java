@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.sales.service;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
+import com.hmdandelion.project_1410002.sales.dto.request.ClientUpdateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
@@ -14,11 +15,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ClientService {
 
     private final ClientRepo clientRepo;
@@ -27,12 +30,23 @@ public class ClientService {
         return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
     }
 
+    @Transactional(readOnly = true)
     public Page<SalesClientsResponse> getSalesClients(Integer page, String sort, String clientName, Boolean isOrdered) {
         Page<Client> clients = null;
 
-        clients = clientRepo.search(getPageable(page));
+        clients = clientRepo.search(getPageable(page), sort, clientName, isOrdered);
 
         return clients.map(SalesClientsResponse::from);
+    }
+
+    @Transactional(readOnly = true)
+    public SalesClientResponse getSalesClient(Long clientCode) {
+        Client client = clientRepo.findByClientCodeAndStatusNot(clientCode, ClientStatus.DELETED)
+                .orElseThrow(() -> new RuntimeException());
+
+        List<ClientOrderDTO> orders = clientRepo.getOrderList(clientCode);
+
+        return SalesClientResponse.from(client, orders);
     }
 
     public Long save(ClientCreateRequest clientRequest, ClientType clientType) {
@@ -51,12 +65,17 @@ public class ClientService {
         return client.getClientCode();
     }
 
-    public SalesClientResponse getSalesClient(Long clientCode) {
+    public void modify(Long clientCode, ClientUpdateRequest clientRequest) {
         Client client = clientRepo.findByClientCodeAndStatusNot(clientCode, ClientStatus.DELETED)
                 .orElseThrow(() -> new RuntimeException());
 
-        List<ClientOrderDTO> orders = clientRepo.getOrderList(clientCode);
-
-        return SalesClientResponse.from(client, orders);
+        client.modify(
+                clientRequest.getClientName(),
+                clientRequest.getAddress(),
+                clientRequest.getAddressDetail(),
+                clientRequest.getPostcode(),
+                clientRequest.getRepresentativeName(),
+                clientRequest.getPhone()
+        );
     }
 }

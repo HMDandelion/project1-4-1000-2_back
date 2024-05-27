@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "tbl_client")
@@ -54,5 +55,17 @@ public class Client {
                 phone,
                 clientType
         );
+    }
+
+    public void modify(
+            String clientName, String address, String addressDetail, String postcode,
+            String representativeName, String phone)
+    {
+        this.clientName = clientName;
+        this.address = address;
+        this.addressDetail = addressDetail;
+        this.postcode = postcode;
+        this.representativeName = representativeName;
+        this.phone = phone;
     }
 }

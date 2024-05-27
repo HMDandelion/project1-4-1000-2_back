@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ClientRepoCustom {
 
-    Page<Client> search(Pageable pageable);
+    Page<Client> search(Pageable pageable, String sort, String clientName, Boolean isOrdered);
 
     List<ClientOrderDTO> getOrderList(Long clientCode);
 }
