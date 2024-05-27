@@ -7,6 +7,9 @@ import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
 import com.hmdandelion.project_1410002.sales.model.ClientType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,12 +18,16 @@ public class ClientService {
 
     private final ClientRepo clientRepo;
 
+    private Pageable getPageable(final Integer page) {
+        return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
+    }
+
     public Page<SalesClientsResponse> getSalesClients(Integer page, String sort, String clientName, Boolean isOrdered) {
         Page<Client> clients = null;
 
-        // QueryDSL
+        clients = clientRepo.search(getPageable(page));
 
-        return null;
+        return clients.map(SalesClientsResponse::from);
     }
 
     public Long save(ClientCreateRequest clientRequest, ClientType clientType) {

@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.sales.presentation;
 
+import com.hmdandelion.project_1410002.common.paging.Pagination;
+import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
@@ -27,8 +29,10 @@ public class ClientController {
             @RequestParam(required = false) final Boolean isOrdered
     ) {
         final Page<SalesClientsResponse> clients = clientService.getSalesClients(page, sort, clientName, isOrdered);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(clients);
+        final PagingResponse pagingResponse = PagingResponse.of(clients.getContent(), pagingButtonInfo);
 
-        return null;
+        return ResponseEntity.ok(pagingResponse);
     }
 
     @PostMapping("/clients")
