@@ -23,14 +23,15 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/product")
-    public List<Product> getProducts(
-            @RequestParam (defaultValue = "1")final Integer page,
-            @RequestParam(required = false)  final String productName,
-            @RequestParam(required = false)  final String unit,
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(defaultValue = "1") final Integer page,
+            @RequestParam(required = false) final String productName,
+            @RequestParam(required = false) final String unit,
             @RequestParam(required = false) final ProductStatus status
-    ){
-        Pageable pageable = PageRequest.of(page-1,10);
-        return productService.searchProducts(pageable,productName,unit,status);
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        List<Product> products = productService.searchProducts(pageable, productName, unit, status);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/product/{productCode}")
