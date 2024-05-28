@@ -23,7 +23,7 @@ public class EstimateRepoCustomImpl implements EstimateRepoCustom{
         return switch (sort != null ? sort : "none") {
             case "name" -> new OrderSpecifier<>(Order.ASC, client.clientName);
             case "-name" -> new OrderSpecifier<>(Order.DESC, client.clientName);
-            default -> new OrderSpecifier<>(Order.ASC, estimate.estimateCode);
+            // default -> new OrderSpecifier<>(Order.ASC, estimate.estimateCode);
         };
     }
 
@@ -31,7 +31,7 @@ public class EstimateRepoCustomImpl implements EstimateRepoCustom{
     public Page<EstimatesResponse> search(Pageable pageable, String sort, String clientName, String createdAt) {
         OrderSpecifier orderSpecifier = createOrderSpecifier(sort);
 
-        List<EstimatesResponse> estimates = queryFactory
+/*        List<EstimatesResponse> estimates = queryFactory
                 .select(Projections.constructor(EstimatesResponse.class,
                         estimate.estimateCode,
                         estimate.createdAt,
@@ -45,7 +45,7 @@ public class EstimateRepoCustomImpl implements EstimateRepoCustom{
                 .leftJoin(estimate.estimateProducts, estimateProduct)
                 .leftJoin(product).on(estimateProduct.productCode.eq(product.productCode))
                 .groupBy(estimate.estimateCode)
-                .fetch();
+                .fetch();*/
         return null;
     }
 }

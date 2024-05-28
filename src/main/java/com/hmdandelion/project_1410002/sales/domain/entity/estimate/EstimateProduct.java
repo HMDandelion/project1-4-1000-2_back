@@ -19,4 +19,18 @@ public class EstimateProduct {
     @JoinColumn(name = "estimate_code")
     private Estimate estimate;
     private Integer productCode;
+
+    public EstimateProduct(Integer quantity, Integer price, Integer productCode) {
+        this.quantity = quantity;
+        this.price = price;
+        this.productCode = productCode;
+    }
+
+    public static EstimateProduct of(Integer quantity, Integer price, Integer productCode) {
+        return new EstimateProduct(
+                quantity,
+                price,
+                productCode
+        );
+    }
 }

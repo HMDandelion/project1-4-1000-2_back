@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE tbl_estimate SET status = 'DELETED' WHERE estimate_code = ?")
 public class Estimate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,4 +34,18 @@ public class Estimate {
     public Long clientCode;
     @OneToMany(mappedBy = "estimate")
     private List<EstimateProduct> estimateProducts = new ArrayList<>();
+
+    public Estimate(LocalDate deadline, Long clientCode, List<EstimateProduct> products) {
+        this.deadline = deadline;
+        this.clientCode = clientCode;
+        this.estimateProducts = products;
+    }
+
+    public static Estimate of(LocalDate deadline, Long clientCode, List<EstimateProduct> products) {
+        return new Estimate(
+                deadline,
+                clientCode,
+                products
+        );
+    }
 }

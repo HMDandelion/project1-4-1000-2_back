@@ -3,15 +3,17 @@ package com.hmdandelion.project_1410002.sales.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.sales.dto.request.EstimateCreateRequest;
+import com.hmdandelion.project_1410002.sales.dto.request.EstimateUpdateRequest;
+import com.hmdandelion.project_1410002.sales.dto.response.EstimateResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.EstimatesResponse;
 import com.hmdandelion.project_1410002.sales.service.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -33,4 +35,32 @@ public class EstimateController {
 
         return ResponseEntity.ok(pagingResponse);
     }
+
+    @GetMapping("/estimates/{estimateCode}")
+    public ResponseEntity<EstimateResponse> getEstimate(@PathVariable final Long estimateCode) {
+        final EstimateResponse estimateResponse = estimateService.getEstimate(estimateCode);
+        return ResponseEntity.ok(estimateResponse);
+    }
+
+    @PostMapping("/estimates")
+    public ResponseEntity<Void> save(@RequestBody EstimateCreateRequest estimateRequest) {
+        final Long estimateCode = estimateService.save(estimateRequest);
+        return ResponseEntity.created(URI.create("/api/v1/estimates/" + estimateCode)).build();
+    }
+
+    @PutMapping("/estimates/{estimateCode}")
+    public ResponseEntity<Void>  modify(
+            @PathVariable final Long estimateCode,
+            @RequestBody EstimateUpdateRequest estimateRequest
+    ) {
+        estimateService.modify(estimateCode, estimateRequest);
+        return ResponseEntity.created(URI.create("/api/v1/estimates/" + estimateCode)).build();
+    }
+
+    @DeleteMapping("/estimates/{estimateCode}")
+    public ResponseEntity<Void> remove(@PathVariable final Long estimateCode) {
+        estimateService.remove(estimateCode);
+        return ResponseEntity.noContent().build();
+    }
+
 }
