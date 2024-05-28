@@ -6,26 +6,23 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.QMaterialOrder;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.QOrderSpec;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.dialect.BooleanDecoder;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
-public class MaterialOrderCustomImpl implements MaterialOrderRepoCustom {
+public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     private final JPAQueryFactory queryFactory;
 
 
     @Override
-    public List<MaterialOrderDTO> getSearch(Long specCode, int year, int month) {
+    public List<MaterialOrderDTO> findMaterialORderBySpecCodeAndYearMonth(Long specCode, int year, int month) {
         QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
         QOrderSpec orderSpec = QOrderSpec.orderSpec;
         QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
@@ -56,6 +53,33 @@ public class MaterialOrderCustomImpl implements MaterialOrderRepoCustom {
                 .stream()
                 .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
         // dto에 담아 전송
+        return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
+    }
+
+    @Override
+    public List<MaterialOrderDTO> getLast10OrderBySpecCode(long specCode) {
+        QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
+        QOrderSpec orderSpec = QOrderSpec.orderSpec;
+        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
+
+        List<Long> orderCodesWithSpec = queryFactory
+                .select(orderSpec.orderCode)
+                .from(orderSpec)
+                .where(orderSpec.materialSpec.specCode.eq(specCode))
+                .fetch();
+        List<MaterialOrder> orders = queryFactory
+                .selectFrom(materialOrder)
+                .where(materialOrder.orderCode.in(orderCodesWithSpec))
+                .orderBy(materialOrder.orderDate.desc())
+                .limit(10).stream().toList();
+        Map<Long, List<OrderSpec>> specsMap = queryFactory
+                .selectFrom(orderSpec)
+                .leftJoin(orderSpec.materialSpec, materialSpec)
+                .where(orderSpec.orderCode.in(
+                        orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toSet())))
+                .fetch()
+                .stream()
+                .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
         return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
     }
 }

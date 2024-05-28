@@ -36,8 +36,4 @@ public class MaterialOrder {
     private boolean isDeleted;
     private String deletionReason;
 
-    private Long specCode;
-    private int year;
-    private int month;
-
 }

@@ -33,7 +33,9 @@ public class MaterialOrderDTO {
         orderDTO.setClientCode(order.getClientCode());
         orderDTO.setStatus(order.getStatus());
         orderDTO.setEmployeeCode(order.getEmployeeCode());
-        orderDTO.setArrivalDatetime(order.getArrivalDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+        if (order.getArrivalDatetime() != null) {
+            orderDTO.setArrivalDatetime(order.getArrivalDatetime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss")));
+        }
         orderDTO.setPlanCode(order.getPlanCode());
 
         List<OrderSpecDTO> orderSpecList = specsMap.getOrDefault(order.getOrderCode(),List.of()).stream().map(OrderSpecDTO::from).toList();

@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hmdandelion.project_1410002.inventory.model.StockDivision;
+import com.hmdandelion.project_1410002.inventory.type.StockDivision;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

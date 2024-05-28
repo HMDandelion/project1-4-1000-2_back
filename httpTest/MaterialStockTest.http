@@ -5,5 +5,5 @@ GET http://localhost:8001/api/v1/material/safety-stock
 GET http://localhost:8001/api/v1/material/warehouses/2
 
 ### 스펙별 거래내역 조회
-GET https://localhost:8001/api/v1/material/transactions/3
+GET http://localhost:8001/api/v1/material/transactions/5
 

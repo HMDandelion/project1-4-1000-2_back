@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface MaterialOrderRepoCustom {
 
-    List<MaterialOrderDTO> getSearch(Long SpecCode, int year, int Month);
+    List<MaterialOrderDTO> findMaterialORderBySpecCodeAndYearMonth(Long specCode, int year, int month);
+
+    List<MaterialOrderDTO> getLast10OrderBySpecCode(long specCode);
 }

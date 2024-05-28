@@ -3,8 +3,11 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObjectListRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialGraphRes;
+import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialSpecRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialTransactionsRes;
+import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.inventory.service.MaterialStockService;
+import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,7 @@ import java.util.Map;
 public class MaterialStockController {
     private final MaterialStockService materialStockService;
     private final MaterialOrderService materialOrderService;
+    private final MaterialSpecService materialSpecService;
 
     //안전재고 대비 실재고량 조회
     @GetMapping("/safety-stock")
@@ -47,8 +51,18 @@ public class MaterialStockController {
             @PathVariable final long specCode
     ) {
         Map<String, Double> monthTransactionMap = materialOrderService.getMonthTransactionsBySpecCode(specCode);
-        MaterialTransactionsRes res = MaterialTransactionsRes.of(monthTransactionMap, null);
-        //TODO 최근 거래내역 10건 안만들어짐
+        List<MaterialOrderDTO> orders = materialOrderService.getLast10OrderBySpecCode(specCode);
+        MaterialTransactionsRes res = MaterialTransactionsRes.of(monthTransactionMap, orders);
+
         return ResponseEntity.ok(res);
+    }
+
+    //모든 스펙 조회
+    @GetMapping("/spec")
+    public ResponseEntity<MaterialSpecRes> findAllSpec(
+
+    ) {
+        MaterialSpecRes res = MaterialSpecRes.from(materialSpecService.findAll());
+        return null;
     }
 }
