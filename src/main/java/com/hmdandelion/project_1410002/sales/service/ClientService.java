@@ -27,15 +27,12 @@ public class ClientService {
     private final ClientRepo clientRepo;
 
     private Pageable getPageable(final Integer page) {
-        return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
+        return PageRequest.of(page - 1, 10);
     }
 
     @Transactional(readOnly = true)
     public Page<SalesClientsResponse> getSalesClients(Integer page, String sort, String clientName, Boolean isOrdered) {
-        Page<Client> clients = null;
-
-        clients = clientRepo.search(getPageable(page), sort, clientName, isOrdered);
-
+        Page<Client> clients = clientRepo.search(getPageable(page), sort, clientName, isOrdered);
         return clients.map(SalesClientsResponse::from);
     }
 
