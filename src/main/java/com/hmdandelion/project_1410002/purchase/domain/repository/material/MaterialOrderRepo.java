@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface MaterialOrderRepo extends JpaRepository<MaterialOrder,Long> {
+public interface MaterialOrderRepo extends JpaRepository<MaterialOrder,Long>, MaterialOrderRepoCustom {
 
 }
