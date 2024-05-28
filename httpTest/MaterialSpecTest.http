@@ -5,4 +5,7 @@ GET http://localhost:8001/api/v1/material/spec
 GET http://localhost:8001/api/v1/material/spec?page=2
 
 ### 모든 스펙 조회 검색
-GET http://localhost:8001/api/v1/material/spec?materialName="Material33"
+GET http://localhost:8001/api/v1/material/spec?materialName=Material33
+
+### 왜안됨
+GET http://localhost:8001/api/v1/product?productName=천
