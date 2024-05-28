@@ -16,7 +16,7 @@ public class Bom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bomCode;
-    private Long Quantity;
+    private Long quantity;
     private Long sequence;
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="productCode")
@@ -26,7 +26,7 @@ public class Bom {
     private MaterialSpec materialSpec;
 
     public Bom(Long quantity, Long sequence, Product product, MaterialSpec materialSpec) {
-        Quantity = quantity;
+        this.quantity = quantity;
         this.sequence = sequence;
         this.product = product;
         this.materialSpec = materialSpec;
@@ -39,5 +39,11 @@ public class Bom {
                 product,
                 materialSpec
         );
+    }
+
+    public void modify(MaterialSpec materialSpec,Long  quantity, Long sequence) {
+        this.materialSpec = materialSpec;
+        this.quantity = quantity;
+        this.sequence = sequence;
     }
 }

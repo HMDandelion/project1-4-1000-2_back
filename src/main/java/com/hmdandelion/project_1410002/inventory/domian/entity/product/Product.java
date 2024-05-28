@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -21,6 +22,7 @@ import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatu
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
+@ToString
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
