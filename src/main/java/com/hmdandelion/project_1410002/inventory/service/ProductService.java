@@ -32,7 +32,7 @@ public class ProductService {
     private final JPAQueryFactory queryFactory;
 
     private Pageable getPageable(final Integer page) {
-        return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
+        return PageRequest.of(page - 1, 10, Sort.by("productCode"));
     }
 
 
