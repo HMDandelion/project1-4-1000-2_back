@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.product;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -29,7 +30,7 @@ public class Product {
     private LocalDateTime launchDate;
     private Long price;
     private String unit;
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
     @Enumerated(value=EnumType.STRING)
     private ProductStatus status = IN_PRODUCTION;
 
@@ -59,6 +60,6 @@ public class Product {
         }else{
             this.status = IN_PRODUCTION;
         }
-        this.updated_at = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

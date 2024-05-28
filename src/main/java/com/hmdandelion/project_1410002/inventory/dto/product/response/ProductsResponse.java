@@ -14,11 +14,12 @@ import java.time.LocalDateTime;
 public class ProductsResponse {
     private final Long productCode;
     private final String productName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private final LocalDateTime launchDate;
     private final Long price;
     private final String unit;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
-    private final LocalDateTime updated_at;
+    private final LocalDateTime updatedAt;
     private final ProductStatus status;
 
     public static ProductsResponse from(Product product) {
@@ -28,7 +29,7 @@ public class ProductsResponse {
                 product.getLaunchDate(),
                 product.getPrice(),
                 product.getUnit(),
-                product.getUpdated_at(),
+                product.getUpdatedAt(),
                 product.getStatus()
                 );
     }
