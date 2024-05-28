@@ -30,9 +30,6 @@ public class ClientController {
             @RequestParam(required = false) final String clientName,
             @RequestParam(required = false) final Boolean isOrdered
     ) {
-        System.out.println("sort: " + sort);
-        System.out.println("clientName: " + clientName);
-        System.out.println("isOrdered: " + isOrdered);
 
         final Page<SalesClientsResponse> clients = clientService.getSalesClients(page, sort, clientName, isOrdered);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(clients);

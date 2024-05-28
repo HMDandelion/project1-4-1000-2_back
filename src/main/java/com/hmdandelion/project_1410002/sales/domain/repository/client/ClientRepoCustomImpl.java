@@ -4,6 +4,8 @@ import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.model.ClientStatus;
 import com.hmdandelion.project_1410002.sales.model.OrderStatus;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -26,6 +28,7 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
 
     @Override
     public Page<Client> search(Pageable pageable, String sort, String clientName, Boolean isOrdered) {
+        OrderSpecifier orderSpecifier = createOrderSpecifier(sort);
 
         List<Client> clients = queryFactory
                 .selectFrom(client)
@@ -34,16 +37,18 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                         isOrdered(isOrdered),
                         client.status.eq(ClientStatus.ACTIVE)
                 )
+                .orderBy(orderSpecifier)
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
                 .select(client.count())
+                .from(client)
                 .where(
                         containClientName(clientName),
                         isOrdered(isOrdered),
                         client.status.eq(ClientStatus.ACTIVE)
                 )
-                .from(client);
+                .orderBy(orderSpecifier);
 
         return PageableExecutionUtils.getPage(clients, pageable, countQuery::fetchOne);
     }
@@ -67,6 +72,14 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                         order.status.ne(OrderStatus.COMPLETED)
                 )
                 .exists();
+    }
+
+    private OrderSpecifier createOrderSpecifier(String sort) {
+        return switch (sort != null ? sort : "none") {
+            case "name" -> new OrderSpecifier<>(Order.ASC, client.clientName);
+            case "-name" -> new OrderSpecifier<>(Order.DESC, client.clientName);
+            default -> new OrderSpecifier<>(Order.ASC, client.clientCode);
+        };
     }
 
     @Override
