@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class EstimateProductRequest {
-    public final Integer productCode;
     public final Integer quantity;
     public final Integer price;
+    public final Long productCode;
 }

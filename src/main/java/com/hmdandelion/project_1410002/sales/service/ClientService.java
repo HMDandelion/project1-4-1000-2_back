@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.sales.service;
 
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
@@ -42,7 +44,7 @@ public class ClientService {
     @Transactional(readOnly = true)
     public SalesClientResponse getSalesClient(Long clientCode) {
         Client client = clientRepo.findByClientCodeAndStatusNot(clientCode, ClientStatus.DELETED)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
 
         List<ClientOrderDTO> orders = clientRepo.getOrderList(clientCode);
 
