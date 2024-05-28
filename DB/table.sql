@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `tbl_material_order`
     `order_date`    DATE NOT NULL COMMENT '계약 일자',
     `delivery_due_date`    DATE NOT NULL COMMENT '배송 예정 일자',
     `client_code`    INT NOT NULL COMMENT '거래처코드',
-    `status`    VARCHAR(20) DEFAULT '계약완료' NOT NULL COMMENT '상태',
+    `status`    VARCHAR(20) DEFAULT 'ORDER_COMPLETE' NOT NULL COMMENT '상태',
     `is_regular_contract`    BOOLEAN NOT NULL DEFAULT FALSE COMMENT '정기계약여부',
     `employee_code`    INT NOT NULL COMMENT '사원코드',
     `arrival_datetime`    DATETIME COMMENT '입고일자',

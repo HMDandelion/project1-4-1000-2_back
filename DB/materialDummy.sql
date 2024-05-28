@@ -73,3 +73,24 @@ SELECT
           CROSS JOIN
       (SELECT n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) as nums) as t2;
 
+
+INSERT INTO tbl_material_order (order_date, delivery_due_date, client_code, status, is_regular_contract, employee_code, arrival_datetime, plan_code, is_deleted, deletion_reason)
+SELECT
+    DATE_ADD('2023-11-01', INTERVAL FLOOR(RAND() * (DATEDIFF(NOW(), '2023-11-01') + 1)) MONTH) AS order_date,
+    DATE_ADD('2023-11-01', INTERVAL FLOOR(RAND() * (DATEDIFF(NOW(), '2023-11-01') + 1)) MONTH) AS delivery_due_date,
+    FLOOR(RAND() * 1000) + 1 AS client_code,
+    CASE
+        WHEN RAND() < 0.3 THEN 'ORDER_COMPLETE'
+        WHEN RAND() < 0.6 THEN 'DELIVERY_EXPECTED'
+        ELSE 'DELIVERY_COMPLETED'
+        END AS status,
+    RAND() < 0.5 AS is_regular_contract,
+    FLOOR(RAND() * 1000) + 1 AS employee_code,
+    CASE
+        WHEN RAND() < 0.5 THEN NOW()
+        ELSE NULL
+        END AS arrival_datetime,
+    NULL AS plan_code,
+    FALSE AS is_deleted,
+    NULL AS deletion_reason
+ LIMIT 60; -- 5건씩 총 12개월

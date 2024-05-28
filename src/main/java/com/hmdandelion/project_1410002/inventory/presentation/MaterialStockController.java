@@ -34,10 +34,21 @@ public class MaterialStockController {
     //창고 별 적재현항 조회
     @GetMapping("/warehouses/{warehouseCode}")
     public ResponseEntity<MaterialObjectListRes> findStockByWarehouse(
-            @PathVariable long warehouseCode
+            @PathVariable final long warehouseCode
     ) {
         final List<MaterialStockSimpleDTO> list = materialStockService.findBywarehouseCode(warehouseCode);
         final MaterialObjectListRes res = MaterialObjectListRes.from(Collections.singletonList(list));
+        return ResponseEntity.ok(res);
+    }
+
+    //스펙 별 거래내역 조회
+    @GetMapping("/transactions/{specCode}")
+    public ResponseEntity<MaterialTransactionsRes> getTransactionsBySpecCode(
+            @PathVariable final long specCode
+    ) {
+        Map<String, Double> monthTransactionMap = materialOrderService.getMonthTransactionsBySpecCode(specCode);
+        MaterialTransactionsRes res = MaterialTransactionsRes.of(monthTransactionMap, null);
+        //TODO 최근 거래내역 10건 안만들어짐
         return ResponseEntity.ok(res);
     }
 }
