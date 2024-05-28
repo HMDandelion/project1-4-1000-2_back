@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCate
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialSpecCategoryRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,5 +20,10 @@ public class MaterialSpecCategoryService {
 
     public SpecCategory findById(final long categoryCode) {
         return materialSpecCategoryRepo.findById(categoryCode).orElseThrow(()-> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
+    }
+
+    @Transactional
+    public void deleteByName(String categoryName) {
+        materialSpecCategoryRepo.deleteByCategoryName(categoryName);
     }
 }

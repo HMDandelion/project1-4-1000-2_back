@@ -52,7 +52,7 @@ public class MaterialSpecController {
     public ResponseEntity<Void> registAndModifySpec(
             @RequestBody final SaveMaterialSpecRequest request
     ) {
-        log.info("요청된 리퀘스트 내용 : {}",request);
+        log.info("요청된 리퀘스트 내용 : {}", request);
         final Long specCode = materialSpecService.save(request);
         return ResponseEntity.created(URI.create("/api/v1/material/spec/" + specCode)).build();
     }
@@ -63,8 +63,8 @@ public class MaterialSpecController {
             @RequestBody(required = false) final List<Long> specCodes
     ) {
 
-       String message = materialSpecService.removeByList(specCodes);
-       log.info(message);
+        String message = materialSpecService.removeByList(specCodes);
+        log.info(message);
         return ResponseEntity.noContent().build();
     }
 
@@ -73,5 +73,12 @@ public class MaterialSpecController {
     public ResponseEntity<Void> registSpecCategory(@RequestParam final String newCategoryName) {
         materialSpecCategoryService.save(newCategoryName);
         return ResponseEntity.created(URI.create("/api/v1/material/spec/category")).build();
+    }
+
+    //스펙 분류 삭제
+    @DeleteMapping("/spec/category")
+    public ResponseEntity<Void> deleteSpecCateogry(@RequestParam final String categoryName) {
+        materialSpecCategoryService.deleteByName(categoryName);
+        return ResponseEntity.noContent().build();
     }
 }
