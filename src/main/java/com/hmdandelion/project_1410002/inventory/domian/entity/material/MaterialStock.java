@@ -36,3 +36,4 @@ public class MaterialStock {
     private String modificationReason;
     private int orderCode; //TODO 수정필
 }
+
