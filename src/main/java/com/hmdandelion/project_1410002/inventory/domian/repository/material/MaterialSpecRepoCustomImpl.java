@@ -18,13 +18,14 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialSpecRepoCustomImpl.class);
     private final JPAQueryFactory queryFactory;
+
     @Override
     public List<MaterialSpec> searchMaterialSpec(final Pageable pageable, final String materialName) {
         QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
         BooleanBuilder builder = new BooleanBuilder();
 
         if (materialName != null && !materialName.isEmpty()) {
-            log.info("검색값 확인됨...{}",materialName);
+            log.info("검색값 확인됨...{}", materialName);
             builder.and(materialSpec.materialName.containsIgnoreCase(materialName));
         }
 
@@ -35,5 +36,14 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    @Override
+    public long removeByList(List<Long> specCodes) {
+        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
+        return queryFactory
+                .delete(materialSpec)
+                .where(materialSpec.specCode.in(specCodes))
+                .execute();
     }
 }

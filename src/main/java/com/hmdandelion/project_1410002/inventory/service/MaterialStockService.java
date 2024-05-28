@@ -23,9 +23,6 @@ public class MaterialStockService {
     public List<CombinedStockBySpecDTO> findStocksBySpec() {
         List<MaterialStock> stocks = materialStockRepo.findMaterialStocksWithPositiveActualQuantity();
 
-        if (stocks == null || stocks.isEmpty()) {
-            throw new NoContentsException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK);
-        }
         return stocks.stream()
                      .map(CombinedStockBySpecDTO::from)
                      .toList();
@@ -33,9 +30,6 @@ public class MaterialStockService {
 
     public List<MaterialStockSimpleDTO> findBywarehouseCode(long warehouseCode) {
         List<MaterialStock> stocks = materialStockRepo.findAllByWarehouseCodeAndActualQuantityIsGreaterThan(warehouseCode, 0);
-        if (stocks == null || stocks.isEmpty()) {
-            throw new NoContentsException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK);
-        }
 
         return stocks.stream()
                      .map(MaterialStockSimpleDTO::from)

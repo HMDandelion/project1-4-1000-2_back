@@ -7,5 +7,44 @@ GET http://localhost:8001/api/v1/material/spec?page=2
 ### 모든 스펙 조회 검색
 GET http://localhost:8001/api/v1/material/spec?materialName=Material33
 
-### 왜안됨
-GET http://localhost:8001/api/v1/product?productName=천
+### 스펙 등록
+POST http://localhost:8001/api/v1/material/spec
+Content-Type: application/json
+
+{
+  "materialName": "새로운 스펙",
+  "categoryCode": 3,
+  "unit": "kg",
+  "specification": "AISI 304",
+  "remarks": "Stainless steel",
+  "safetyQuantity": 4
+}
+
+### 스펙 수정
+POST http://localhost:8001/api/v1/material/spec
+Content-Type: application/json
+
+{
+  "specCode": 46,
+  "materialName": "수정된 스펙",
+  "categoryCode": 3,
+  "unit": "kg",
+  "specification": "AISI 304",
+  "remarks": "Stainless steel",
+  "safetyQuantity": 4
+}
+
+### 단일삭제 테스트
+DELETE http://localhost:8001/api/v1/material/spec
+Content-Type: application/json
+
+[1]
+
+### 여러 행 삭제 테스트
+DELETE http://localhost:8001/api/v1/material/spec
+Content-Type: application/json
+
+[46,45,44]
+
+### 분류 등록 테스트
+POST http://localhost:8001/api/v1/material/spec/category?newCategoryName=새로운카테고리이름

@@ -8,4 +8,6 @@ import java.util.List;
 public interface MaterialSpecRepoCustom {
     List<MaterialSpec> searchMaterialSpec(Pageable pageable, String materialName);
 
+    long removeByList(List<Long> specCodes);
+
 }

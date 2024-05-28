@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Category {
+public class SpecCategory {
 
     @Id
     @Column(name = "spec_category_code")
@@ -19,4 +19,13 @@ public class Category {
     private Long categoryCode;
     @Column(name = "spec_category_name")
     private String categoryName;
+
+    public SpecCategory(String categoryName) {
+        this.categoryCode = null;
+        this.categoryName = categoryName;
+    }
+
+    public static SpecCategory of(String newCategoryName) {
+        return new SpecCategory(newCategoryName);
+    }
 }
