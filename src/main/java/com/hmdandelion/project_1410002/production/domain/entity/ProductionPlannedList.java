@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
+import com.hmdandelion.project_1410002.product.domain.entity.Product;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public class ProductionPlannedList {
     @Column(name = "plan_list_code")
     private Long planListCode;
 
+    private Long planCode;
+
     @Column(name = "required_quantity")
     private String requiredQuantity;
 
@@ -27,15 +30,7 @@ public class ProductionPlannedList {
     private String plannedQuantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_code", nullable = false)
-    private ProductionPlan productionPlan;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "product_code", nullable = false)
-//    private Product product; <- product 엔티티 필요
-
-
-
-
+    @JoinColumn(name = "product_code", nullable = false)
+    private Product product;
 
 }

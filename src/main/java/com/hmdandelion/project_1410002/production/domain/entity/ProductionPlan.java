@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -40,11 +41,11 @@ public class ProductionPlan {
     @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt;
 
-    @OneToMany(mappedBy = "productionPlan")
-    private List<PlannedOrderList> plannedOrderList;
-
-    @OneToMany(mappedBy = "productionPlan")
-    private List<ProductionPlannedList> productionPlannedList;
+//    @OneToMany(mappedBy = "productionPlan")
+//    private List<PlannedOrderList> plannedOrderList;
+//
+//    @OneToMany(mappedBy = "productionPlan")
+//    private List<ProductionPlannedList> productionPlannedList;
 
     public ProductionPlan(LocalDateTime startAt, String description, LocalDateTime endAt) {
         this.startAt = startAt;

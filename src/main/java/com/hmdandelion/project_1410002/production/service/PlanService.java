@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
-import com.hmdandelion.project_1410002.production.domain.repository.ProductionRepository;
+import com.hmdandelion.project_1410002.production.domain.repository.ProductionPlanRepository;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,16 +17,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class PlanService {
 
-    private final ProductionRepository productionRepository;
+    private final ProductionPlanRepository productionRepository;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("planCode").descending());
     }
 
     public Page<PlanListResponse> getPlanList(Integer page) {
-        Page<ProductionPlan> products = productionRepository.findByStatusNot(getPageable(page));
-
-        return null;// products.map(PlanListResponse::from)
+        Pageable pageable = getPageable(page);
+        return productionRepository.findPlanDetails(pageable);
     }
 
     public Long save(final ProductionPlanCreateRequest productionPlanCreateRequest) {
