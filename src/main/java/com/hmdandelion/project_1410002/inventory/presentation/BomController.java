@@ -66,4 +66,13 @@ public class BomController {
         bomService.modifyBomByBomCode(bomCode,bomRequest);
         return ResponseEntity.created(URI.create("/api/v1/bom"+bomCode)).build();
     }
+
+    /*bomCode에 해당 하는 BOM삭제*/
+    @DeleteMapping("/bom/{bomCode}")
+    public ResponseEntity<Void> deleteByBomCode(
+            @PathVariable final Long bomCode
+    ){
+        bomService.deleteByBomCode(bomCode);
+        return ResponseEntity.noContent().build();
+    }
 }
