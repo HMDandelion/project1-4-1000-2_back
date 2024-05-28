@@ -2,11 +2,12 @@ package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.Category;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
-import com.hmdandelion.project_1410002.inventory.domian.repository.product.BomRepository;
-import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepository;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.BomRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.BomRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,8 +20,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BomService {
 
-    private final BomRepository bomRepository;
-    private final ProductRepository productRepository;
+    private final BomRepo bomRepository;
+    private final ProductRepo productRepository;
+
 
     @Transactional(readOnly = true)
     public List<Bom> getBoms() {
@@ -39,16 +41,19 @@ public class BomService {
         return bom;
     }
 
-/*    public Long saveBomByProductCode(Long productCode, BomRequest bomRequest) {
+    public Long saveBomByProductCode(Long productCode, BomRequest bomRequest) {
         Product product = productRepository.findById(productCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-        MaterialSpec materialSpec = new MaterialSpec();
+        MaterialSpec materialSpec = new MaterialSpec(1L,"G","3","G",null,3,"G");
+        System.out.println("양:"+bomRequest.getQuantity());
         Bom newBom = Bom.of(
           bomRequest.getQuantity(),
           bomRequest.getSequence(),
-          product
+          product,
+                materialSpec
         );
+        System.out.println("newBom = " + newBom);
         Bom bom =  bomRepository.save(newBom);
 
         return bom.getBomCode();
-    }*/
+    }
 }

@@ -46,12 +46,12 @@ public class BomController {
     }
 
     /*해당하는 상품의 BOM 추가*/
-//    @PostMapping("/bom/product/{productCode}")
-//    public ResponseEntity<Void> saveBomByProductCode(
-//            @PathVariable final Long productCode,
-//            @RequestBody final BomRequest bomRequest
-//    ){
-//        Long bomCode = bomService.saveBomByProductCode(productCode,bomRequest);
-//        return ResponseEntity.created(URI.create("/api/v1/bom/product"+productCode)).build();
-//    }
+    @PostMapping("/bom/product/{productCode}")
+    public ResponseEntity<Void> saveBomByProductCode(
+            @PathVariable final Long productCode,
+            @RequestBody final BomRequest bomRequest
+    ){
+        Long bomCode = bomService.saveBomByProductCode(productCode,bomRequest);
+        return ResponseEntity.created(URI.create("/api/v1/bom/product"+productCode)).build();
+    }
 }

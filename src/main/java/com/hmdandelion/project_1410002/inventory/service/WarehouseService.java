@@ -1,10 +1,9 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
-import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.common.exception.type.NotWarehouseException;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
-import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepository;
+import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.request.WarehouseCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.request.WarehouseUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.response.WarehouseResponse;
@@ -23,7 +22,7 @@ import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCod
 @Transactional
 public class WarehouseService {
 
-    private final WarehouseRepository warehouseRepository;
+    private final WarehouseRepo warehouseRepository;
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("warehouseCode"));
     }
