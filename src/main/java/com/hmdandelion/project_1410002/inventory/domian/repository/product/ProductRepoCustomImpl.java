@@ -11,10 +11,10 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
+public class ProductRepoCustomImpl implements ProductRepoCustom {
     private final JPAQueryFactory queryFactory;
 
-    public ProductRepositoryCustomImpl(JPAQueryFactory queryFactory) {
+    public ProductRepoCustomImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
     }
 

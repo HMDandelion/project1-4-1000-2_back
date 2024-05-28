@@ -3,15 +3,13 @@ package com.hmdandelion.project_1410002.inventory.service;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct;
-import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepository;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
 
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,7 +26,7 @@ import java.util.List;
 @Transactional
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepo productRepository;
     private final JPAQueryFactory queryFactory;
 
     private Pageable getPageable(final Integer page) {
