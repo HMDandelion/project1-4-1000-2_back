@@ -2,20 +2,21 @@ package com.hmdandelion.project_1410002.inventory.domian.repository.material;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialSpecDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 @RequiredArgsConstructor
-public class MaterialSpecCustomImpl implements MaterialSpecCustom{
+public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
 
-    private static final Logger log = LoggerFactory.getLogger(MaterialSpecCustomImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(MaterialSpecRepoCustomImpl.class);
     private final JPAQueryFactory queryFactory;
     @Override
     public List<MaterialSpec> searchMaterialSpec(final Pageable pageable, final String materialName) {
