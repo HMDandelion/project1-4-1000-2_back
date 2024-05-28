@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.product.domain.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.product.domain.entity.Product;
 import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
 import lombok.Getter;
@@ -15,6 +16,7 @@ public class ProductsResponse {
     private final LocalDateTime launchDate;
     private final Long price;
     private final String unit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private final LocalDateTime updated_at;
     private final ProductStatus status;
 
