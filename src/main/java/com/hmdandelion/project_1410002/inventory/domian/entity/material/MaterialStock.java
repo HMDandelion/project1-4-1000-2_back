@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -23,7 +24,9 @@ public class MaterialStock {
     @ManyToOne
     @JoinColumn(name = "spec_code")
     private MaterialSpec materialSpec;
-    private int warehouseCode;  //TODO 수정필
+    @ManyToOne
+    @JoinColumn(name = "warehouse_code")
+    private Warehouse warehouse;
     private int incomingQuantity;
     private int actualQuantity;
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")

@@ -1,20 +1,21 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
 import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObjectListRes;
+import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.inventory.dto.material.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialGraphRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialSpecRes;
+import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialTransactionsRes;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.inventory.service.MaterialStockService;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -56,6 +57,18 @@ public class MaterialStockController {
 
         return ResponseEntity.ok(res);
     }
-
+    //재고목록 조회
+    @GetMapping("/inventory")
+    public ResponseEntity<MaterialStockRes> searchMaterialStock(
+            @RequestParam(defaultValue = "1") final int page,
+            @RequestParam(required = false) final String materialName,
+            @RequestParam(required = false) final Long warehouseCode,
+            @RequestParam(required = false) final Long specCategoryCode
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        final List<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable,materialName,warehouseCode,specCategoryCode);
+        MaterialStockRes res = MaterialStockRes.of(list);
+        return ResponseEntity.ok(res);
+    }
 
 }

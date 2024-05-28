@@ -7,3 +7,20 @@ GET http://localhost:8001/api/v1/material/warehouses/2
 ### 스펙별 거래내역 조회
 GET http://localhost:8001/api/v1/material/transactions/5
 
+
+### 재고 조회(창고별)
+GET http://localhost:8001/api/v1/material/inventory?warehouseCode=2
+
+### 재고 검색(창고별)
+GET http://localhost:8001/api/v1/material/inventory?warehouseCode=2&materialName=19
+
+### 재고 조회(분류별)
+GET http://localhost:8001/api/v1/material/inventory?specCategoryCode=2
+
+### 재고 검색(분류별)
+GET http://localhost:8001/api/v1/material/inventory?specCategoryCode=2&materialName=17
+
+
+
+
+
