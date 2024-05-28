@@ -1,19 +1,15 @@
-package com.hmdandelion.project_1410002.product.presentation;
+package com.hmdandelion.project_1410002.inventory.presentation;
 
-import com.hmdandelion.project_1410002.common.paging.Pagenation;
-import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
-import com.hmdandelion.project_1410002.common.paging.PagingResponse;
-import com.hmdandelion.project_1410002.product.domain.dto.request.ProductRequest;
-import com.hmdandelion.project_1410002.product.domain.dto.response.ProductsResponse;
-import com.hmdandelion.project_1410002.product.domain.entity.Product;
-import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
-import com.hmdandelion.project_1410002.product.service.ProductService;
+
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
+import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequest;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
+import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;

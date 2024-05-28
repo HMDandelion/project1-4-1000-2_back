@@ -1,13 +1,14 @@
-package com.hmdandelion.project_1410002.product.domain.dto.response;
+package com.hmdandelion.project_1410002.inventory.dto.product.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hmdandelion.project_1410002.product.domain.entity.Product;
-import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
+
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+
 @Getter
 @RequiredArgsConstructor
 public class ProductsResponse {

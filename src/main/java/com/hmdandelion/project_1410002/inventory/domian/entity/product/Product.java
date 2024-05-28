@@ -1,18 +1,19 @@
-package com.hmdandelion.project_1410002.product.domain.entity;
+package com.hmdandelion.project_1410002.inventory.domian.entity.product;
 
-import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
+
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-import static com.hmdandelion.project_1410002.product.domain.type.ProductStatus.IN_PRODUCTION;
-import static com.hmdandelion.project_1410002.product.domain.type.ProductStatus.PRODUCTION_DISCONTINUED;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus.IN_PRODUCTION;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus.PRODUCTION_DISCONTINUED;
+
 
 @Entity
 @Table(name="tbl_product")
