@@ -57,12 +57,5 @@ public class MaterialStockController {
         return ResponseEntity.ok(res);
     }
 
-    //모든 스펙 조회
-    @GetMapping("/spec")
-    public ResponseEntity<MaterialSpecRes> findAllSpec(
 
-    ) {
-        MaterialSpecRes res = MaterialSpecRes.from(materialSpecService.findAll());
-        return null;
-    }
 }
