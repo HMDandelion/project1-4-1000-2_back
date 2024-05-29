@@ -73,4 +73,9 @@ public class MaterialStockService {
         }
         return materialStockRepo.save(MaterialStock.from(request, warehouse, spec)).getStockCode();
     }
+
+    @Transactional
+    public void delete(Long stockCode) {
+        materialStockRepo.deleteById(stockCode);
+    }
 }

@@ -74,6 +74,7 @@ public class MaterialStockController {
         MaterialStockRes res = MaterialStockRes.from(list);
         return ResponseEntity.ok(res);
     }
+
     //재고 상세 조회
     @GetMapping("/inventory/{stockCode}")
     public ResponseEntity<MaterialStockRes> findByIdForDetail(
@@ -84,7 +85,7 @@ public class MaterialStockController {
         return ResponseEntity.ok(res);
     }
 
-    //재고 등록/삭제
+    //재고 등록/수정
     @PostMapping("/inventory")
     public ResponseEntity<Void> saveStock(
             @RequestBody final SaveMaterialStockRequest request
@@ -92,5 +93,14 @@ public class MaterialStockController {
         final Long stockCode = materialStockService.save(request);
 
         return ResponseEntity.created(URI.create("/api/v1/material/inventory/" + stockCode)).build();
+    }
+    //재고 삭제
+    @DeleteMapping("/inventory/{stockCode}")
+    public ResponseEntity<Void> deleteStock(
+        @PathVariable final Long stockCode
+    ) {
+        materialStockService.delete(stockCode);
+
+        return ResponseEntity.noContent().build();
     }
 }
