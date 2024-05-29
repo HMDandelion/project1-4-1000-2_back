@@ -23,7 +23,7 @@ public class ProductionPlanController {
 
     /* 내가 설정한 시작날짜 종료날짜에 대한 생산 계획 조회 start */
     @GetMapping("/production/work-order")
-    public ResponseEntity<PagingResponse> getPlanList(
+    public ResponseEntity<PagingResponse> getPlanList (
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final String dt,
             @RequestParam(defaultValue = "1") final Integer page)
     {
