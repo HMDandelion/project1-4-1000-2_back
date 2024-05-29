@@ -7,6 +7,7 @@ import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequ
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
 import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +24,14 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/product")
-    public ResponseEntity<List<Product>> getProducts(
+    public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final String productName,
             @RequestParam(required = false) final String unit,
             @RequestParam(required = false) final ProductStatus status
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        List<Product> products = productService.searchProducts(pageable, productName, unit, status);
+        Page<Product> products = productService.searchProducts(pageable, productName, unit, status);
         return ResponseEntity.ok(products);
     }
 

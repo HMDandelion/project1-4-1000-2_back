@@ -72,7 +72,7 @@ public class ProductService {
         product.updateStatus(product);
     }
 
-    public List<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status) {
+    public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status) {
         return productRepository.searchProducts(pageable, productName, unit, status);
     }
 
