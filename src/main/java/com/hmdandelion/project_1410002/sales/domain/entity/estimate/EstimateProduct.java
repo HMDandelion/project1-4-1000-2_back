@@ -27,7 +27,6 @@ public class EstimateProduct {
         this.estimate = newEstimate;
     }
 
-
     public static EstimateProduct of(Integer quantity, Integer price, Long productCode, Estimate newEstimate) {
         return new EstimateProduct(
                 quantity,
@@ -35,5 +34,15 @@ public class EstimateProduct {
                 productCode,
                 newEstimate
         );
+    }
+
+    public void modify(Integer quantity, Integer price, Long productCode) {
+        this.quantity = quantity;
+        this.price = price;
+        this.productCode = productCode;
+    }
+
+    public void disconnect() {
+        this.estimate = null;
     }
 }
