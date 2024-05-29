@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.inventory.domian.repository.material;
+package com.hmdandelion.project_1410002.inventory.domian.repository.material.Stock;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import org.springframework.data.domain.Pageable;

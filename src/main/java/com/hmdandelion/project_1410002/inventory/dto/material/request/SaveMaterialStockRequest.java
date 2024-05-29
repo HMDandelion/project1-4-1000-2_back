@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public class SaveMaterialStockRequest {
+
     private final Long stockCode;
     private final String division;
     private final Long specCode;

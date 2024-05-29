@@ -3,9 +3,9 @@ package com.hmdandelion.project_1410002.inventory.service;
 import com.hmdandelion.project_1410002.common.exception.BedRequestException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCategory;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialSpecRepo;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCategory;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
@@ -41,7 +41,7 @@ public class MaterialSpecService {
                 request.getRemarks(),
                 request.getUnit(),
                 foundCategory,
-                request.getSafetyQuantity(),
+                request.getSafetyStock(),
                 request.getSpecification()
         );
         return materialSpecRepo.save(spec).getSpecCode();
@@ -60,13 +60,14 @@ public class MaterialSpecService {
         return affectRows + "의 콘텐츠가 삭제되었습니다.";
     }
 
+    @Transactional
     public Long modifySpec(MaterialSpecModifyRequest request) {
         MaterialSpec targetSpec = materialSpecRepo.findBySpecCode(request.getSpecCode());
         SpecCategory category = materialSpecCategoryService.findById(request.getCategoryCode());
         if (category == null) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE);
         }
-        targetSpec.modifyFrom(request,category);
+        targetSpec.modifyFrom(request, category);
 
         return targetSpec.getSpecCode();
     }

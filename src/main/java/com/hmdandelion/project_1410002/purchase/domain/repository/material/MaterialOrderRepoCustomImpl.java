@@ -40,7 +40,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
         List<MaterialOrder> orders = queryFactory
                 .selectFrom(materialOrder)
                 .where(materialOrder.orderCode.in(orderCodesWithSpec)
-                               .and(materialOrder.orderDate.between(startDate,endDate)))
+                                              .and(materialOrder.orderDate.between(startDate, endDate)))
                 .fetch();
 
         // 조회한 주문의 오더-스펙을 조회

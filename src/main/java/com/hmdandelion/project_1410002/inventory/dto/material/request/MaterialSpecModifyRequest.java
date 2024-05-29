@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class MaterialSpecModifyRequest {
+
     private final Long specCode;
     private final String materialName;
     private final Long categoryCode;

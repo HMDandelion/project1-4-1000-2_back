@@ -1,7 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
-import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.common.exception.type.NotWarehouseException;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepository;
@@ -24,6 +23,7 @@ import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCod
 public class WarehouseService {
 
     private final WarehouseRepository warehouseRepository;
+
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("warehouseCode"));
     }
@@ -47,7 +47,7 @@ public class WarehouseService {
 
     public Warehouse getWarehouse(Long warehouseCode) {
         Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
-            new NotWarehouseException(NO_WAREHOUSE)
+                                                                                              new NotWarehouseException(NO_WAREHOUSE)
         );
 
         return warehouse;
@@ -65,7 +65,8 @@ public class WarehouseService {
     }
 
     public void delete(Long warehouseCode) {
-        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() -> new CustomException(NO_WAREHOUSE));
+        Warehouse warehouse = warehouseRepository.findById(warehouseCode)
+                                                 .orElseThrow(() -> new CustomException(NO_WAREHOUSE));
         warehouseRepository.delete(warehouse);
     }
 }

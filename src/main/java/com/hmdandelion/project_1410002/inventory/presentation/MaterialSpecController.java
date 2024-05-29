@@ -4,8 +4,8 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
-import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecCreateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecCategoryService;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +38,12 @@ public class MaterialSpecController {
             @RequestParam(required = false) final String materialName
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
+
         final List<MaterialSpecDTO> list = materialSpecService.searchMaterialSpec(pageable, materialName);
         for (MaterialSpecDTO dto : list) {
             log.info("조회된 객체...{}", dto.getMaterialName());
         }
+
         final Page<MaterialSpecDTO> toPage = new PageImpl<>(list, pageable, list.size());
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
         PagingResponse res = PagingResponse.of(toPage.getContent(), pagingButtonInfo);

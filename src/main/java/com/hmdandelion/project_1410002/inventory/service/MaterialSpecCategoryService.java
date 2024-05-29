@@ -3,7 +3,7 @@ package com.hmdandelion.project_1410002.inventory.service;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCategory;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialSpecCategoryRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecCategoryRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class MaterialSpecCategoryService {
+
     private final MaterialSpecCategoryRepo materialSpecCategoryRepo;
 
     public void save(String newCategoryName) {
@@ -19,7 +20,8 @@ public class MaterialSpecCategoryService {
     }
 
     public SpecCategory findById(final long categoryCode) {
-        return materialSpecCategoryRepo.findById(categoryCode).orElseThrow(()-> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
+        return materialSpecCategoryRepo.findById(categoryCode)
+                                       .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CATEGORY_CODE));
     }
 
     @Transactional

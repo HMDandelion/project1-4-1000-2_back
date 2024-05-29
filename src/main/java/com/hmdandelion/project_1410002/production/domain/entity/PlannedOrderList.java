@@ -22,8 +22,8 @@ public class PlannedOrderList {
     @JoinColumn(name = "plan_code", nullable = false)
     private ProductionPlan productionPlan;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "order_code", nullable = false)
-//    private Order orderCode; <- order 엔티티 필요
+    //    @ManyToOne(fetch = FetchType.LAZY)
+    //    @JoinColumn(name = "order_code", nullable = false)
+    //    private Order orderCode; <- order 엔티티 필요
 
 }

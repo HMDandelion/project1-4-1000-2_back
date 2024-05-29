@@ -12,9 +12,10 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_material_usage")
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.private)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialUsage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usageCode;

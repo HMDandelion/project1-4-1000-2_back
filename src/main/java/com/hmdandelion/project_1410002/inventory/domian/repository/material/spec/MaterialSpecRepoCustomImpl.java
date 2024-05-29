@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.inventory.domian.repository.material;
+package com.hmdandelion.project_1410002.inventory.domian.repository.material.spec;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;

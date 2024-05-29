@@ -36,7 +36,7 @@ public class PlanService {
         LocalDate startAt = LocalDate.parse(dt + "-01");
         LocalDate endAt = startAt.with(TemporalAdjusters.lastDayOfMonth());
 
-        Page<PlanListResponse> planList = productionRepository.findPlanDetails(getPageable(page), startAt ,endAt);
+        Page<PlanListResponse> planList = productionRepository.findPlanDetails(getPageable(page), startAt, endAt);
 
         return planList;
     }
@@ -68,7 +68,7 @@ public class PlanService {
 
     public void planModify(Long planCode, ProductionPlanUpdateRequest productionPlanUpdateRequest) {
         ProductionPlan productionPlan = productionRepository.findByPlanCode(planCode)
-                .orElseThrow(() -> new RuntimeException());
+                                                            .orElseThrow(() -> new RuntimeException());
 
         productionPlan.planModify(
                 productionPlanUpdateRequest.getStartAt(),

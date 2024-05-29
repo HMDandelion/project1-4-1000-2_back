@@ -15,11 +15,13 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Table(name = "tbl_material_stock")
-@Entity @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.private)
+@AllArgsConstructor(access = AccessLevel.private)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialStock {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stockCode;

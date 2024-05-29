@@ -1,6 +1,8 @@
 package com.hmdandelion.project_1410002.inventory.dto.material.request;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Getter
 @ToString

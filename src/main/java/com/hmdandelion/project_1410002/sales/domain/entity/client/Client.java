@@ -16,6 +16,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @SQLDelete(sql = "UPDATE tbl_client SET status = 'DELETED' WHERE client_code = ?")
 public class Client {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long clientCode;
@@ -32,8 +33,7 @@ public class Client {
 
     public Client(
             String clientName, String address, String addressDetail, String postcode,
-            String representativeName, String phone, ClientType clientType)
-    {
+            String representativeName, String phone, ClientType clientType) {
         this.clientName = clientName;
         this.address = address;
         this.addressDetail = addressDetail;
@@ -45,8 +45,7 @@ public class Client {
 
     public static Client of(
             String clientName, String address, String addressDetail, String postcode,
-            String representativeName, String phone, ClientType clientType)
-    {
+            String representativeName, String phone, ClientType clientType) {
         return new Client(
                 clientName,
                 address,
@@ -60,8 +59,7 @@ public class Client {
 
     public void modify(
             String clientName, String address, String addressDetail, String postcode,
-            String representativeName, String phone)
-    {
+            String representativeName, String phone) {
         this.clientName = clientName;
         this.address = address;
         this.addressDetail = addressDetail;

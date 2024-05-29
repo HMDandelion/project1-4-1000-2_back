@@ -2,13 +2,15 @@ package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "tbl_material_specification")
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor(access = AccessLevel.private)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialSpec {
 
@@ -33,13 +35,13 @@ public class MaterialSpec {
         this.specification = specification;
     }
 
-    public static MaterialSpec of( String materialName, String remarks, String unit, SpecCategory foundCategory, Integer safetyQuantity, String specification) {
+    public static MaterialSpec of(String materialName, String remarks, String unit, SpecCategory foundCategory, Integer safetyStock, String specification) {
         return new MaterialSpec(
                 materialName,
                 remarks,
                 unit,
                 foundCategory,
-                safetyQuantity,
+                safetyStock,
                 specification
         );
     }

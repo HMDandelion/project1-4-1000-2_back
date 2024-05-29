@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class ClientOrderDTO {
+
     private final Long orderCode;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime orderDatetime;

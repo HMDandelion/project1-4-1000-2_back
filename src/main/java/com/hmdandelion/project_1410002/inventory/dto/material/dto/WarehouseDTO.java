@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class WarehouseDTO {
+
     private final String warehouseName;
     private final String location;
     private final long volume;
