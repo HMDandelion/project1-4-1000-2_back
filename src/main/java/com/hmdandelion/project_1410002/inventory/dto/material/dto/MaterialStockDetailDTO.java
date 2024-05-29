@@ -3,7 +3,6 @@ package com.hmdandelion.project_1410002.inventory.dto.material.dto;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
-import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import lombok.Getter;
 
 import java.time.format.DateTimeFormatter;

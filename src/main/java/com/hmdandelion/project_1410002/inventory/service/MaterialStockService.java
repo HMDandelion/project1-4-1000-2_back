@@ -64,7 +64,13 @@ public class MaterialStockService {
     @Transactional
     public Long save(SaveMaterialStockRequest request) {
         Warehouse warehouse = warehouseService.getWarehouse(request.getWarehouseCode());
+        if (warehouse == null) {
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE);
+        }
         MaterialSpec spec = materialSpecRepo.findBySpecCode(request.getSpecCode());
+        if (spec == null) {
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_SPEC_CODE);
+        }
         return materialStockRepo.save(MaterialStock.from(request, warehouse, spec)).getStockCode();
     }
 }
