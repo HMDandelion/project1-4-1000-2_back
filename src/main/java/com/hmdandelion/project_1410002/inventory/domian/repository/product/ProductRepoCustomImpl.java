@@ -15,7 +15,9 @@ import java.util.List;
 
 @Repository
 public class ProductRepoCustomImpl implements ProductRepoCustom {
+
     private final JPAQueryFactory queryFactory;
+
 
     public ProductRepoCustomImpl(JPAQueryFactory queryFactory) {
         this.queryFactory = queryFactory;
