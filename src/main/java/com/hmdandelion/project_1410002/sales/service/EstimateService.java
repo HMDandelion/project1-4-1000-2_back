@@ -79,6 +79,25 @@ public class EstimateService {
     }
 
     public void modify(Long estimateCode, EstimateUpdateRequest estimateRequest) {
+        Estimate estimate = estimateRepo.findByEstimateCodeAndStatusNot(estimateCode, EstimateStatus.DELETED)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ESTIMATE_CODE));
+
+        estimate.getEstimateProducts().clear();
+
+        List<EstimateProduct> products = estimateRequest.getProducts().stream()
+                .map(productRequest -> {
+                    return EstimateProduct.of(
+                            productRequest.getQuantity(),
+                            productRequest.getPrice(),
+                            productRequest.getProductCode(),
+                            estimate
+                    );
+                }).toList();
+
+        estimate.modify(
+                estimateRequest.getDeadline(),
+                products
+        );
     }
 
     public void remove(Long estimateCode) {

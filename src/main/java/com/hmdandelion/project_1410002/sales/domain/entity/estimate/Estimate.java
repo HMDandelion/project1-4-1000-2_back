@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.sales.domain.entity.estimate;
 
 import com.hmdandelion.project_1410002.sales.domain.type.EstimateStatus;
+import com.hmdandelion.project_1410002.sales.dto.request.EstimateProductRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -49,7 +50,13 @@ public class Estimate {
         );
     }
 
+    public void modify(LocalDate deadline, List<EstimateProduct> products) {
+        this.deadline = deadline;
+        this.estimateProducts.addAll(products);
+    }
+
     public void modifyProducts(List<EstimateProduct> products) {
         this.estimateProducts = products;
     }
+
 }
