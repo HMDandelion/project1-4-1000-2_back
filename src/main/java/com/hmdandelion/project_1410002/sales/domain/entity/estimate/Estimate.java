@@ -1,6 +1,6 @@
 package com.hmdandelion.project_1410002.sales.domain.entity.estimate;
 
-import com.hmdandelion.project_1410002.sales.model.EstimateStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.EstimateStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

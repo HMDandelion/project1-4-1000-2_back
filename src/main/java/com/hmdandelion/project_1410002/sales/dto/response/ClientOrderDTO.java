@@ -1,14 +1,12 @@
 package com.hmdandelion.project_1410002.sales.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
-import com.hmdandelion.project_1410002.sales.model.OrderStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor

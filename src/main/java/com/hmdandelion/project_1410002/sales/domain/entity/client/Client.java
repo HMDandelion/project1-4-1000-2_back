@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.sales.domain.entity.client;
 
-import com.hmdandelion.project_1410002.sales.model.ClientStatus;
-import com.hmdandelion.project_1410002.sales.model.ClientType;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

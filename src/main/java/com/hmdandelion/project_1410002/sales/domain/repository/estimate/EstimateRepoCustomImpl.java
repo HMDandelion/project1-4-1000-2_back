@@ -1,8 +1,7 @@
 package com.hmdandelion.project_1410002.sales.domain.repository.estimate;
 
 import com.hmdandelion.project_1410002.sales.dto.response.EstimatesResponse;
-import com.hmdandelion.project_1410002.sales.model.ClientStatus;
-import com.hmdandelion.project_1410002.sales.model.EstimateStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.EstimateStatus;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;

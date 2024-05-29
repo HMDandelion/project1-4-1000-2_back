@@ -2,8 +2,8 @@ package com.hmdandelion.project_1410002.sales.domain.repository.client;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
-import com.hmdandelion.project_1410002.sales.model.ClientStatus;
-import com.hmdandelion.project_1410002.sales.model.OrderStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
