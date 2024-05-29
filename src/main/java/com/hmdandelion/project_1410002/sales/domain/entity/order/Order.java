@@ -1,6 +1,6 @@
 package com.hmdandelion.project_1410002.sales.domain.entity.order;
 
-import com.hmdandelion.project_1410002.sales.model.OrderStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

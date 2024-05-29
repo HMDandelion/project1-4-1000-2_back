@@ -7,13 +7,12 @@ import com.hmdandelion.project_1410002.sales.dto.request.ClientUpdateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
-import com.hmdandelion.project_1410002.sales.model.ClientStatus;
-import com.hmdandelion.project_1410002.sales.model.ClientType;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
