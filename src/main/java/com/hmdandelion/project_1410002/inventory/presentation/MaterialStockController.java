@@ -1,10 +1,10 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
 import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObjectListRes;
-import com.hmdandelion.project_1410002.common.paging.Pagination;
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialStockSimpleDTO;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialStockRepo;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockDetailDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialGraphRes;
-import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialSpecRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialTransactionsRes;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
@@ -25,6 +25,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/material")
 @RequiredArgsConstructor
 public class MaterialStockController {
+
     private final MaterialStockService materialStockService;
     private final MaterialOrderService materialOrderService;
     private final MaterialSpecService materialSpecService;
@@ -57,6 +58,7 @@ public class MaterialStockController {
 
         return ResponseEntity.ok(res);
     }
+
     //재고목록 조회
     @GetMapping("/inventory")
     public ResponseEntity<MaterialStockRes> searchMaterialStock(
@@ -66,9 +68,17 @@ public class MaterialStockController {
             @RequestParam(required = false) final Long specCategoryCode
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        final List<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable,materialName,warehouseCode,specCategoryCode);
-        MaterialStockRes res = MaterialStockRes.of(list);
+        final List<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+        MaterialStockRes res = MaterialStockRes.from(list);
         return ResponseEntity.ok(res);
     }
 
+    @GetMapping("/inventory/{stockCode}")
+    public ResponseEntity<MaterialStockRes> findByIdForDetail(
+            @PathVariable final Long stockCode
+    ) {
+        MaterialStockDetailDTO found = materialStockService.findById(stockCode);
+        MaterialStockRes res = MaterialStockRes.from(found);
+        return ResponseEntity.ok(res);
+    }
 }

@@ -1,8 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
-import com.hmdandelion.project_1410002.common.exception.BedRequestException;
-import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialSpecRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialSpecRes;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecCategoryService;

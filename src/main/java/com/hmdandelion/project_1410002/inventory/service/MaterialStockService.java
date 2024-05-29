@@ -2,8 +2,9 @@ package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialStockRepo;
-import com.hmdandelion.project_1410002.inventory.dto.material.CombinedStockBySpecDTO;
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialStockSimpleDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.CombinedStockBySpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockDetailDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,5 +38,9 @@ public class MaterialStockService {
 
     public List<MaterialStockSimpleDTO> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
         return materialStockRepo.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+    }
+
+    public MaterialStockDetailDTO findById(Long stockCode) {
+        return materialStockRepo.getStockByCode(stockCode);
     }
 }

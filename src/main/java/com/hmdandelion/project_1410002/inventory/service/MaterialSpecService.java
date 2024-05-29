@@ -5,7 +5,7 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCategory;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialSpecRepo;
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialSpecRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

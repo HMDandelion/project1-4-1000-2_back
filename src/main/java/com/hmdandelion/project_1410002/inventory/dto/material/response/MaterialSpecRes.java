@@ -1,6 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.dto.material.response;
 
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

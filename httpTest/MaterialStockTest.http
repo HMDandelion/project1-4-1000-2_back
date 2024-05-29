@@ -20,7 +20,8 @@ GET http://localhost:8001/api/v1/material/inventory?specCategoryCode=2
 ### 재고 검색(분류별)
 GET http://localhost:8001/api/v1/material/inventory?specCategoryCode=2&materialName=17
 
-
+### 재고 상세조회
+GET http://localhost:8001/api/v1/material/inventory/20
 
 
 

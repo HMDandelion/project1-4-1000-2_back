@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.dto.material.response;
 
 import com.hmdandelion.project_1410002.common.model.material.MaterialGraphModel;
-import com.hmdandelion.project_1410002.inventory.dto.material.CombinedStockBySpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.CombinedStockBySpecDTO;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

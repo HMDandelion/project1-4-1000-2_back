@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.inventory.dto.material;
+package com.hmdandelion.project_1410002.inventory.dto.material.dto;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import lombok.*;
