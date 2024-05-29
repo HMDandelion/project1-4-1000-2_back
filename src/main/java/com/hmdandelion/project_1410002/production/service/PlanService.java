@@ -1,9 +1,8 @@
 package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
-import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
-import com.hmdandelion.project_1410002.production.domain.repository.ProductionPlanRepository;
+import com.hmdandelion.project_1410002.production.domain.repository.ProductionPlanRepo;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.TemporalAdjusters;
 
 import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.ALREADY_EXIST_PRODUCTION_PLAN;
@@ -26,7 +24,7 @@ import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCod
 @Transactional
 public class PlanService {
 
-    private final ProductionPlanRepository productionRepository;
+    private final ProductionPlanRepo productionRepository;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("planCode").descending());

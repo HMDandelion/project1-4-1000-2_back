@@ -10,16 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 
-public interface ProductionPlanRepository extends JpaRepository <ProductionPlan, Long> {
+public interface ProductionPlanRepo extends JpaRepository <ProductionPlan, Long> {
 
-    @Query("SELECT new com.hmdandelion.project_1410002.production.dto.response.PlanListResponse(p, ppp, pp) " +
+    @Query("SELECT new com.hmdandelion.project_1410002.production.dto.response.PlanListResponse(ppl, p, pp) " +
             "FROM ProductionPlan pp " +
-            "LEFT JOIN ProductionPlannedList p ON pp.planCode = p.planCode " +
-            "LEFT JOIN Product ppp ON ppp.productCode = p.product.productCode " +
+            "LEFT JOIN ProductionPlannedList ppl ON pp.planCode = ppl.planCode " +
+            "LEFT JOIN Product p ON p.productCode = ppl.product.productCode " +
             "WHERE pp.startAt <= :endAt AND pp.endAt >= :startAt " +
             "ORDER BY (pp.endAt - CURRENT_TIMESTAMP)")
     Page<PlanListResponse> findPlanDetails(Pageable pageable, @Param("startAt") LocalDate startAt, @Param("endAt") LocalDate endAt);

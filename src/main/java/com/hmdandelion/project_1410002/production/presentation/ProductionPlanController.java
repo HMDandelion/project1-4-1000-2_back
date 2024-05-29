@@ -1,8 +1,8 @@
 package com.hmdandelion.project_1410002.production.presentation;
 
-import com.hmdandelion.project_1410002.production.common.paging.Pagination;
-import com.hmdandelion.project_1410002.production.common.paging.PagingButtonInfo;
-import com.hmdandelion.project_1410002.production.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.common.paging.Pagination;
+import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
+import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
@@ -13,12 +13,11 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
-import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class planController {
+public class ProductionPlanController {
 
     private final PlanService planService;
 

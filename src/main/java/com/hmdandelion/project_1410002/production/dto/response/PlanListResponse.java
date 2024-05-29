@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.production.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hmdandelion.project_1410002.product.domain.entity.Product;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlannedList;
 import lombok.AccessLevel;

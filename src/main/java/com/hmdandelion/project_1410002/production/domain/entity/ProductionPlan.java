@@ -37,7 +37,7 @@ public class ProductionPlan {
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "end_at", nullable = false)
     private LocalDate endAt;
