@@ -1,13 +1,14 @@
 package com.hmdandelion.project_1410002.sales.dto.response;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @Getter
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SalesClientResponse {
     private final Long clientCode;
     private final String clientName;
