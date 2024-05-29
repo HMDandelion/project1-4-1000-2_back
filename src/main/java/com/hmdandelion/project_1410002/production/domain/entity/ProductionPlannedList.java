@@ -21,6 +21,11 @@ public class ProductionPlannedList {
     @Column(name = "plan_list_code")
     private Long planListCode;
 
+
+    @Column(name = "product_code")
+    private Long productCode;
+
+    @Column(name = "plan_code")
     private Long planCode;
 
     @Column(name = "required_quantity")
@@ -29,8 +34,17 @@ public class ProductionPlannedList {
     @Column(name = "planned_quantity")
     private String plannedQuantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_code", nullable = false)
-    private Product product;
+    @Column(name = "description")
+    private String description;
 
+    public ProductionPlannedList(Long productCode, String plannedQuantity, String description, String requiredQuantity) {
+        this.productCode = productCode;
+        this.requiredQuantity = requiredQuantity;
+        this.plannedQuantity = plannedQuantity;
+        this.description = description;
+    }
+
+    public static ProductionPlannedList of(Long productCode, String plannedQuantity, String description, String requiredQuantity) {
+        return new ProductionPlannedList(productCode, plannedQuantity, description, requiredQuantity);
+    }
 }

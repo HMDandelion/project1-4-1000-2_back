@@ -17,8 +17,9 @@ public interface ProductionPlanRepo extends JpaRepository <ProductionPlan, Long>
 
     @Query("SELECT new com.hmdandelion.project_1410002.production.dto.response.PlanListResponse(ppl, p, pp) " +
             "FROM ProductionPlan pp " +
-            "LEFT JOIN ProductionPlannedList ppl ON pp.planCode = ppl.planCode " +
-            "LEFT JOIN Product p ON p.productCode = ppl.product.productCode " +
+            "LEFT JOIN ProductionPlannedList ppl ON pp.planCode = ppl.planCode" +
+            " " +
+            "LEFT JOIN Product p ON p.productCode = ppl.productCode " +
             "WHERE pp.startAt <= :endAt AND pp.endAt >= :startAt " +
             "ORDER BY (pp.endAt - CURRENT_TIMESTAMP)")
     Page<PlanListResponse> findPlanDetails(Pageable pageable, @Param("startAt") LocalDate startAt, @Param("endAt") LocalDate endAt);

@@ -38,7 +38,7 @@ public class ProductionPlanController {
 
     /* 생산 계획 등록 start */
     @PostMapping("/production/planning")
-    public ResponseEntity<Void> planSave(
+    public ResponseEntity<Void> planSave (
             @RequestBody final ProductionPlanCreateRequest productionPlanCreateRequest)
       {
             final Long planCode = planService.planSave(productionPlanCreateRequest);
@@ -51,14 +51,14 @@ public class ProductionPlanController {
     /* 생산 계획 등록 end */
 
     /* 생산 계획 수정 start */
-    @PutMapping("/production/planning/{planCode}")
+    @PutMapping("/production/work-order/{planCode}")
     public ResponseEntity<Void> planModify(
             @PathVariable final Long planCode,
             @RequestBody final ProductionPlanUpdateRequest productionPlanUpdateRequest)
     {
         planService.planModify(planCode, productionPlanUpdateRequest);
 
-        return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
+        return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + planCode)).build();
     }
     /* 생산 계획 수정 end */
 

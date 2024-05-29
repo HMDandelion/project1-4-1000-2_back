@@ -11,6 +11,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ProductionPlanUpdateRequest {
 
+    private final String plannedQuantity;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate startAt;
 
