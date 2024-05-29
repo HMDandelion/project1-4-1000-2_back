@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialStockRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -38,4 +39,8 @@ public class MaterialStock {
     private LocalDateTime modificationDatetime;
     private String modificationReason;
     private int orderCode; //TODO 수정필
+
+    public static MaterialStock from(SaveMaterialStockRequest request) {
+        return null;//TODO 반환값 null
+    }
 }

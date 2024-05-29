@@ -4,6 +4,7 @@ import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObje
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockDetailDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialStockRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialGraphRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockRes;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialTransactionsRes;
@@ -17,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +74,7 @@ public class MaterialStockController {
         MaterialStockRes res = MaterialStockRes.from(list);
         return ResponseEntity.ok(res);
     }
-
+    //재고 상세 조회
     @GetMapping("/inventory/{stockCode}")
     public ResponseEntity<MaterialStockRes> findByIdForDetail(
             @PathVariable final Long stockCode
@@ -80,5 +82,15 @@ public class MaterialStockController {
         MaterialStockDetailDTO found = materialStockService.findById(stockCode);
         MaterialStockRes res = MaterialStockRes.from(found);
         return ResponseEntity.ok(res);
+    }
+
+    //재고 등록/삭제
+    @PostMapping("/inventory")
+    public ResponseEntity<Void> saveStock(
+            @RequestBody final SaveMaterialStockRequest request
+    ) {
+        final Long stockCode = materialStockService.save(request);
+
+        return ResponseEntity.created(URI.create("/api/v1/material/inventory/" + stockCode)).build();
     }
 }

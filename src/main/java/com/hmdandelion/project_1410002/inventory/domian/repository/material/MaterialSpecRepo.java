@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MaterialSpecRepo extends JpaRepository<MaterialSpec,Long>, MaterialSpecRepoCustom {
 
+    MaterialSpec findBySpecCode(Long specCode);
 }
