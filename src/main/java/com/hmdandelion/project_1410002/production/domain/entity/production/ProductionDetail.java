@@ -1,10 +1,12 @@
 package com.hmdandelion.project_1410002.production.domain.entity.production;
 
+import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -12,6 +14,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Table(name = "tbl_production_detail")
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ProductionDetail {
 
@@ -20,25 +23,20 @@ public class ProductionDetail {
     @Column(name = "production_detail_code")
     private Long productionDetailCode;
 
-    @Column(name = "work_order_code")
-    private Integer workOrderCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "work_order_code")
+    private WorkOrder workOrder;
 
-    /*@ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_code")
-    private Order order; */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "production_status_code", insertable = false, updatable = false)
+    private ProductionManagement productionManagement;
 
-    @Column(name = "production_status_code")
-    private Long productionStatusCode;
-
-    @Column(name = "employee_code")
-    private Integer employeeCode;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @Column(name = "inspection_date")
-    private LocalDate inspectionDate;
+    private LocalDateTime inspectionDate;
 
-    @Column(name = "memo")
-    private String memo;
+    private int productionQuantity;
 
     @Column(name = "defect_quantity")
     private Integer defectQuantity;
@@ -46,14 +44,7 @@ public class ProductionDetail {
     @Column(name = "completely_quantity")
     private Integer completelyQuantity;
 
-    @Column(name = "defect_reason")
-    private String defectReason;
+    @Column(name = "memo")
+    private String productionMemo;
 
-    @Column(name = "defect_status")
-    private String defectStatus;
-
-    @Column(name = "attachment_file")
-    private String attachmentFile;
-
-    // Constructors, getters, and setters
 }

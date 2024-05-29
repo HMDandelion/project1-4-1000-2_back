@@ -10,8 +10,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-import static com.hmdandelion.project_1410002.Product.domian.type.ProductStatus.IN_PRODUCTION;
 import static com.hmdandelion.project_1410002.Product.domian.type.ProductStatus.PRODUCTION_DISCONTINUED;
+
 
 @Entity
 @Table(name="tbl_product")
@@ -19,6 +19,7 @@ import static com.hmdandelion.project_1410002.Product.domian.type.ProductStatus.
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Product {
+    private static final ProductStatus IN_PRODUCTION = null;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productCode;
