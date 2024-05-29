@@ -1,21 +1,25 @@
-package com.hmdandelion.project_1410002.product.domain.dto.response;
+package com.hmdandelion.project_1410002.inventory.dto.product.response;
 
-import com.hmdandelion.project_1410002.product.domain.entity.Product;
-import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDateTime;
+
 @Getter
 @RequiredArgsConstructor
 public class ProductsResponse {
     private final Long productCode;
     private final String productName;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private final LocalDateTime launchDate;
     private final Long price;
     private final String unit;
-    private final LocalDateTime updated_at;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
+    private final LocalDateTime updatedAt;
     private final ProductStatus status;
 
     public static ProductsResponse from(Product product) {
@@ -25,7 +29,7 @@ public class ProductsResponse {
                 product.getLaunchDate(),
                 product.getPrice(),
                 product.getUnit(),
-                product.getUpdated_at(),
+                product.getUpdatedAt(),
                 product.getStatus()
                 );
     }

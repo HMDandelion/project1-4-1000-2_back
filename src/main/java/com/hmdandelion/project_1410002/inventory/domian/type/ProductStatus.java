@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.product.domain.type;
+package com.hmdandelion.project_1410002.inventory.domian.type;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;

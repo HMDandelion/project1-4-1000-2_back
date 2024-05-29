@@ -1,14 +1,15 @@
-package com.hmdandelion.project_1410002.product.service;
+package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.product.domain.dto.request.ProductRequest;
-import com.hmdandelion.project_1410002.product.domain.dto.response.ProductsResponse;
-import com.hmdandelion.project_1410002.product.domain.entity.Product;
-import com.hmdandelion.project_1410002.product.domain.entity.QProduct;
-import com.hmdandelion.project_1410002.product.domain.repository.ProductRepository;
-import com.hmdandelion.project_1410002.product.domain.type.ProductStatus;
-import com.querydsl.core.BooleanBuilder;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
+
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
+import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequest;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
+
+
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,7 +26,7 @@ import java.util.List;
 @Transactional
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductRepo productRepository;
     private final JPAQueryFactory queryFactory;
 
     private Pageable getPageable(final Integer page) {
@@ -71,31 +72,8 @@ public class ProductService {
         product.updateStatus(product);
     }
 
-    public List<Product> searchProducts(Pageable pageable,String productName, String unit,ProductStatus status) {
-
-        QProduct product = QProduct.product;
-        BooleanBuilder builder = new BooleanBuilder();
-
-        if (productName != null) {
-            builder.and(product.productName.contains(productName));
-        }
-        if (unit != null) {
-            builder.and(product.unit.eq(unit));
-        }
-        if (status != null) {
-            if (status == ProductStatus.IN_PRODUCTION) {
-                builder.and(product.status.eq(ProductStatus.IN_PRODUCTION));
-            } else if (status == ProductStatus.PRODUCTION_DISCONTINUED) {
-                builder.and(product.status.eq(ProductStatus.PRODUCTION_DISCONTINUED));
-            }
-        }
-
-        return queryFactory
-                .selectFrom(product)
-                .where(builder)
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
+    public List<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status) {
+        return productRepository.searchProducts(pageable, productName, unit, status);
     }
 
 }
