@@ -29,9 +29,11 @@ public class Product {
     private Long productCode;
     private String productName;
     @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime launchDate;
     private Long price;
     private String unit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime updatedAt;
     @Enumerated(value=EnumType.STRING)
     private ProductStatus status = IN_PRODUCTION;

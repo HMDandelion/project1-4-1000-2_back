@@ -10,7 +10,8 @@ public enum ExceptionCode {
     NOT_FOUND_PRODUCT_CODE(3000, "상품 코드에 해당하는 상품이 존재하지 않습니다."),
     NO_CONTENTS_MATERIAL_STOCK(3000, "요구하신 조건에 맞는 원자재 재고가 없습니다."),
     NO_WAREHOUSE(3001,"창고 코드에 맞는 창고가 존재하지 않습니다."),
-    NO_BOM(3002,"BOM이 존재하지 않습니다." );
+    NO_BOM(3002,"BOM이 존재하지 않습니다." ),
+    ALREADY_EXIST_PRODUCTION_PLAN(0,"DD");
 
 
     private final int code;
