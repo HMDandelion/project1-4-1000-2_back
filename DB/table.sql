@@ -1,4 +1,4 @@
-CREATE TABLE `tbl_assigned_material`
+CREATE TABLE IF NOT EXISTS `tbl_assigned_material`
 (
     `assigned_material_code`    INT NOT NULL AUTO_INCREMENT
         COMMENT '담당자재 코드',

@@ -30,16 +30,16 @@ public class ProductService {
     private final JPAQueryFactory queryFactory;
 
     private Pageable getPageable(final Integer page) {
-        return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
+        return PageRequest.of(page - 1, 10, Sort.by("productCode"));
     }
 
-
+    @Transactional(readOnly = true)
     public Page<ProductsResponse> getProducts(Integer page) {
         Page<Product> products = productRepository.findAll(getPageable(page));
         return products.map(ProductsResponse::from);
     }
 
-
+    @Transactional(readOnly = true)
     public ProductsResponse getProduct(Long productCode) {
         Product product = productRepository.findById(productCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         return ProductsResponse.from(product);
@@ -72,7 +72,7 @@ public class ProductService {
         product.updateStatus(product);
     }
 
-    public List<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status) {
+    public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status) {
         return productRepository.searchProducts(pageable, productName, unit, status);
     }
 

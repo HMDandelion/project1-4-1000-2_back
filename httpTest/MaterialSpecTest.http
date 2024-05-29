@@ -1,0 +1,8 @@
+### 모든 스펙 조회
+GET http://localhost:8001/api/v1/material/spec
+
+### 모든 스펙 조회 페이지 테스트
+GET http://localhost:8001/api/v1/material/spec?page=2
+
+### 모든 스펙 조회 검색
+GET http://localhost:8001/api/v1/material/spec?materialName="Material33"
