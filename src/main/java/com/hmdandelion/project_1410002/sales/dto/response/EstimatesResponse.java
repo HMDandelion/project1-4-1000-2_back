@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.sales.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.sales.domain.type.EstimateStatus;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

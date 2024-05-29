@@ -1,7 +1,10 @@
 package com.hmdandelion.project_1410002.sales.domain.repository.estimate;
 
+import com.hmdandelion.project_1410002.sales.dto.response.EstimateProductResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.EstimateResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.EstimatesResponse;
 import com.hmdandelion.project_1410002.sales.domain.type.EstimateStatus;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -14,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct.product;
 import static com.hmdandelion.project_1410002.sales.domain.entity.client.QClient.client;
@@ -77,5 +82,39 @@ public class EstimateRepoCustomImpl implements EstimateRepoCustom{
         return client.clientName.containsIgnoreCase(clientName);
     }
 
+    @Override
+    public Optional<EstimateResponse> getEstimate(Long estimateCode) {
+        Map<Long, EstimateResponse> result = queryFactory
+                .from(estimate)
+                .leftJoin(client).on(estimate.clientCode.eq(client.clientCode))
+                .leftJoin(estimate.estimateProducts, estimateProduct)
+                .leftJoin(product).on(estimateProduct.productCode.eq(product.productCode))
+                .where(
+                        estimate.estimateCode.eq(estimateCode),
+                        estimate.status.eq(EstimateStatus.ACTIVE)
+                )
+                .transform(
+                        GroupBy.groupBy(estimate.estimateCode).as(
+                                Projections.constructor(EstimateResponse.class,
+                                        estimate.estimateCode,
+                                        estimate.createdAt,
+                                        estimate.updatedAt,
+                                        estimate.deadline,
+                                        client.clientName,
+                                        estimate.status,
+                                        estimate.isOrdered,
+                                        GroupBy.list(Projections.constructor(EstimateProductResponse.class,
+                                                product.productCode,
+                                                product.productName,
+                                                estimateProduct.quantity,
+                                                estimateProduct.price)
+                                        )
+                                )
+                        )
+                );
+        EstimateResponse estimateResponse = result.get(estimateCode);
+        return Optional.ofNullable(estimateResponse);
+
+    }
 
 }

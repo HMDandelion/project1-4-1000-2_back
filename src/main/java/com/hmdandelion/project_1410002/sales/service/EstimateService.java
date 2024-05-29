@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.sales.domain.entity.estimate.Estimate;
 import com.hmdandelion.project_1410002.sales.domain.entity.estimate.EstimateProduct;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.domain.repository.estimate.EstimateRepo;
+import com.hmdandelion.project_1410002.sales.domain.type.EstimateStatus;
 import com.hmdandelion.project_1410002.sales.dto.request.EstimateCreateRequest;
 import com.hmdandelion.project_1410002.sales.dto.request.EstimateUpdateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.EstimateResponse;
@@ -43,7 +44,9 @@ public class EstimateService {
 
     @Transactional(readOnly = true)
     public EstimateResponse getEstimate(Long estimateCode) {
-        return null;
+        EstimateResponse estimate = estimateRepo.getEstimate(estimateCode)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ESTIMATE_CODE));
+        return estimate;
     }
 
     public Long save(EstimateCreateRequest estimateRequest) {
