@@ -9,6 +9,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,17 +30,17 @@ public class ProductionPlan {
     private LocalDateTime creationAt;
 
     @Column(name = "start_at", nullable = false)
-    private LocalDateTime startAt;
+    private LocalDate startAt;
 
     @Column(name = "description", nullable = false)
     private String description;
 
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDate updatedAt;
 
     @Column(name = "end_at", nullable = false)
-    private LocalDateTime endAt;
+    private LocalDate endAt;
 
 //    @OneToMany(mappedBy = "productionPlan")
 //    private List<PlannedOrderList> plannedOrderList;
@@ -47,13 +48,19 @@ public class ProductionPlan {
 //    @OneToMany(mappedBy = "productionPlan")
 //    private List<ProductionPlannedList> productionPlannedList;
 
-    public ProductionPlan(LocalDateTime startAt, String description, LocalDateTime endAt) {
+    public ProductionPlan(LocalDate startAt, String description, LocalDate endAt) {
         this.startAt = startAt;
         this.description = description;
         this.endAt = endAt;
     }
-    public static ProductionPlan of(LocalDateTime startAt, String description, LocalDateTime endAt) {
+    public static ProductionPlan of(LocalDate startAt, String description, LocalDate endAt) {
         return new ProductionPlan(startAt, description, endAt);
 
+    }
+
+    public void planModify(LocalDate startAt, LocalDate endAt, String description) {
+        this.startAt = startAt;
+        this.description = description;
+        this.endAt = endAt;
     }
 }

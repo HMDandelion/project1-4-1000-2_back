@@ -7,14 +7,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 public interface ProductionPlanRepository extends JpaRepository <ProductionPlan, Long> {
 
     @Query("SELECT new com.hmdandelion.project_1410002.production.dto.response.PlanListResponse(p, ppp, pp) " +
-            "FROM ProductionPlannedList p " +
-            "JOIN ProductionPlan pp ON pp.planCode = p.planCode " +
-            "JOIN Product ppp ON ppp.productCode = pp.planCode " +
+            "FROM ProductionPlan pp " +
+            "LEFT JOIN ProductionPlannedList p ON pp.planCode = p.planCode " +
+            "LEFT JOIN Product ppp ON ppp.productCode = p.product.productCode " +
+            "WHERE pp.startAt <= :endAt AND pp.endAt >= :startAt " +
             "ORDER BY (pp.endAt - CURRENT_TIMESTAMP)")
-    Page<PlanListResponse> findPlanDetails(Pageable pageable);
+    Page<PlanListResponse> findPlanDetails(Pageable pageable, @Param("startAt") LocalDate startAt, @Param("endAt") LocalDate endAt);
+
+    Optional<ProductionPlan> findByPlanCode(Long planCode);
+
+    /* 생산 계획 기간 겹치지 않게 */
+    @Query("SELECT COUNT(p) > 0 FROM ProductionPlan p WHERE :endAt >= p.startAt AND :startAt <= p.endAt")
+    boolean existsByDateRange(@Param("startAt") LocalDate startAt, @Param("endAt") LocalDate endAt);
 }

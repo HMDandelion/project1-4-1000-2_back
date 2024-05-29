@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class ProductionPlanCreateRequest {
+public class ProductionPlanUpdateRequest {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate startAt;
@@ -18,4 +19,3 @@ public class ProductionPlanCreateRequest {
 
     private final String description;
 }
-

@@ -8,28 +8,30 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlanListResponse {
 
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private LocalDateTime startAt;
-    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
-    private LocalDateTime endAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate startAt;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private LocalDate endAt;
     private String requiredQuantity;
     private String plannedQuantity;
     private Long productCode;
     private String productName;
 
-public PlanListResponse(ProductionPlannedList productionPlannedList
-, Product product, ProductionPlan productionPlan) {
-    this.startAt = productionPlan.getStartAt();
-    this.endAt = productionPlan.getEndAt();
-    this.requiredQuantity = productionPlannedList.getRequiredQuantity();
-    this.plannedQuantity = productionPlannedList.getPlannedQuantity();
-    this.productCode = product.getProductCode();
-    this.productName = product.getProductName();
-}
+
+    public PlanListResponse (ProductionPlannedList productionPlannedList
+            , Product product, ProductionPlan productionPlan) {
+        this.startAt = productionPlan.getStartAt();
+        this.endAt = productionPlan.getEndAt();
+        this.requiredQuantity = productionPlannedList.getRequiredQuantity();
+        this.plannedQuantity = productionPlannedList.getPlannedQuantity();
+        this.productCode = product.getProductCode();
+        this.productName = product.getProductName();
+    }
 }
