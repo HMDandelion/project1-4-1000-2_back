@@ -59,7 +59,7 @@ public class MaterialStockService {
 
     @Transactional
     public Long save(SaveMaterialStockRequest request) {
-        Warehouse warehouse =
-        final Long stockCode = materialStockRepo.save(MaterialStock.from(request));
+//        Warehouse warehouse =
+//        final Long stockCode = materialStockRepo.save(MaterialStock.from(request));
     }
 }

@@ -25,7 +25,7 @@ public class MaterialStockRepoCustomImpl implements MaterialStockRepoCustom {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialStockRepoCustomImpl.class);
     private final MaterialSpecRepo materialSpecRepo;
-    privat final JPAQueryFactory queryFactory;
+    private final JPAQueryFactory queryFactory;
 
     @Override
     public List<MaterialStock> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
