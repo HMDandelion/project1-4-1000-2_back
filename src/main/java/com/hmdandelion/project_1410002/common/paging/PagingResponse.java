@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class PagingResponse {
+
     private final Object data;
     private final PagingButtonInfo pageInfo;
 
