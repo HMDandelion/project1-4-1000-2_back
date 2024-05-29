@@ -1,12 +1,5 @@
 package com.hmdandelion.project_1410002.inventory.dto.material.request;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Warehouse;
-import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -16,17 +9,17 @@ import java.time.LocalDateTime;
 @Getter
 @RequiredArgsConstructor
 public class SaveMaterialStockRequest {
-    private Long stockCode;
-    private String division;
-    private Long specCode;
-    private Long warehouseCode;
-    private int incomingQuantity;
-    private int actualQuantity;
-    private String storageDatetime;
-    private String remarks;
-    private String inspectionDatetime;
+    private final Long stockCode;
+    private final String division;
+    private final Long specCode;
+    private final Long warehouseCode;
+    private final int incomingQuantity;
+    private final int actualQuantity;
+    private final LocalDateTime storageDatetime;
+    private final String remarks;
+    private final LocalDateTime inspectionDatetime;
     @LastModifiedDate
-    private LocalDateTime modificationDatetime;
-    private String modificationReason;
-    private int orderCode;
+    private final LocalDateTime modificationDatetime;
+    private final String modificationReason;
+    private final int orderCode;
 }

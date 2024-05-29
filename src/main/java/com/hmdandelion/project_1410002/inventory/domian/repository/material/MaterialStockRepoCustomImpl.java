@@ -1,18 +1,9 @@
 package com.hmdandelion.project_1410002.inventory.domian.repository.material;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialStock;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.QWarehouse;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Warehouse;
-import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
-import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockDetailDTO;
-import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
-import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialStockRequest;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.querydsl.jpa.impl.JPAUpdateClause;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

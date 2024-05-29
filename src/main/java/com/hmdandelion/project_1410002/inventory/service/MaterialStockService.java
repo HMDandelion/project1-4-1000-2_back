@@ -2,8 +2,10 @@ package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Warehouse;
+import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.CombinedStockBySpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockDetailDTO;
@@ -24,6 +26,8 @@ public class MaterialStockService {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialStockService.class);
     private final MaterialStockRepo materialStockRepo;
+    private final WarehouseService warehouseService;
+    private final MaterialSpecRepo materialSpecRepo;
 
     public List<CombinedStockBySpecDTO> findStocksBySpec() {
         List<MaterialStock> stocks = materialStockRepo.findMaterialStocksWithPositiveActualQuantity();
@@ -59,7 +63,8 @@ public class MaterialStockService {
 
     @Transactional
     public Long save(SaveMaterialStockRequest request) {
-//        Warehouse warehouse =
-//        final Long stockCode = materialStockRepo.save(MaterialStock.from(request));
+        Warehouse warehouse = warehouseService.getWarehouse(request.getWarehouseCode());
+        MaterialSpec spec = materialSpecRepo.findBySpecCode(request.getSpecCode());
+        return materialStockRepo.save(MaterialStock.from(request, warehouse, spec)).getStockCode();
     }
 }
