@@ -10,4 +10,5 @@ public interface MaterialSpecRepoCustom {
 
     long removeByList(List<Long> specCodes);
 
+    Long getUsingSepcCode(List<Long> specCodes);
 }

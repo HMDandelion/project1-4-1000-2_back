@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.inventory.domian.repository.material;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialStock;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -46,4 +47,16 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
                 .where(materialSpec.specCode.in(specCodes))
                 .execute();
     }
+
+    @Override
+    public Long getUsingSepcCode(List<Long> specCodes) {
+        QMaterialStock materialStock = QMaterialStock.materialStock;
+
+        return queryFactory
+                .select(materialStock.count())
+                .from(materialStock)
+                .where(materialStock.materialSpec.specCode.in(specCodes))
+                .fetchOne();
+    }
+
 }
