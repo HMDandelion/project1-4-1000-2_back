@@ -45,6 +45,16 @@ CREATE TABLE IF NOT EXISTS `tbl_client`
 ) COMMENT = '거래처';
 
 
+CREATE TABLE `tbl_defect_detail` (
+    `defect_code` BIGINT NOT NULL AUTO_INCREMENT COMMENT '불량 상세 코드',
+    `production_detail_code` BIGINT NOT NULL COMMENT '생산 상세 코드',
+    `defect_reason` VARCHAR(50) COMMENT '불량 사유',
+    `defect_status` VARCHAR(20) COMMENT '불량 처리',
+    `defect_file` VARCHAR(50) COMMENT '첨부 파일',
+    PRIMARY KEY (`defect_code`)
+) COMMENT = '불량 상세';
+
+
 CREATE TABLE IF NOT EXISTS `tbl_department`
 (
     `department_code`    INT NOT NULL AUTO_INCREMENT
@@ -280,34 +290,29 @@ CREATE TABLE IF NOT EXISTS `tbl_product_spec`
 ) COMMENT = '상품 스펙';
 
 
-CREATE TABLE IF NOT EXISTS `tbl_production_detail`
-(
-    `production_detail_code`    BIGINT NOT NULL COMMENT '생산 상세 코드',
-    `work_order_code`    INT NOT NULL COMMENT '작업 지시서 코드',
-    `production_staus_code`    BIGINT NOT NULL COMMENT '생산 현황 코드',
-    `employee_code`    INT NOT NULL COMMENT '사원코드',
-    `inspection_date`    DATETIME NOT NULL COMMENT '품질 검수 일자',
-    `memo`    VARCHAR(50) COMMENT '비고',
-    `defect_quantity`    INT COMMENT '불량 수량',
-    `completely_quantity`    INT COMMENT '양품 수',
-    `defect_reason`    VARCHAR(50) COMMENT '불량 사유',
-    `defect_status`    VARCHAR(20) COMMENT '불량 처리',
-    `attachment_file`    VARCHAR(50) COMMENT '첨부파일',
-    PRIMARY KEY ( `production_detail_code` )
+CREATE TABLE `tbl_production_detail` (
+    `production_detail_code` BIGINT NOT NULL AUTO_INCREMENT COMMENT '생산 상세 코드',
+    `work_order_code` INT NOT NULL COMMENT '작업 지시서 코드',
+    `production_status_code` BIGINT NOT NULL COMMENT '생산 현황 코드',
+    `employee_code` INT NOT NULL COMMENT '사원 코드',
+    `inspection_date` DATETIME NOT NULL COMMENT '품질 검수 일자',
+    `production_quantity` INT COMMENT '현재 생산량',
+    `defect_quantity` INT COMMENT '불량 수량',
+    `completely_quantity` INT COMMENT '양품 수',
+    `production_memo` VARCHAR(50) COMMENT '비고',
+    PRIMARY KEY (`production_detail_code`)
 ) COMMENT = '생산 상세';
 
 
-CREATE TABLE IF NOT EXISTS `tbl_production_management`
-(
-    `production_staus_code`    BIGINT NOT NULL COMMENT '생산 현황 코드',
-    `product_code`    INT NOT NULL COMMENT '상품 코드',
-    `start_at`    DATETIME NOT NULL COMMENT '생산 시작 일시',
-    `completed_at`    DATETIME NOT NULL COMMENT '생산 마감 일시',
-    `attachment_file`    VARCHAR(50) COMMENT '생산 관리 서류(첨부 서류)',
-    `production_current`    INT COMMENT '현재 생산량',
-    `production_status`    VARCHAR(20) NOT NULL COMMENT '상태',
-    `inspection_status`    VARCHAR(20) NOT NULL COMMENT '품질 검수 처리',
-    PRIMARY KEY ( `production_staus_code` )
+CREATE TABLE IF NOT EXISTS `tbl_production_management` (
+    `production_status_code` BIGINT NOT NULL AUTO_INCREMENT COMMENT '생산 현황 코드',
+    `start_at` DATETIME NOT NULL COMMENT '생산 시작 일시',
+    `completed_at` DATETIME NOT NULL COMMENT '생산 마감 일시',
+    `total_production_quantity` INT NOT NULL COMMENT '총 생산 수량',
+    `production_file` VARCHAR(50) COMMENT '생산 관리 서류(첨부 서류)',
+    `production_status` VARCHAR(20) NOT NULL COMMENT '상태',
+    `inspection_status` VARCHAR(20) NOT NULL COMMENT '품질 검수 처리',
+    PRIMARY KEY (`production_status_code`)
 ) COMMENT = '일일 생산 보고서';
 
 
@@ -335,26 +340,27 @@ CREATE TABLE IF NOT EXISTS `tbl_production_plan_list`
 ) COMMENT = '생산 계획 목록';
 
 
-CREATE TABLE IF NOT EXISTS `tbl_release`
+CREATE TABLE `tbl_release`
 (
     `release_code`    BIGINT NOT NULL COMMENT '출고 코드',
-    `status`    VARCHAR(20) DEFAULT 'WAIT' NOT NULL COMMENT '상태',
+    `status`    VARCHAR (255) DEFAULT 'WAIT' NOT NULL COMMENT '상태',
     `order_code`    INT NOT NULL COMMENT '주문코드',
-    `created_at`    DATETIME AUTO_INCREMENT UNIQUE KEY
+    `created_at`    DATETIME UNIQUE KEY
         COMMENT '생성 일시',
     PRIMARY KEY ( `release_code` )
 ) COMMENT = '상품 출고';
 
-ALTER TABLE IF NOT EXISTS `tbl_release`
-    ADD CONSTRAINT `tbl_release_PK` PRIMARY KEY ( `release_code` );
+
+ALTER TABLE `tbl_release`
+    ADD CONSTRAINT `tbl_release_CK` CHECK ( `status` IN ('WAIT', 'SHIPPING','DELIVERY_COMPLETED'));
 
 
 CREATE TABLE IF NOT EXISTS `tbl_release_change`
 (
     `release_change_code`    INT NOT NULL AUTO_INCREMENT
         COMMENT '출고 상태 변경 이력 코드',
-    `status`    VARCHAR DEFAULT 'SHIPPING' NOT NULL COMMENT '상태',
-    `change_at`    VARCHAR NOT NULL COMMENT '시간',
+    `status`    VARCHAR(20) DEFAULT 'SHIPPING' NOT NULL COMMENT '상태',  /*vachar 길이지정*/
+    `change_at`    VARCHAR(20) NOT NULL COMMENT '시간',                   /*vachar 길이지정*/
     `release_code`    BIGINT NOT NULL COMMENT '출고 코드',
     PRIMARY KEY ( `release_change_code` )
 ) COMMENT = '출고 상태 변경 이력';

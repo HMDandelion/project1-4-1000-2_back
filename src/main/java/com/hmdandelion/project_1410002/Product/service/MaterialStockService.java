@@ -1,9 +1,9 @@
-package com.hmdandelion.project_1410002.inventory.service;
+package com.hmdandelion.project_1410002.Product.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service("inventoryMaterialStockService")
+@Service
 @RequiredArgsConstructor
 public class MaterialStockService {
 }

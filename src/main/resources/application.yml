@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dandeliondb
+    username : ohgiraffers
+    password : ohgiraffers
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+server:
+  port: 8001
+
+image:
+  image-url: http://localhost:8001/productimgs/
+  image-dir: src/main/resources/static/productimgs
+
+jwt:
+  secret: 87zd9ad6xxv6pphkgnbu0b25w43bugncvyurewhd37ekat9hys
+  access:
+    expiration: 3600000
+  refresh:
+    expiration: 604800000
+
