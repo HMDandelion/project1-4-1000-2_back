@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.purchase.service;
 
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialGraphModel;
+import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlannedList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ public class MaterialOrderAnalyzeService {
 
     public List<MaterialGraphModel> findOrderByMaterialRequirementRatio(Long planCode) {
         //생산계획 리스트를 생산계획 코드로 조회한다 (생산하려는 제품과 그 숫자)
+//        List<ProductionPlannedList> plannedLists =
         //생산하려는 제품의 BOM을 조회한다(생산하려는 제품의 요구수치)
         //필요 원자재 정보를 조회한다(원자재의 정보)
         //원자재의 이름과 총 필요량을 산출하여 데이터를 저장한다 called A
