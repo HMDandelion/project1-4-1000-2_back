@@ -33,7 +33,7 @@ public class BomService {
     }
     @Transactional(readOnly = true)
     public Bom getBomByBomCode(Long BomCode){
-        Bom bom = bomRepository.findBomByBomCode(BomCode).orElseThrow(() -> new CustomException(ExceptionCode.NO_BOM));
+        Bom bom = bomRepository.findBomByBomCode(BomCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_BOM_CODE));
         return bom;
     }
     @Transactional(readOnly = true)

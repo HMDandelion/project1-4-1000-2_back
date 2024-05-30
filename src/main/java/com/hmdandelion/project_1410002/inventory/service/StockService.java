@@ -72,4 +72,25 @@ public class StockService {
         Integer sum = stockRepo.getAccumulateStockByProductCode(productCode);
         return sum;
     }
+
+    public StockProduct getStock(Long stockCode) {
+        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+        Product product = productRepo.findById(stock.getProduct().getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+
+        StockProduct stockProduct = StockProduct.of(
+                stock.getStockCode(),
+                stock.getQuantity(),
+                stock.getCreatedAt(),
+                stock.getIsDelete(),
+                stock.getType(),
+                product.getProductCode(),
+                product.getProductName(),
+                product.getLaunchDate(),
+                product.getPrice(),
+                product.getUnit(),
+                product.getUpdatedAt(),
+                product.getStatus()
+        );
+        return stockProduct;
+    }
 }

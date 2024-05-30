@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.dto.stock.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
@@ -53,6 +54,24 @@ public class StockProduct {
         this.unit = stock.getProduct().getUnit();
         this.updatedAt = stock.getProduct().getUpdatedAt();
         this.status = stock.getProduct().getStatus();
+    }
+
+
+    public static StockProduct of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status) {
+        return new StockProduct(
+                stockCode,
+                quantity,
+                createdAt,
+                isDelete,
+                type,
+                productCode,
+                productName,
+                launchDate,
+                price,
+                unit,
+                updatedAt,
+                status
+        );
     }
 }
 

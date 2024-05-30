@@ -15,7 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.NO_WAREHOUSE;
+import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.NOT_FOUND_WAREHOUSE_CODE;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +46,7 @@ public class WarehouseService {
     @Transactional(readOnly = true)
     public Warehouse getWarehouse(Long warehouseCode) {
         Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
-            new NotWarehouseException(NO_WAREHOUSE)
+            new NotWarehouseException(NOT_FOUND_WAREHOUSE_CODE)
         );
 
         return warehouse;
@@ -64,7 +64,7 @@ public class WarehouseService {
     }
 
     public void delete(Long warehouseCode) {
-        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() -> new CustomException(NO_WAREHOUSE));
+        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() -> new CustomException(NOT_FOUND_WAREHOUSE_CODE));
         warehouseRepository.delete(warehouse);
     }
 }

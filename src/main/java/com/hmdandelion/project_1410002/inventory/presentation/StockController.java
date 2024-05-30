@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
@@ -47,6 +48,15 @@ public class StockController {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,startDate,endDate);
         return ResponseEntity.ok(stocks);
+    }
+
+    /*재고 상세 조회(재고 코드로 조회)*/
+    @GetMapping("/stock/{stockCode}")
+    public ResponseEntity<StockProduct> getStock(
+            @PathVariable final Long stockCode
+    ){
+        StockProduct stock = stockService.getStock(stockCode);
+        return ResponseEntity.ok(stock);
     }
 
     /*재고 수정*/
