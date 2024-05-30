@@ -1,6 +1,7 @@
-package com.hmdandelion.project_1410002.Product.domian.entity;
+package com.hmdandelion.project_1410002.inventory.domian.entity.product;
 
-import com.hmdandelion.project_1410002.Product.domian.type.ProductStatus;
+
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-import static com.hmdandelion.project_1410002.Product.domian.type.ProductStatus.PRODUCTION_DISCONTINUED;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus.IN_PRODUCTION;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus.PRODUCTION_DISCONTINUED;
 
 
 @Entity
@@ -19,7 +21,6 @@ import static com.hmdandelion.project_1410002.Product.domian.type.ProductStatus.
 @Getter
 @NoArgsConstructor(access= AccessLevel.PROTECTED)
 public class Product {
-    private static final ProductStatus IN_PRODUCTION = null;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productCode;
@@ -28,8 +29,8 @@ public class Product {
     private LocalDateTime launchDate;
     private Long price;
     private String unit;
-    private LocalDateTime updated_at;
-    @Enumerated(value= EnumType.STRING)
+    private LocalDateTime updatedAt;
+    @Enumerated(value=EnumType.STRING)
     private ProductStatus status = IN_PRODUCTION;
 
     public Product(String productName, Long price, String unit) {
@@ -58,6 +59,6 @@ public class Product {
         }else{
             this.status = IN_PRODUCTION;
         }
-        this.updated_at = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
 }

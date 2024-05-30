@@ -2,7 +2,6 @@ package com.hmdandelion.project_1410002.production.domain.entity.production;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import com.hmdandelion.project_1410002.Product.domian.entity.Product;
 import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import jakarta.persistence.*;

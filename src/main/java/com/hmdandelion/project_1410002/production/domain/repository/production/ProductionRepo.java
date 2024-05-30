@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 public interface ProductionRepo extends JpaRepository<ProductionManagement, Long> {
     /* ProductionStatus 별 검색 */
@@ -28,8 +27,4 @@ public interface ProductionRepo extends JpaRepository<ProductionManagement, Long
 
     /*작업 시작 날짜로 조회 */
     Page<ProductionManagement> findByStartAt(Pageable pageable, LocalDateTime startAt);
-
-
-    /* 상세 조회 */
-    Optional<ProductionManagement> findByProductionStatusCode(Long productionStateCode)
 }
