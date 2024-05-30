@@ -85,5 +85,6 @@ public class MaterialStockService {
             warehouse = stock.getWarehouse();
         }
         stock.modifyFrom(request, warehouse);
+        return stock.getStockCode();
     }
 }
