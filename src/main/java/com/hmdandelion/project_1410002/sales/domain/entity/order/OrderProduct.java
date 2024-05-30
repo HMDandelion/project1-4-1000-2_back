@@ -18,5 +18,5 @@ public class OrderProduct {
     @ManyToOne
     @JoinColumn(name = "order_code")
     private Order order;
-    private Integer productCode;
+    private Long productCode;
 }
