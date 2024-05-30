@@ -70,3 +70,4 @@ public class MaterialStock {
         this.warehouse = warehouse;
     }
 }
+
