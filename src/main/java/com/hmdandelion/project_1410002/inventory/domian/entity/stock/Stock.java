@@ -64,4 +64,9 @@ public class Stock {
         this.product = product;
         this.type = type;
     }
+
+
+    public void modifyStatus(AssignmentStatus change) {
+        this.assignmentStatus = change;
+    }
 }

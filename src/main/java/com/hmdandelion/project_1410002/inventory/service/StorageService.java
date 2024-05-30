@@ -8,12 +8,15 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehou
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
+import static com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +61,25 @@ public class StorageService {
         );
 
         storageRepo.save(newStorage);
+
+
+        List<Storage> afterStorages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
+
+        System.out.println("afterStorages = " + afterStorages);
+        Long afterSum = 0L;
+
+        for(Storage storage : afterStorages){
+            afterSum+=storage.getInitialQuantity();
+        }
+        AssignmentStatus change;
+        if(afterSum==0){
+            change=NOT_ASSIGNED;
+        }else if(afterSum==stock.getQuantity()){
+            change=FULLY_ASSIGNED;
+        }else{
+            change=PARTIALLY_ASSIGNED;
+        }
+        stock.modifyStatus(change);
         return newStorage.getStorageCode();
     }
 }
