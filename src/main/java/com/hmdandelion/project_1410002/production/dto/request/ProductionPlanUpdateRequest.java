@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class ProductionPlanUpdateRequest {
 
-    private final String plannedQuantity;
-
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate startAt;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate endAt;
+
+    private final String requiredQuantity;
 
     private final String description;
 }

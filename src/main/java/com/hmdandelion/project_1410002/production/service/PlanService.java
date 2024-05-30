@@ -98,7 +98,7 @@ public class PlanService {
                 productionPlanUpdateRequest.getStartAt(),
                 productionPlanUpdateRequest.getEndAt(),
                 productionPlanUpdateRequest.getDescription(),
-                productionPlanUpdateRequest.getPlannedQuantity()
+                productionPlanUpdateRequest.getRequiredQuantity()
         );
     }
 

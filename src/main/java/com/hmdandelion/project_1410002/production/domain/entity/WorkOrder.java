@@ -22,6 +22,12 @@ public class WorkOrder {
     @Column(name = "work_order_code")
     private Long workOrderCode;
 
+    @Column(name = "line_code")
+    private Long lineCode;
+
+    @Column(name = "product_code")
+    private Long productCode;
+
     @Column(name = "work_written_date", nullable = false)
     private LocalDateTime workWrittenDate;
 
@@ -36,6 +42,7 @@ public class WorkOrder {
 
     @Column(name = "work_modified_date", nullable = false)
     private LocalDateTime workModifiedDate;
+
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "line_code", nullable = false)
