@@ -9,6 +9,7 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.material.Stoc
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -61,5 +62,28 @@ public class MaterialStockService {
     @Transactional
     public void delete(Long stockCode) {
         materialStockRepo.deleteById(stockCode);
+    }
+
+    @Transactional
+    public Long modify(MaterialStockModifyRequest request) {
+
+        Warehouse warehouse;
+        MaterialStock stock = materialStockRepo.getStockByCode(request.getStockCode());
+        if (stock == null) {
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_STOCK_CODE);
+        }
+        //만약 웨어하우스가 비어있지 않다면
+        if (request.getWarehouseCode() != null) {
+            //찾아서
+            warehouse = warehouseService.getWarehouse(request.getWarehouseCode());
+            if (warehouse == null) {
+                //잘못된 요청인가 확인하고
+                throw new NotFoundException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE);
+            }
+        } else {
+            // 비어있으면 기존의 것을 유지
+            warehouse = stock.getWarehouse();
+        }
+        stock.modifyFrom(request, warehouse);
     }
 }

@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockResponse;
 import com.hmdandelion.project_1410002.inventory.service.MaterialStockService;
 import lombok.RequiredArgsConstructor;
@@ -63,11 +64,22 @@ public class MaterialStockController {
         return ResponseEntity.created(URI.create("/api/v1/material/inventory/" + stockCode)).build();
     }
 
+    //재고 수정
+    @PutMapping("/inventory")
+    public ResponseEntity<Void> modifyStock(
+            @RequestBody final MaterialStockModifyRequest request
+            ) {
+
+        final Long stockCode = materialStockService.modify(request);
+
+        return ResponseEntity.created(URI.create("/api/v1/material/inventory/" + stockCode)).build();
+    }
     //재고 삭제
     @DeleteMapping("/inventory/{stockCode}")
     public ResponseEntity<Void> deleteStock(
             @PathVariable final Long stockCode
     ) {
+
         materialStockService.delete(stockCode);
 
         return ResponseEntity.noContent().build();

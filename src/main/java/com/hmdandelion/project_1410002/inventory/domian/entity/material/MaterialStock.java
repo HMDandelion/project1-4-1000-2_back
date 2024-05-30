@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -61,5 +62,11 @@ public class MaterialStock {
                 request.getModificationReason(),
                 request.getOrderCode()
         );
+    }
+
+    public void modifyFrom(MaterialStockModifyRequest request, Warehouse warehouse) {
+        this.actualQuantity = request.getActualQuantity();
+        this.modificationReason = request.getModificationReason();
+        this.warehouse = warehouse;
     }
 }
