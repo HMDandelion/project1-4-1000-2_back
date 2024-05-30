@@ -16,4 +16,5 @@ import java.time.LocalDateTime;
 public class StorageCreateRequest {
     private Long initialQuantity;
     private Long warehouseCode;
+    private Long actualQuantity;
 }

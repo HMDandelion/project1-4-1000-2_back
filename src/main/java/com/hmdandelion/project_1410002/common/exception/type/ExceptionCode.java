@@ -22,6 +22,7 @@ public enum ExceptionCode {
 
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
     BAD_REQUEST_MORE_QUANTITY(6500,"보관 중인 재고가 재고 수량보다 큽니다."),
+    BAD_REQUEST_DELETED_STOCK(6501,"삭제 된 재고 정보입니다."),
 
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다.");
 

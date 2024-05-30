@@ -49,10 +49,11 @@ public class StockService {
 
     public void modifyStock(Long stockCode, StockUpdateRequest stockUpdateRequest) {
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-        System.out.println("stock = " + stock);
-        System.out.println("dd"+stockUpdateRequest.getProductCode());
+        if(stock.getIsDelete()==true){
+            throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+        }
         Product product = productRepo.findById(stockUpdateRequest.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-        System.out.println("product = " + product);
+
         stock.modify(
                 product,
                 stockUpdateRequest.getType()
@@ -60,6 +61,10 @@ public class StockService {
     }
 
     public void deleteStockByStockCode(Long stockCode) {
+        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        if(stock.getIsDelete()==true){
+            throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+        }
         stockRepo.deleteById(stockCode);
     }
 
@@ -75,6 +80,9 @@ public class StockService {
 
     public StockProduct getStock(Long stockCode) {
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+        if(stock.getIsDelete()==true){
+            throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+        }
         Product product = productRepo.findById(stock.getProduct().getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
 
         StockProduct stockProduct = StockProduct.of(

@@ -35,18 +35,20 @@ public class Storage {
     @ManyToOne
     @JoinColumn(name="warehouse_code")
     private Warehouse warehouse;
-    private Long actualCode;
+    private Long actualQuantity;
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Storage(Long initialQuantity, Stock stock, Warehouse warehouse) {
+    public Storage(Long initialQuantity,Long actualQuantity, Stock stock, Warehouse warehouse) {
         this.initialQuantity = initialQuantity;
+        this.actualQuantity = actualQuantity;
         this.stock = stock;
         this.warehouse = warehouse;
     }
 
     public static Storage of(Warehouse warehouse, Long initialQuantity, Stock stock) {
         return new Storage(
+                initialQuantity,
                 initialQuantity,
                 stock,
                 warehouse

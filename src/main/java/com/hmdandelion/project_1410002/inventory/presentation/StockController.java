@@ -31,7 +31,7 @@ public class StockController {
             @RequestBody final StockCreateRequest stockRequest
     ){
         Long stockCode = stockService.saveStock(stockRequest);
-        return ResponseEntity.created(URI.create(null)).build();
+        return ResponseEntity.created(URI.create("/api/v1/stock"+stockCode)).build();
     }
 
     /*재고 조회(필터링)*/
@@ -66,7 +66,7 @@ public class StockController {
             @RequestBody final StockUpdateRequest stockUpdateRequest
     ){
         stockService.modifyStock(stockCode,stockUpdateRequest);
-        return ResponseEntity.created(URI.create(null)).build();
+        return ResponseEntity.created(URI.create("/api/v1/stock"+stockCode)).build();
     }
 
     /*재고 삭제(단,tbl_storage에 데이터가 있다면 삭제 불가능)*/

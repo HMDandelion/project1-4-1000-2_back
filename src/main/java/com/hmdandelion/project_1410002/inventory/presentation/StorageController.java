@@ -15,6 +15,7 @@ public class StorageController {
 
     private final StorageService storageService;
 
+    /*재고 창고 배정(재고 수량보다 창고에 배정 된 갯수가 많으면 안됨.)*/
     @PostMapping("/storage/stock/{stockCode}")
     public ResponseEntity<Void> saveStorage(
             @PathVariable Long stockCode,
@@ -23,4 +24,7 @@ public class StorageController {
         Long storageCode = storageService.saveStorage(stockCode,storageCreateRequest);
         return ResponseEntity.created(URI.create(null)).build();
     }
+
+    /*재고 코드에 일치하는 보관 재고 초기 수량 합 조회*/
+
 }

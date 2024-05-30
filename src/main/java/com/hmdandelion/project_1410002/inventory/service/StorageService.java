@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,12 +25,29 @@ public class StorageService {
     private final WarehouseRepo warehouseRepo;
 
     public Long saveStorage(Long stockCode, StorageCreateRequest storageCreateRequest) {
+
         System.out.println("stockCode = " + stockCode);
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
         System.out.println("stock = " + stock);
+
+        if(stock.getIsDelete()==true){
+            throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+        }
+
+        List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
+
+        System.out.println("storages = " + storages);
+        Long sum = 0L;
+        
+        for(Storage storage : storages){
+            sum+=storage.getInitialQuantity();
+        }
+        sum+=storageCreateRequest.getInitialQuantity();
+        System.out.println("sum = " + sum);
+
         Warehouse warehouse = warehouseRepo.findById(storageCreateRequest.getWarehouseCode()).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
 
-        if(storageCreateRequest.getInitialQuantity()>stock.getQuantity()){
+        if(stock.getQuantity()<sum){
             throw new CustomException(ExceptionCode.BAD_REQUEST_MORE_QUANTITY);
         }
 
@@ -37,6 +56,8 @@ public class StorageService {
                 storageCreateRequest.getInitialQuantity(),
                 stock
         );
+
+        storageRepo.save(newStorage);
         return newStorage.getStorageCode();
     }
 }
