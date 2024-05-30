@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
@@ -42,11 +43,12 @@ public class StockController {
             @RequestParam(required = false) final StockType type,
             @RequestParam(required = false) final Long minQuantity,
             @RequestParam(required = false) final Long maxQuantity,
+            @RequestParam(required = false) final AssignmentStatus assignmentStatus,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,startDate,endDate);
+        Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,assignmentStatus,startDate,endDate);
         return ResponseEntity.ok(stocks);
     }
 

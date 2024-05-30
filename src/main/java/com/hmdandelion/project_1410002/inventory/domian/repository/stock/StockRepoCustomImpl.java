@@ -2,9 +2,11 @@ package com.hmdandelion.project_1410002.inventory.domian.repository.stock;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 
+
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.QStock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
 import com.querydsl.core.BooleanBuilder;
@@ -29,7 +31,7 @@ public class StockRepoCustomImpl implements StockRepoCustom {
     }
 
     @Override
-    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity,LocalDate startDate, LocalDate endDate) {
+    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate) {
         QStock stock = QStock.stock;
         QProduct product = QProduct.product;
         BooleanBuilder builder = new BooleanBuilder();
@@ -46,6 +48,9 @@ public class StockRepoCustomImpl implements StockRepoCustom {
         if (maxQuantity != null) {
             builder.and(stock.quantity.loe(maxQuantity));
         }
+        if(assignmentStatus!=null){
+            builder.and(stock.assignmentStatus.eq(assignmentStatus));
+        }
         if (startDate != null && endDate != null) {
             builder.and(stock.createdAt.between(startDate.atStartOfDay(), endDate.plusDays(1).atStartOfDay().minusSeconds(1)));
         } else if (startDate != null) {
@@ -53,6 +58,7 @@ public class StockRepoCustomImpl implements StockRepoCustom {
         } else if (endDate != null) {
             builder.and(stock.createdAt.loe(endDate.plusDays(1).atStartOfDay().minusSeconds(1)));
         }
+
         builder.and(stock.isDelete.eq(false));
 
         QueryResults<Stock> queryResults = queryFactory

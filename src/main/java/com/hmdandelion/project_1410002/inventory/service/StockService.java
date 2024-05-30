@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
@@ -43,8 +44,8 @@ public class StockService {
         return stock.getStockCode();
     }
 
-    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity,LocalDate startDate, LocalDate endDate) {
-        return stockRepo.searchStocks(pageable, productCode, type, minQuantity,maxQuantity,startDate,endDate);
+    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate) {
+        return stockRepo.searchStocks(pageable, productCode, type, minQuantity,maxQuantity,assignmentStatus,startDate,endDate);
     }
 
     public void modifyStock(Long stockCode, StockUpdateRequest stockUpdateRequest) {
@@ -90,6 +91,7 @@ public class StockService {
                 stock.getQuantity(),
                 stock.getCreatedAt(),
                 stock.getIsDelete(),
+                stock.getAssignmentStatus(),
                 stock.getType(),
                 product.getProductCode(),
                 product.getProductName(),

@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.inventory.domian.entity.stock;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -41,6 +42,9 @@ public class Stock {
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "product_code")
     private Product product;
+
+    @Enumerated(EnumType.STRING)
+    private AssignmentStatus assignmentStatus;
 
     public Stock(Long quantity, StockType type, Product product) {
         this.quantity = quantity;

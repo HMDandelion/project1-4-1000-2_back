@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.dto.stock.response;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import jakarta.persistence.EnumType;
@@ -26,8 +27,11 @@ public class StockProduct {
     private LocalDateTime createdAt;
 
     private Boolean isDelete;
+    private AssignmentStatus assignmentStatus;
     private StockType type;
     private Long productCode;
+
+
     private String productName;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
@@ -41,11 +45,13 @@ public class StockProduct {
 
     private ProductStatus status;
 
+
     public StockProduct(Stock stock) {
         this.stockCode = stock.getStockCode();
         this.quantity = stock.getQuantity();
         this.createdAt = stock.getCreatedAt();
         this.isDelete = stock.getIsDelete();
+        this.assignmentStatus = stock.getAssignmentStatus();
         this.type = stock.getType();
         this.productCode = stock.getProduct().getProductCode();
         this.productName = stock.getProduct().getProductName();
@@ -57,12 +63,13 @@ public class StockProduct {
     }
 
 
-    public static StockProduct of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status) {
+    public static StockProduct of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete,AssignmentStatus assignmentStatus, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status) {
         return new StockProduct(
                 stockCode,
                 quantity,
                 createdAt,
                 isDelete,
+                assignmentStatus,
                 type,
                 productCode,
                 productName,
