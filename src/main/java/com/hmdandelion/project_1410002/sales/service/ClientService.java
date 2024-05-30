@@ -1,14 +1,16 @@
 package com.hmdandelion.project_1410002.sales.service;
 
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
-import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
-import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientUpdateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,7 +40,7 @@ public class ClientService {
     @Transactional(readOnly = true)
     public SalesClientResponse getSalesClient(Long clientCode) {
         Client client = clientRepo.findByClientCodeAndStatusNot(clientCode, ClientStatus.DELETED)
-                                  .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
 
         List<ClientOrderDTO> orders = clientRepo.getOrderList(clientCode);
 
@@ -63,7 +65,7 @@ public class ClientService {
 
     public void modify(Long clientCode, ClientUpdateRequest clientRequest) {
         Client client = clientRepo.findByClientCodeAndStatusNot(clientCode, ClientStatus.DELETED)
-                                  .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new RuntimeException());
 
         client.modify(
                 clientRequest.getClientName(),
