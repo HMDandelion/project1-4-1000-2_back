@@ -41,8 +41,8 @@ public class StockController {
             @RequestParam(required = false) final StockType type,
             @RequestParam(required = false) final Long minQuantity,
             @RequestParam(required = false) final Long maxQuantity,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy.MM.dd") LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy.MM.dd") LocalDate endDate
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,startDate,endDate);
