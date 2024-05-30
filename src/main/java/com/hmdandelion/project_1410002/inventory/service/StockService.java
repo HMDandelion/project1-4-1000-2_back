@@ -67,4 +67,9 @@ public class StockService {
         Integer sum = stockRepo.getAccumulateStock();
         return sum;
     }
+
+    public Integer getAccumulateStockByProductCode(Integer productCode) {
+        Integer sum = stockRepo.getAccumulateStockByProductCode(productCode);
+        return sum;
+    }
 }

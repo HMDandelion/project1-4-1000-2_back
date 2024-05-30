@@ -15,4 +15,6 @@ import java.util.List;
 public interface StockRepo extends JpaRepository<Stock,Long>, StockRepoCustom {
 @Query("SELECT SUM(s.quantity) FROM Stock s")
     Integer getAccumulateStock();
+@Query("SELECT SUM(s.quantity) FROM Stock s WHERE s.product.productCode = :productCode")
+    Integer getAccumulateStockByProductCode(Integer productCode);
 }

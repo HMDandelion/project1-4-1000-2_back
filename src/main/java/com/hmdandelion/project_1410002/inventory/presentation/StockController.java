@@ -75,4 +75,13 @@ public class StockController {
         return ResponseEntity.ok(sum);
     }
 
+    /*상품 별 누적 재고 조회*/
+    @GetMapping("/stock/{productCode}/accumulate")
+    public ResponseEntity<Integer> getAccumulateStockByProductCode(
+            @PathVariable final Integer productCode
+    ){
+        Integer sum = stockService.getAccumulateStockByProductCode(productCode);
+        return ResponseEntity.ok(sum);
+    }
+
 }
