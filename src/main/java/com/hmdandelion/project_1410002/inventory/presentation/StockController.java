@@ -68,6 +68,11 @@ public class StockController {
         return ResponseEntity.noContent().build();
     }
 
-    /**/
+    /*누적 재고 조회*/
+    @GetMapping("/stock/accumulate")
+    public ResponseEntity<Integer> getAccumulateStock(){
+        Integer sum = stockService.getAccumulateStock();
+        return ResponseEntity.ok(sum);
+    }
 
 }

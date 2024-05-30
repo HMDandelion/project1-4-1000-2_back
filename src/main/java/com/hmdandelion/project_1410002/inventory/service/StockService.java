@@ -63,4 +63,8 @@ public class StockService {
         stockRepo.deleteById(stockCode);
     }
 
+    public Integer getAccumulateStock() {
+        Integer sum = stockRepo.getAccumulateStock();
+        return sum;
+    }
 }
