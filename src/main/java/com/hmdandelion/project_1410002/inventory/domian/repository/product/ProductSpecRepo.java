@@ -11,6 +11,5 @@ import java.util.Optional;
 
 @Repository
 public interface ProductSpecRepo extends JpaRepository<ProductSpec,Long> {
-
     Optional<List<ProductSpec>> findProductSpecsByProductCode(Long productCode);
 }

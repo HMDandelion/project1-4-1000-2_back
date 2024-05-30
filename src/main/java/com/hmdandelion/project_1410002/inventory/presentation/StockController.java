@@ -68,5 +68,6 @@ public class StockController {
         return ResponseEntity.noContent().build();
     }
 
+    /**/
 
 }
