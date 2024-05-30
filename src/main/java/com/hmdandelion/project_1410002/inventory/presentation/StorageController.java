@@ -25,6 +25,13 @@ public class StorageController {
         return ResponseEntity.created(URI.create(null)).build();
     }
 
-    /*재고 코드에 일치하는 보관 재고 초기 수량 합 조회*/
+    /*재고 창고 배정 취소(저장 이력 삭제 조건: 삭제 되지 않은 재고,삭제 되지 않은 저장 이력,재고 이력 삭제 될 시 상태 값 변경)*/
+    @DeleteMapping("/storage/{storageCode}")
+    public ResponseEntity<Void> deleteStorage(
+            @PathVariable Long storageCode
+    ){
+        storageService.deleteStorage(storageCode);
+        return ResponseEntity.noContent().build();
+    }
 
 }

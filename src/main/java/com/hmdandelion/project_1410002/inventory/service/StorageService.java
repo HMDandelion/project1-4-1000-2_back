@@ -65,6 +65,10 @@ public class StorageService {
 
         List<Storage> afterStorages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
 
+        if(afterStorages==null && afterStorages.isEmpty()){
+            throw new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE);
+        }
+
         System.out.println("afterStorages = " + afterStorages);
         Long afterSum = 0L;
 
@@ -81,5 +85,41 @@ public class StorageService {
         }
         stock.modifyStatus(change);
         return newStorage.getStorageCode();
+    }
+
+    public void deleteStorage(Long storageCode) {
+        Storage storage = storageRepo.findStorageByStorageCodeAndIsDelete(storageCode,false);
+        if(storage==null){
+            throw new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE);
+        }
+
+        Long stockCode = storage.getStock().getStockCode();
+
+        System.out.println("stockCode = " + stockCode);
+
+        Stock stock =stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+
+        storageRepo.deleteById(storageCode);
+
+        List<Storage> afterStorages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
+
+        System.out.println("afterStorages = " + afterStorages);
+        Long afterSum = 0L;
+
+        for(Storage storageElement : afterStorages){
+            afterSum+=storageElement.getInitialQuantity();
+        }
+        System.out.println("afterSum = " + afterSum);
+
+        AssignmentStatus change;
+
+        if(afterSum==0){
+            change=NOT_ASSIGNED;
+        }else if(afterSum==stock.getQuantity()){
+            change=FULLY_ASSIGNED;
+        }else{
+            change=PARTIALLY_ASSIGNED;
+        }
+        stock.modifyStatus(change);
     }
 }

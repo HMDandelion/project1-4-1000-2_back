@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE tbl_stock SET is_delete = 1 WHERE storage_code = ?")
+@SQLDelete(sql = "UPDATE tbl_storage SET is_delete = 1 WHERE storage_code = ?")
 @ToString
 public class Storage {
     @Id

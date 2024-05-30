@@ -16,7 +16,8 @@ public enum ExceptionCode {
     NOT_FOUND_MATERIAL_NAME(3402, "자재 이름에 해당하는 스톡이 존재하지 않습니다." ),
     NOT_FOUND_WAREHOUSE_CODE(3403,"창고 코드에 맞는 창고가 존재하지 않습니다" ),
     NOT_FOUND_SPEC_CODE(3404,"스펙 코드에 맞는 스펙이 존재하지 않습니다." ),
-    NOT_FOUND_BOM_CODE(3505,"BOM 코드에 맞는 BOM이 존재하지 않습니다."),
+    NOT_FOUND_BOM_CODE(3501,"BOM 코드에 맞는 BOM이 존재하지 않습니다."),
+    NOT_FOUND_STORAGE_CODE(3502,"저장 이력 코드가 존재하지 않습니다."),
 
     NO_CONTENTS_MATERIAL_STOCK(4400, "요구하신 조건에 맞는 원자재 재고가 없습니다."),
 
