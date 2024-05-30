@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 public enum ExceptionCode {
 
     NOT_FOUND_PRODUCT_CODE(3000, "상품 코드에 해당하는 상품이 존재하지 않습니다."),
-    NO_CONTENTS_MATERIAL_STOCK(3000, "요구하신 조건에 맞는 원자재 재고가 없습니다."),
+    NO_CONTENTS_MATERIAL_STOCK(4400, "요구하신 조건에 맞는 원자재 재고가 없습니다."),
     NO_WAREHOUSE(4000, "창고 코드에 맞는 창고가 존재하지 않습니다."),
     NOT_FOUND_CATEGORY_CODE(3400, "카테고리 코드에 해당하는 카테고리가 존재하지 않습니다."),
     NOT_FOUND_STOCK_CODE(3401, "스톡 코드에 해당하는 스톡이 존재하지 않습니다."),

@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.common.model.material;
+package com.hmdandelion.project_1410002.inventory.dto.material.dto;
 
 import lombok.Getter;
 

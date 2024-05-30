@@ -8,7 +8,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehou
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.Stock.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
-import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialStockRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class MaterialStockService {
     }
 
     @Transactional
-    public Long save(SaveMaterialStockRequest request) {
+    public Long save(MaterialStockCreateRequest request) {
         Warehouse warehouse = warehouseService.getWarehouse(request.getWarehouseCode());
         if (warehouse == null) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE);

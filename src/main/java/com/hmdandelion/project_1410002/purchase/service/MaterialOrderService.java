@@ -34,7 +34,7 @@ public class MaterialOrderService {
                 currentMonth = 12;
             }
             log.info("year : {} / month : {} / specCode : {}", currentYear, currentMonth, specCode);
-            List<MaterialOrderDTO> tempList = materialOrderRepo.findMaterialORderBySpecCodeAndYearMonth(specCode, currentYear, currentMonth);
+            List<MaterialOrderDTO> tempList = materialOrderRepo.findMaterialOrderBySpecCodeAndYearMonth(specCode, currentYear, currentMonth);
             String monthName = getMonthName(currentMonth);
             log.info("찾아온 리스트의 크기...{}", tempList.size());
             double avg = tempList.stream()

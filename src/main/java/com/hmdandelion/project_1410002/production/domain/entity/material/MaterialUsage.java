@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Table(name = "tbl_material_usage")
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.private)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialUsage {
 
@@ -23,5 +23,5 @@ public class MaterialUsage {
     private LocalDateTime usageDatetime;
     private Long employeeCode; //TODO 수정필
     private Long workOrderCode; //TODO 수정필
-    private MUStatus status;
+    private MaterialUsageStatus status;
 }

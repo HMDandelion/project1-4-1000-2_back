@@ -4,7 +4,7 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
-import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialStockRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockResponse;
 import com.hmdandelion.project_1410002.inventory.service.MaterialStockService;
 import lombok.RequiredArgsConstructor;
@@ -53,10 +53,10 @@ public class MaterialStockController {
         return ResponseEntity.ok(found);
     }
 
-    //재고 등록/수정
+    //재고 등록
     @PostMapping("/inventory")
-    public ResponseEntity<Void> saveStock(
-            @RequestBody final SaveMaterialStockRequest request
+    public ResponseEntity<Void> createStock(
+            @RequestBody final MaterialStockCreateRequest request
     ) {
         final Long stockCode = materialStockService.save(request);
 

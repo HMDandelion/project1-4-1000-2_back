@@ -22,7 +22,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
 
     @Override
-    public List<MaterialOrderDTO> findMaterialORderBySpecCodeAndYearMonth(Long specCode, int year, int month) {
+    public List<MaterialOrderDTO> findMaterialOrderBySpecCodeAndYearMonth(Long specCode, int year, int month) {
         QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
         QOrderSpec orderSpec = QOrderSpec.orderSpec;
         QMaterialSpec materialSpec = QMaterialSpec.materialSpec;

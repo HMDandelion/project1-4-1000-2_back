@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "tbl_material_specification")
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.private)
+@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialSpec {
 
