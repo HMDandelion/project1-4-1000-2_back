@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.net.URI;
 
 @RestController
@@ -25,9 +26,8 @@ public class ProductionPlanController {
     @GetMapping("/production/work-order")
     public ResponseEntity<PagingResponse> getPlanList(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final String dt,
-            @RequestParam(defaultValue = "1") final Integer page)
-    {
-        final Page<PlanListResponse> plan = planService.getPlanListBetweenDates(dt,page);
+            @RequestParam(defaultValue = "1") final Integer page) {
+        final Page<PlanListResponse> plan = planService.getPlanListBetweenDates(dt, page);
 
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(plan);
         final PagingResponse pagingResponse = PagingResponse.of(plan.getContent(), pagingButtonInfo);
@@ -39,14 +39,13 @@ public class ProductionPlanController {
     /* 생산 계획 등록 start */
     @PostMapping("/production/planning")
     public ResponseEntity<Void> planSave(
-            @RequestBody final ProductionPlanCreateRequest productionPlanCreateRequest)
-      {
-            final Long planCode = planService.planSave(productionPlanCreateRequest);
+            @RequestBody final ProductionPlanCreateRequest productionPlanCreateRequest) {
+        final Long planCode = planService.planSave(productionPlanCreateRequest);
 
-          // 생산 계획 등록 후에 해당 주문 건을 삭제
-//          orderService.deleteOrder(productionPlanCreateRequest.getOrderId());
+        // 생산 계획 등록 후에 해당 주문 건을 삭제
+        //          orderService.deleteOrder(productionPlanCreateRequest.getOrderId());
 
-            return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
+        return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
     }
     /* 생산 계획 등록 end */
 
@@ -54,8 +53,7 @@ public class ProductionPlanController {
     @PutMapping("/production/planning/{planCode}")
     public ResponseEntity<Void> planModify(
             @PathVariable final Long planCode,
-            @RequestBody final ProductionPlanUpdateRequest productionPlanUpdateRequest)
-    {
+            @RequestBody final ProductionPlanUpdateRequest productionPlanUpdateRequest) {
         planService.planModify(planCode, productionPlanUpdateRequest);
 
         return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
@@ -65,12 +63,11 @@ public class ProductionPlanController {
     /* 생산 계획 삭제 start */
     @DeleteMapping("/production/planning/{planCode}")
     public ResponseEntity<Void> planRemove(
-            @PathVariable final Long planCode)
-            {
-                planService.planRemove(planCode);
+            @PathVariable final Long planCode) {
+        planService.planRemove(planCode);
 
-                return ResponseEntity.noContent().build();
-            }
+        return ResponseEntity.noContent().build();
+    }
     /* 생산 계획 삭제 end */
 
 }

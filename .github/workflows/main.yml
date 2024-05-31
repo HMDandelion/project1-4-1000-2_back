@@ -2,8 +2,8 @@ name: Example CI & CD
 
 on:
   push:
-    branches: ["master"]
- # pull_request:
+    branches: [ "master" ]
+  # pull_request:
   #  branches: ["develop"]
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'gradle'
-          
+
       # Gradlew 권한 부여
       - name: Add permission for gradlew
         run: chmod +x gradlew
@@ -38,8 +38,8 @@ jobs:
         with:
           arguments: build -x test
 
-      # 테스트 진행
-      # - name: Test
+        # 테스트 진행
+        # - name: Test
         # run: ./gradlew test
 
       # Docker 로그인

@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderSpecDTO {
+
     private Long orderSpecCode;
     private int orderQuantity;
     private int price;

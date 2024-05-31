@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class BedRequestException extends CustomException {
+
     public BedRequestException(final ExceptionCode exceptionCode) {
         super(exceptionCode);
     }

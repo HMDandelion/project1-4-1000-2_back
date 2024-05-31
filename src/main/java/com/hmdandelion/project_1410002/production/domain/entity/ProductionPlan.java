@@ -1,6 +1,5 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +10,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "tbl_production_plan")
@@ -42,17 +40,18 @@ public class ProductionPlan {
     @Column(name = "end_at", nullable = false)
     private LocalDate endAt;
 
-//    @OneToMany(mappedBy = "productionPlan")
-//    private List<PlannedOrderList> plannedOrderList;
-//
-//    @OneToMany(mappedBy = "productionPlan")
-//    private List<ProductionPlannedList> productionPlannedList;
+    //    @OneToMany(mappedBy = "productionPlan")
+    //    private List<PlannedOrderList> plannedOrderList;
+    //
+    //    @OneToMany(mappedBy = "productionPlan")
+    //    private List<ProductionPlannedList> productionPlannedList;
 
     public ProductionPlan(LocalDate startAt, String description, LocalDate endAt) {
         this.startAt = startAt;
         this.description = description;
         this.endAt = endAt;
     }
+
     public static ProductionPlan of(LocalDate startAt, String description, LocalDate endAt) {
         return new ProductionPlan(startAt, description, endAt);
 
