@@ -22,7 +22,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
 
     @Override
-    public List<MaterialOrderDTO> findMaterialORderBySpecCodeAndYearMonth(Long specCode, int year, int month) {
+    public List<MaterialOrderDTO> findMaterialOrderBySpecCodeAndYearMonth(Long specCode, int year, int month) {
         QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
         QOrderSpec orderSpec = QOrderSpec.orderSpec;
         QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
@@ -40,7 +40,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
         List<MaterialOrder> orders = queryFactory
                 .selectFrom(materialOrder)
                 .where(materialOrder.orderCode.in(orderCodesWithSpec)
-                               .and(materialOrder.orderDate.between(startDate,endDate)))
+                                              .and(materialOrder.orderDate.between(startDate, endDate)))
                 .fetch();
 
         // 조회한 주문의 오더-스펙을 조회

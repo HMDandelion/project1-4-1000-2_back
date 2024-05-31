@@ -2,7 +2,7 @@ name: Update Issue Status
 
 on:
   issues:
-    types: [edited]
+    types: [ edited ]
 
 jobs:
   update_issue_status:
@@ -10,34 +10,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check if issue status changed
-      if: github.event.changes['issue.state']
-      run: |
-        const octokit = require('@octokit/rest')();
-        octokit.authenticate({
-          type: 'token',
-          token: process.env.GITHUB_TOKEN
-        });
-
-        const issue = github.context.payload.issue;
-        const issueNumber = issue.number;
-        const owner = github.context.repo.owner;
-        const repo = github.context.repo.repo;
-        const currentState = issue.state;
-
-        if (currentState === 'todo') {
-          octokit.issues.update({
-            owner: owner,
-            repo: repo,
-            issue_number: issueNumber,
-            state: 'in_progress'
+      - name: Check if issue status changed
+        if: github.event.changes['issue.state']
+        run: |
+          const octokit = require('@octokit/rest')();
+          octokit.authenticate({
+            type: 'token',
+            token: process.env.GITHUB_TOKEN
           });
-        } else if (currentState === 'in_progress') {
-          octokit.issues.update({
-            owner: owner,
-            repo: repo,
-            issue_number: issueNumber,
-            state: 'done',
-            body: 'End Date: ' + new Date().toISOString().slice(0, 10)
-          });
-        }
+          
+          const issue = github.context.payload.issue;
+          const issueNumber = issue.number;
+          const owner = github.context.repo.owner;
+          const repo = github.context.repo.repo;
+          const currentState = issue.state;
+          
+          if (currentState === 'todo') {
+            octokit.issues.update({
+              owner: owner,
+              repo: repo,
+              issue_number: issueNumber,
+              state: 'in_progress'
+            });
+          } else if (currentState === 'in_progress') {
+            octokit.issues.update({
+              owner: owner,
+              repo: repo,
+              issue_number: issueNumber,
+              state: 'done',
+              body: 'End Date: ' + new Date().toISOString().slice(0, 10)
+            });
+          }
