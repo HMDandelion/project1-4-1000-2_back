@@ -1,7 +1,9 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
+import com.hmdandelion.project_1410002.inventory.dto.product.request.BomCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.BomRequest;
+import com.hmdandelion.project_1410002.inventory.dto.product.request.BomUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.BomResponse;
 import com.hmdandelion.project_1410002.inventory.service.BomService;
 import lombok.RequiredArgsConstructor;
@@ -35,23 +37,44 @@ public class BomController {
         return ResponseEntity.ok(bom);
     }
 
-    /*상품 코드로 BOM조회*/
+    /*상품 코드로 BOM조회(BOM상세 보기)*/
     @GetMapping("/bom/product/{productCode}")
-    public ResponseEntity<Bom> getBomByProductCode(
+    public ResponseEntity<List<Bom>> getBomByProductCode(
             @PathVariable final Long productCode
     ){
-        Bom bom = bomService.getBomByProductCode(productCode);
+        List<Bom> boms = bomService.getBomByProductCode(productCode);
 
-        return ResponseEntity.ok(bom);
+        return ResponseEntity.ok(boms);
     }
 
-    /*해당하는 상품의 BOM 추가*/
-//    @PostMapping("/bom/product/{productCode}")
-//    public ResponseEntity<Void> saveBomByProductCode(
-//            @PathVariable final Long productCode,
-//            @RequestBody final BomRequest bomRequest
-//    ){
-//        Long bomCode = bomService.saveBomByProductCode(productCode,bomRequest);
-//        return ResponseEntity.created(URI.create("/api/v1/bom/product"+productCode)).build();
-//    }
+    /*productCode에 해당하는 상품의 BOM 추가*/
+    /*TODO: 나중에 MaterailSpec과 연동*/
+    @PostMapping("/bom/product/{productCode}")
+    public ResponseEntity<Void> saveBomByProductCode(
+            @PathVariable final Long productCode,
+            @RequestBody final BomCreateRequest bomRequest
+    ){
+        Long bomCode = bomService.saveBomByProductCode(productCode,bomRequest);
+        return ResponseEntity.created(URI.create("/api/v1/bom/product"+bomCode)).build();
+    }
+
+    /*bomCode에해당하는 상품의 BOM 수정*/
+    /*TODO: 나중에 MaterailSpec과 연동*/
+    @PutMapping("/bom/{bomCode}")
+    public ResponseEntity<Void> modifyBomByProductCode(
+            @PathVariable final Long bomCode,
+            @RequestBody final BomUpdateRequest bomRequest
+    ){
+        bomService.modifyBomByBomCode(bomCode,bomRequest);
+        return ResponseEntity.created(URI.create("/api/v1/bom"+bomCode)).build();
+    }
+
+    /*bomCode에 해당 하는 BOM삭제*/
+    @DeleteMapping("/bom/{bomCode}")
+    public ResponseEntity<Void> deleteByBomCode(
+            @PathVariable final Long bomCode
+    ){
+        bomService.deleteByBomCode(bomCode);
+        return ResponseEntity.noContent().build();
+    }
 }
