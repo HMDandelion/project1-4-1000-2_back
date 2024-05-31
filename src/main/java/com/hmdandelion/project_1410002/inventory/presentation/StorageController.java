@@ -1,7 +1,10 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStock;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageWarehouse;
 import com.hmdandelion.project_1410002.inventory.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +47,25 @@ public class StorageController {
         List<StorageStock> storageStocks = storageService.getStorageStockByStockCode(stockCode);
 
         return ResponseEntity.ok(storageStocks);
+    }
+
+    /*창고 별 이동 종류,상품명,수량,창고이름,등록 날짜*/
+    @GetMapping("/storage/warehouse/{warehouseCode}")
+    public ResponseEntity<List<StorageWarehouse>> getStorageWarehouseByWarehouseCode(
+            @PathVariable final Long warehouseCode
+    ){
+        List<StorageWarehouse> storageWarehouses = storageService.getStorageWarehouseByWarehouseCode(warehouseCode);
+        return ResponseEntity.ok(storageWarehouses);
+    }
+
+    /*파손 등록*/
+    @PutMapping("/storage/destroy/{storageCode}")
+    public ResponseEntity<Void> modifyDestroyQuantity(
+            @PathVariable final Long storageCode,
+            @RequestBody final StorageDestroyRequest destroyQuantity
+    ){
+        storageService.modifyDestroyQuantity(storageCode,destroyQuantity);
+        return ResponseEntity.created(URI.create(null)).build();
     }
 
 }

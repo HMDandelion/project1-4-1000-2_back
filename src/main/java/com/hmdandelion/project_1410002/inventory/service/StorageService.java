@@ -12,7 +12,9 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.stock.Storage
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStock;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageWarehouse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -162,5 +164,37 @@ public class StorageService {
         System.out.println("initialQuantity="+stock.getQuantity());
         System.out.println("resultList = " + resultList);
         return resultList;
+    }
+
+    public List<StorageWarehouse> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
+        List<StorageWarehouse> storageWarehouses = new ArrayList<>();
+        List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode,false);
+        if(storages.isEmpty()&&storages==null){
+            throw new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE);
+        }
+        Warehouse warehouse = warehouseRepo.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
+        for(Storage storage:storages){
+            StorageWarehouse storageWarehouse = StorageWarehouse.of(
+                    "입고",
+                    storage.getStock().getProduct().getProductName(),
+                    storage.getInitialQuantity(),
+                    warehouse.getName(),
+                    storage.getCreatedAt()
+            );
+            storageWarehouses.add(storageWarehouse);
+            System.out.println("storageWarehouse = " + storageWarehouse);
+        }
+        return storageWarehouses;
+    }
+
+
+    public void modifyDestroyQuantity(Long storageCode, StorageDestroyRequest destroyQuantity) {
+        Storage storage = storageRepo.findById(storageCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE));
+        if(storage.getInitialQuantity()<destroyQuantity.getDestroyQuantity()){
+            throw new CustomException(ExceptionCode.BAD_REQUEST_DESTROY_QUANTITY);
+        }
+        storage.modifyDestroyQuantity(
+                destroyQuantity.getDestroyQuantity()
+        );
     }
 }

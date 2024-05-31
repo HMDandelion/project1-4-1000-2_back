@@ -54,4 +54,9 @@ public class Storage {
                 warehouse
         );
     }
+
+    public void modifyDestroyQuantity(Long destroyQuantity) {
+        this.destroyQuantity += destroyQuantity;
+        this.actualQuantity -= destroyQuantity;
+    }
 }
