@@ -15,6 +15,7 @@ import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreate
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStock;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageWarehouse;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStockWarehouse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -196,5 +197,31 @@ public class StorageService {
         storage.modifyDestroyQuantity(
                 destroyQuantity.getDestroyQuantity()
         );
+    }
+
+    public StorageStockWarehouse getStorageByStorageCode(Long storageCode) {
+        Storage storage = storageRepo.findStorageByStorageCodeAndIsDelete(storageCode,false);
+        System.out.println("storage = " + storage);
+        Stock stock = stockRepo.findById(storage.getStock().getStockCode()).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+        System.out.println("2");
+        Warehouse warehouse = warehouseRepo.findById(storage.getWarehouse().getWarehouseCode()).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
+        System.out.println("3");
+        StorageStockWarehouse storageWarehouse = StorageStockWarehouse.of(
+                storage.getInitialQuantity(),
+                storage.getDestroyQuantity(),
+                storage.getStorageCode(),
+                storage.getActualQuantity(),
+                storage.getCreatedAt(),
+                stock.getQuantity(),
+                stock.getCreatedAt(),
+                stock.getType(),
+                stock.getProduct().getProductCode(),
+                stock.getAssignmentStatus(),
+                warehouse.getWarehouseCode(),
+                warehouse.getName(),
+                warehouse.getLocation(),
+                warehouse.getVolume()
+        );
+        return storageWarehouse;
     }
 }

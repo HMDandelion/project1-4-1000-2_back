@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.stock;
 
+import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -56,6 +58,9 @@ public class Storage {
     }
 
     public void modifyDestroyQuantity(Long destroyQuantity) {
+        if(this.destroyQuantity+destroyQuantity>initialQuantity||this.actualQuantity-destroyQuantity<0){
+            throw new CustomException(ExceptionCode.BAD_REQUEST_DESTROY_QUANTITY);
+        }
         this.destroyQuantity += destroyQuantity;
         this.actualQuantity -= destroyQuantity;
     }

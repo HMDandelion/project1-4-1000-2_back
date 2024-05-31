@@ -66,6 +66,9 @@ public class StockService {
         if(stock.getIsDelete()==true){
             throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
         }
+        if(stock.getAssignmentStatus()!=AssignmentStatus.NOT_ASSIGNED){
+            throw new CustomException(ExceptionCode.ALREADY_ASSIGNED_STOCK);
+        }
         stockRepo.deleteById(stockCode);
     }
 

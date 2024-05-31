@@ -15,6 +15,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+import static com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus.NOT_ASSIGNED;
+
 @Entity
 @Table(name = "tbl_stock")
 @EntityListeners(AuditingEntityListener.class)
@@ -44,7 +46,7 @@ public class Stock {
     private Product product;
 
     @Enumerated(EnumType.STRING)
-    private AssignmentStatus assignmentStatus;
+    private AssignmentStatus assignmentStatus=NOT_ASSIGNED;
 
     public Stock(Long quantity, StockType type, Product product) {
         this.quantity = quantity;
@@ -60,7 +62,7 @@ public class Stock {
         );
     }
 
-    private void modify(Product product, StockType type) {
+    public void modify(Product product, StockType type) {
         this.product = product;
         this.type = type;
     }

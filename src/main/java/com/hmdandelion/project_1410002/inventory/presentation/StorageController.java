@@ -1,10 +1,10 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStock;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageWarehouse;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStockWarehouse;
 import com.hmdandelion.project_1410002.inventory.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +66,15 @@ public class StorageController {
     ){
         storageService.modifyDestroyQuantity(storageCode,destroyQuantity);
         return ResponseEntity.created(URI.create(null)).build();
+    }
+
+    /*창고 보관코드로 보관 이력 조회*/
+    @GetMapping("/storage/{storageCode}")
+    public ResponseEntity<StorageStockWarehouse> getStorageByStorageCode(
+            @PathVariable final Long storageCode
+    ){
+        StorageStockWarehouse storageWarehouse = storageService.getStorageByStorageCode(storageCode);
+        return ResponseEntity.ok(storageWarehouse);
     }
 
 }

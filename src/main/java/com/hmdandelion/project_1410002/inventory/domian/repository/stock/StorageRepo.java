@@ -13,4 +13,5 @@ public interface StorageRepo extends JpaRepository<Storage,Long>, StorageRepoCus
     Storage findStorageByStorageCodeAndIsDelete(Long storageCode,Boolean isDelete);
 
     List<Storage> findStoragesByWarehouseWarehouseCodeAndIsDelete(Long warehouseCode,Boolean isDelete);
+
 }

@@ -1,7 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
 import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObjectListRes;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockDetailDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.SaveMaterialStockRequest;
