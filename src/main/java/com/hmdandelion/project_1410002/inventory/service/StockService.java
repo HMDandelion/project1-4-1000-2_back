@@ -44,8 +44,8 @@ public class StockService {
         return stock.getStockCode();
     }
 
-    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate) {
-        return stockRepo.searchStocks(pageable, productCode, type, minQuantity,maxQuantity,assignmentStatus,startDate,endDate);
+    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate,Boolean sort) {
+        return stockRepo.searchStocks(pageable, productCode, type, minQuantity,maxQuantity,assignmentStatus,startDate,endDate,sort);
     }
 
     public void modifyStock(Long stockCode, StockUpdateRequest stockUpdateRequest) {
@@ -88,6 +88,7 @@ public class StockService {
             throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
         }
         Product product = productRepo.findById(stock.getProduct().getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Boolean isToday = stock.getCreatedAt().toLocalDate().isEqual(LocalDate.now());
 
         StockProduct stockProduct = StockProduct.of(
                 stock.getStockCode(),
@@ -102,7 +103,8 @@ public class StockService {
                 product.getPrice(),
                 product.getUnit(),
                 product.getUpdatedAt(),
-                product.getStatus()
+                product.getStatus(),
+                isToday
         );
         return stockProduct;
     }

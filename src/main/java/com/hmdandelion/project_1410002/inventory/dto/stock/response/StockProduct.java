@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus.IN_PRODUCTION;
@@ -44,6 +45,7 @@ public class StockProduct {
     private LocalDateTime updatedAt;
 
     private ProductStatus status;
+    private Boolean isToday;
 
 
     public StockProduct(Stock stock) {
@@ -60,10 +62,11 @@ public class StockProduct {
         this.unit = stock.getProduct().getUnit();
         this.updatedAt = stock.getProduct().getUpdatedAt();
         this.status = stock.getProduct().getStatus();
+        this.isToday = stock.getCreatedAt().toLocalDate().isEqual(LocalDate.now());
     }
 
 
-    public static StockProduct of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete,AssignmentStatus assignmentStatus, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status) {
+    public static StockProduct of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete,AssignmentStatus assignmentStatus, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status,Boolean isToday) {
         return new StockProduct(
                 stockCode,
                 quantity,
@@ -77,8 +80,13 @@ public class StockProduct {
                 price,
                 unit,
                 updatedAt,
-                status
+                status,
+                isToday
         );
+    }
+
+    public void setToday(boolean equal) {
+        this.isToday = equal;
     }
 }
 

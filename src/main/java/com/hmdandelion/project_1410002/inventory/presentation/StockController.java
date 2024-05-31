@@ -45,10 +45,11 @@ public class StockController {
             @RequestParam(required = false) final Long maxQuantity,
             @RequestParam(required = false) final AssignmentStatus assignmentStatus,
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate,
+            @RequestParam(defaultValue = "true") final Boolean sort
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,assignmentStatus,startDate,endDate);
+        Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,assignmentStatus,startDate,endDate,sort);
         return ResponseEntity.ok(stocks);
     }
 

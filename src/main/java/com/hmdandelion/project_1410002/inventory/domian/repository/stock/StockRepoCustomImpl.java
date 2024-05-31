@@ -11,6 +11,7 @@ import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -31,7 +32,7 @@ public class StockRepoCustomImpl implements StockRepoCustom {
     }
 
     @Override
-    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate) {
+    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus, LocalDate startDate, LocalDate endDate, Boolean sort) {
         QStock stock = QStock.stock;
         QProduct product = QProduct.product;
         BooleanBuilder builder = new BooleanBuilder();
@@ -48,7 +49,7 @@ public class StockRepoCustomImpl implements StockRepoCustom {
         if (maxQuantity != null) {
             builder.and(stock.quantity.loe(maxQuantity));
         }
-        if(assignmentStatus!=null){
+        if (assignmentStatus != null) {
             builder.and(stock.assignmentStatus.eq(assignmentStatus));
         }
         if (startDate != null && endDate != null) {
@@ -61,16 +62,29 @@ public class StockRepoCustomImpl implements StockRepoCustom {
 
         builder.and(stock.isDelete.eq(false));
 
-        QueryResults<Stock> queryResults = queryFactory
+        JPAQuery<Stock> query = queryFactory
                 .selectFrom(stock)
                 .join(stock.product, product)
-                .where(builder)
+                .where(builder);
+
+        // 정렬 조건 추가
+        if (Boolean.TRUE.equals(sort)) {
+            query.orderBy(stock.createdAt.asc());
+        } else if (Boolean.FALSE.equals(sort)) {
+            query.orderBy(stock.createdAt.desc());
+        }
+
+        QueryResults<Stock> queryResults = query
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
         List<StockProduct> results = queryResults.getResults().stream()
-                .map(StockProduct::new)
+                .map(stockEntity -> {
+                    StockProduct stockProduct = new StockProduct(stockEntity);
+                    stockProduct.setToday(stockEntity.getCreatedAt().toLocalDate().isEqual(LocalDate.now()));
+                    return stockProduct;
+                })
                 .collect(Collectors.toList());
 
         return new PageImpl<>(results, pageable, queryResults.getTotal());

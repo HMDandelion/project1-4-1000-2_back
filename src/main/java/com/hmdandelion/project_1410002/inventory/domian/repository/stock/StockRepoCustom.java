@@ -12,5 +12,5 @@ import org.springframework.data.domain.Pageable;
 import java.time.LocalDate;
 
 public interface StockRepoCustom {
-    Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate);
+    Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate,Boolean sort);
 }
