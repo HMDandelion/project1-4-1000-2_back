@@ -10,7 +10,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Entity
 @Table(name = "tbl_material_specification")
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
+@RequiredArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialSpec {
 
@@ -46,6 +46,9 @@ public class MaterialSpec {
         );
     }
 
+    public MaterialSpec(String materialName){
+        this.materialName = materialName;
+    }
     public void modifyFrom(MaterialSpecModifyRequest request, SpecCategory specCategory) {
         if (request.getMaterialName() != null && !request.getMaterialName().isBlank()) {
             this.materialName = request.getMaterialName();
