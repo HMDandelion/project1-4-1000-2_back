@@ -20,5 +20,21 @@ public class ReturnProduct {
     private Return returnEntity;
     private Long productCode;
     private Integer defectiveQuantity;
-    private Boolean inspectionStatus;
+    private Boolean inspectionStatus = false;
+
+    private ReturnProduct(Integer quantity, Integer refundPrice, Return newReturn, Long productCode) {
+        this.quantity = quantity;
+        this.refundPrice = refundPrice;
+        this.returnEntity = newReturn;
+        this.productCode = productCode;
+    }
+
+    public static ReturnProduct of(Integer quantity, Integer refundPrice, Return newReturn, Long productCode) {
+        return new ReturnProduct(
+                quantity,
+                refundPrice,
+                newReturn,
+                productCode
+        );
+    }
 }

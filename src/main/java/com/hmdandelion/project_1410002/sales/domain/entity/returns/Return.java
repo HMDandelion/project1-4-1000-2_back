@@ -28,12 +28,37 @@ public class Return {
     private LocalDateTime returnDatetime;
     private Long clientCode;
     private Long orderCode;
+    @Enumerated(value = EnumType.STRING)
     private ManageType manageType;
+    @Enumerated(value = EnumType.STRING)
     private ManageStatus manageStatus = ManageStatus.RETURN_RECEIVED;
+    @Enumerated(value = EnumType.STRING)
     private ReturnStatus returnStatus = ReturnStatus.AWAITING_INSPECTION;
     private Long exchangeOrder;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @OneToMany(mappedBy = "return", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "returnEntity", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReturnProduct> returnProducts = new ArrayList<>();
+
+    private Return(Long clientCode, Long orderCode, ManageType manageType) {
+        this.clientCode = clientCode;
+        this.orderCode = orderCode;
+        this.manageType = manageType;
+    }
+
+    public static Return of(Long clientCode, Long orderCode, ManageType manageType) {
+        return new Return(
+                clientCode,
+                orderCode,
+                manageType
+        );
+    }
+
+    public void modifyExchangeCode(Long exchangeOrderCode) {
+        this.exchangeOrder = exchangeOrderCode;
+    }
+
+    public void modifyProducts(List<ReturnProduct> returnProducts) {
+        this.returnProducts = returnProducts;
+    }
 }
