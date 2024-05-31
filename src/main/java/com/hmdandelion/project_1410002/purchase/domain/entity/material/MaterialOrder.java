@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.purchase.domain.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.purchase.model.MaterialOrderStatus;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -25,7 +26,10 @@ public class MaterialOrder {
     private LocalDate orderDate;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deliveryDueDate;
-    private Long clientCode;    //TODO 수정필
+    //    private Long clientCode;    //TODO 수정필
+    @ManyToOne
+    @JoinColumn(name = "client_code")
+    private Client client;
     @Enumerated(value = EnumType.STRING)
     private MaterialOrderStatus status;
     private boolean isRegularContract;

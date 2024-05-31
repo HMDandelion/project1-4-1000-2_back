@@ -22,7 +22,7 @@ public class OrderSpec {
     private int price;
     private Long orderCode;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "spec_code")
     private MaterialSpec materialSpec;
 }

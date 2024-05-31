@@ -6,8 +6,13 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.QMaterialOrder;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.QOrderSpec;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
+    private static final Logger log = LoggerFactory.getLogger(MaterialOrderRepoCustomImpl.class);
     private final JPAQueryFactory queryFactory;
 
 
@@ -91,5 +97,56 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
                 .selectFrom(orderSpec)
                 .where(orderSpec.orderCode.eq(orderCode))
                 .fetch();
+    }
+
+    @Override
+    public List<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable) {
+        QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
+        QOrderSpec orderSpec = QOrderSpec.orderSpec;
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (planCode != null && planCode > 0) {
+            builder.and(materialOrder.planCode.eq(planCode));
+        }
+        if (clientName != null && !clientName.isBlank()) {
+            builder.and(materialOrder.client.clientName.contains(clientName));
+        }
+
+        List<MaterialOrder> orders = queryFactory
+                .selectFrom(materialOrder)
+                .where(builder)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .orderBy(materialOrder.orderDate.desc())
+                .fetch();
+        log.info("검색된 주문건의 수...{}",orders.size());
+        for (MaterialOrder bb : orders) {
+            log.info("주문번호...{}",bb.getOrderCode());
+        }
+        List<OrderSpec> orderSpecs = queryFactory
+                .selectFrom(orderSpec)
+                .leftJoin(orderSpec.materialSpec).fetchJoin() // 이 부분이 수정된 부분입니다.
+                .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())))
+                .fetch();
+
+        for (OrderSpec ccc : orderSpecs) {
+            System.out.println(ccc.getOrderSpecCode());
+            System.out.println(ccc.getMaterialSpec().getMaterialName());
+        }
+
+        Map<Long, List<OrderSpec>> specsMap = orderSpecs.stream()
+                                                        .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
+
+
+        log.info("연결된 specsMap의 수...{}",specsMap.size());
+        for (Map.Entry<Long, List<OrderSpec>> entry : specsMap.entrySet()) {
+            System.out.println("=========================");
+            System.out.println("key : " + entry.getKey());
+            for (OrderSpec aaaa : entry.getValue()) {
+                System.out.println(aaaa.getMaterialSpec().getMaterialName());
+            }
+            System.out.println("=========================");
+        }
+        return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
     }
 }

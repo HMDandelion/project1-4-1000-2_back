@@ -20,6 +20,7 @@ public class MaterialOrderAnalyzeController {
 
     private final MaterialOrderAnalyzeService materialOrderAnalyzeService;
 
+    //필요 자재량 대비 주문량
     @GetMapping("/order-quantity/{planCode}")
     public ResponseEntity<MaterialGraphResponse> findOrderByMaterialRequirementRatio(@PathVariable Long planCode) {
         List<MaterialGraphModel> list = materialOrderAnalyzeService.findOrderByMaterialRequirementRatio(planCode);

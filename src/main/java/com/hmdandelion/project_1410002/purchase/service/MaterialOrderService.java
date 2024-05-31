@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.purchase.service;
 
+import com.hmdandelion.project_1410002.common.exception.NoContentsException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
@@ -7,6 +9,7 @@ import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -68,5 +71,14 @@ public class MaterialOrderService {
 
     public List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode) {
         return materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
+    }
+
+    public List<MaterialOrderDTO> getOrders(Long planCode, String clientName, Pageable pageable) {
+        List<MaterialOrderDTO> orders = materialOrderRepo.gerOrders(planCode, clientName, pageable);
+        log.info("조회된 주문정보 {}건.",orders.size());
+        if (orders == null || orders.isEmpty()) {
+            throw new NoContentsException(ExceptionCode.NO_CONTENTS_M_ORDERS);
+        }
+        return orders;
     }
 }
