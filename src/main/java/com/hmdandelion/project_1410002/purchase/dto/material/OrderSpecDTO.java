@@ -1,6 +1,6 @@
 package com.hmdandelion.project_1410002.purchase.dto.material;
 
-import com.hmdandelion.project_1410002.inventory.dto.material.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import lombok.*;
 
@@ -10,6 +10,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderSpecDTO {
+
     private Long orderSpecCode;
     private int orderQuantity;
     private int price;

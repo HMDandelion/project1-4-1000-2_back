@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialUsage {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usageCode;
@@ -22,5 +23,5 @@ public class MaterialUsage {
     private LocalDateTime usageDatetime;
     private Long employeeCode; //TODO 수정필
     private Long workOrderCode; //TODO 수정필
-    private MUStatus status;
+    private MaterialUsageStatus status;
 }

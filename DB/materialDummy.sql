@@ -1,4 +1,5 @@
-INSERT INTO tbl_material_specification (material_name, remarks, unit, spec_category_code, safety_stock, specification)
+INSERT INTO tbl_material_specification
+    (material_name, remarks, unit, spec_category_code, safety_stock, specification)
 VALUES
     ('Material6', 'Sample remarks for Material6', 'kg', 1, 45, 'Spec6'),
     ('Material7', 'Sample remarks for Material7', 'pcs', 2, 25, 'Spec7'),
@@ -46,7 +47,8 @@ VALUES
     ('Material49', 'Sample remarks for Material49', 'g', 3, 23, 'Spec49'),
     ('Material50', 'Sample remarks for Material50', 'kg', 2, 63, 'Spec50');
 
-INSERT INTO tbl_spec_category (spec_category_name)
+INSERT INTO tbl_spec_category
+    (spec_category_name)
 VALUES
     ('Category1'),
     ('Category2'),
@@ -55,26 +57,65 @@ VALUES
     ('Category5');
 
 -- 오더 코드를 1부터 50까지 순차적으로 생성하고 specCode는 1부터 45까지의 랜덤한 값으로 설정합니다.
-INSERT INTO tbl_material_stock (division, spec_code, warehouse_code, incoming_quantity, actual_quantity, storage_datetime, remarks, inspection_datetime, modification_datetime, modification_reason, order_code)
-SELECT
-    'STOCK',
-    FLOOR(RAND() * 45) + 1, -- specCode를 1부터 45까지의 랜덤한 값으로 설정
-    1, -- 임의의 창고 코드
-    100, -- 임의의 입고 수량
-    80, -- 임의의 실수량
-    '2024-05-01 08:00:00', -- 임의의 적재 일시
-    '비고', -- 임의의 비고
-    '2024-05-03 10:00:00', -- 임의의 점검 일시
-    '2024-05-05 14:00:00', -- 임의의 수정 일시
-    '수정사유', -- 임의의 수정 사유
-    t.n + 1 as order_code -- 오더 코드를 1부터 50까지 순차적으로 생성
-  FROM
-      (SELECT n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) as nums) as t
-          CROSS JOIN
-      (SELECT n FROM (SELECT 0 as n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) as nums) as t2;
+INSERT INTO tbl_material_stock
+    (division, spec_code, warehouse_code, incoming_quantity, actual_quantity, storage_datetime, remarks,
+     inspection_datetime, modification_datetime, modification_reason, order_code)
+SELECT 'STOCK',
+       FLOOR(RAND() * 45) + 1, -- specCode를 1부터 45까지의 랜덤한 값으로 설정
+       1,                      -- 임의의 창고 코드
+       100,                    -- 임의의 입고 수량
+       80,                     -- 임의의 실수량
+       '2024-05-01 08:00:00',  -- 임의의 적재 일시
+       '비고',                   -- 임의의 비고
+       '2024-05-03 10:00:00',  -- 임의의 점검 일시
+       '2024-05-05 14:00:00',  -- 임의의 수정 일시
+       '수정사유',                 -- 임의의 수정 사유
+       t.n + 1 AS order_code   -- 오더 코드를 1부터 50까지 순차적으로 생성
+  FROM (SELECT n
+          FROM (SELECT 0 AS n
+                 UNION ALL
+                SELECT 1
+                 UNION ALL
+                SELECT 2
+                 UNION ALL
+                SELECT 3
+                 UNION ALL
+                SELECT 4
+                 UNION ALL
+                SELECT 5
+                 UNION ALL
+                SELECT 6
+                 UNION ALL
+                SELECT 7
+                 UNION ALL
+                SELECT 8
+                 UNION ALL
+                SELECT 9) AS nums) AS t
+           CROSS JOIN
+       (SELECT n
+          FROM (SELECT 0 AS n
+                 UNION ALL
+                SELECT 1
+                 UNION ALL
+                SELECT 2
+                 UNION ALL
+                SELECT 3
+                 UNION ALL
+                SELECT 4
+                 UNION ALL
+                SELECT 5
+                 UNION ALL
+                SELECT 6
+                 UNION ALL
+                SELECT 7
+                 UNION ALL
+                SELECT 8
+                 UNION ALL
+                SELECT 9) AS nums) AS t2;
 
 
-INSERT INTO tbl_material_order (order_date, delivery_due_date, client_code, status, is_regular_contract, employee_code)
+INSERT INTO tbl_material_order
+    (order_date, delivery_due_date, client_code, status, is_regular_contract, employee_code)
 VALUES
     ('2024-01-01', '2024-01-04', 1, 'ORDER_COMPLETED', FALSE, 1001),
     ('2024-01-04', '2024-01-07', 2, 'ORDER_COMPLETED', TRUE, 1002),
@@ -111,4 +152,5 @@ VALUES
     ('2024-04-07', '2024-04-10', 33, 'DELIVERY_EXPECTED', FALSE, 1033),
     ('2024-04-10', '2024-04-13', 34, 'ORDER_COMPLETED', TRUE, 1034);
 
-ALTER TABLE tbl_material_order AUTO_INCREMENT = 1;
+ALTER TABLE tbl_material_order
+    AUTO_INCREMENT = 1;
