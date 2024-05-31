@@ -5,18 +5,16 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Entity
 @Table(name="tbl_bom")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
 public class Bom {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long bomCode;
-    private Long quantity;
+    private Long Quantity;
     private Long sequence;
     @ManyToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="productCode")
@@ -25,25 +23,19 @@ public class Bom {
     @JoinColumn(name="specCode")
     private MaterialSpec materialSpec;
 
-    public Bom(Long quantity, Long sequence, Product product, MaterialSpec materialSpec) {
-        this.quantity = quantity;
+    public Bom(Long bomCode, Long sequence, Product product, MaterialSpec materialSpec) {
+        this.bomCode = bomCode;
         this.sequence = sequence;
         this.product = product;
-        this.materialSpec = materialSpec;
+        this.materialSpec = new MaterialSpec();
     }
 
-    public static Bom of(Long quantity, Long sequence, Product product, MaterialSpec materialSpec) {
+    public static Bom of(Long quantity, Long sequence,  Product product) {
         return new Bom(
                 quantity,
                 sequence,
                 product,
-                materialSpec
+                new MaterialSpec("원자재2")
         );
-    }
-
-    public void modify(MaterialSpec materialSpec,Long  quantity, Long sequence) {
-        this.materialSpec = materialSpec;
-        this.quantity = quantity;
-        this.sequence = sequence;
     }
 }
