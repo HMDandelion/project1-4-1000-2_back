@@ -7,12 +7,13 @@ public enum ProductStatus {
     IN_PRODUCTION("in_production"),
     PRODUCTION_DISCONTINUED("production_discontinued");
     private final String value;
-    ProductStatus(String value){this.value=value;}
+
+    ProductStatus(String value) {this.value = value;}
 
     @JsonCreator
     public ProductStatus from(String value) {
-        for(ProductStatus status : ProductStatus.values()) {
-            if(status.getValue().equals(value)) {
+        for (ProductStatus status : ProductStatus.values()) {
+            if (status.getValue().equals(value)) {
                 return status;
             }
         }
@@ -20,5 +21,5 @@ public enum ProductStatus {
     }
 
     @JsonValue
-    public String getValue() { return value; }
+    public String getValue() {return value;}
 }

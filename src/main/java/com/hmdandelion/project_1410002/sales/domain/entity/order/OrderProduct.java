@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderProduct {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderProductCode;

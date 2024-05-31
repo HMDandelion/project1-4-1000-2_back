@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
@@ -26,7 +25,7 @@ public class PlanListResponse {
     private final String productName;
 
 
-    public PlanListResponse (ProductionPlannedList productionPlannedList
+    public PlanListResponse(ProductionPlannedList productionPlannedList
             , Product product, ProductionPlan productionPlan) {
         this.startAt = productionPlan.getStartAt();
         this.endAt = productionPlan.getEndAt();

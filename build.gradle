@@ -49,7 +49,7 @@ dependencies {
 def querydslDir = "$buildDir/generated/querydsl"
 
 sourceSets {
-    main.java.srcDirs += [ querydslDir ]
+    main.java.srcDirs += [querydslDir]
 }
 
 tasks.withType(JavaCompile) {
@@ -62,7 +62,6 @@ clean.doLast {
 //queryDSL END....
 
 
-
 tasks.named('test') {
     outputs.dir snippetsDir
     useJUnitPlatform()
@@ -73,8 +72,8 @@ tasks.named('asciidoctor') {
     dependsOn test
 }
 
-tasks.register('copyPrivate'){
-    copy{
+tasks.register('copyPrivate') {
+    copy {
         from './project_1410002_settings'
         include "application.yml"
         into 'src/main/resources'

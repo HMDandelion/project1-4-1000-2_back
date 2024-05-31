@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 
-public interface ProductionPlanRepo extends JpaRepository <ProductionPlan, Long> {
+public interface ProductionPlanRepo extends JpaRepository<ProductionPlan, Long> {
 
     @Query("SELECT new com.hmdandelion.project_1410002.production.dto.response.PlanListResponse(ppl, p, pp) " +
             "FROM ProductionPlan pp " +

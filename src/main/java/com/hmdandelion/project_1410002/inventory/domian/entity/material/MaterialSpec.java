@@ -1,7 +1,10 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 
+import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
@@ -23,8 +26,7 @@ public class MaterialSpec {
     private int safetyStock;
     private String specification;
 
-    private MaterialSpec(Long specCode, String materialName, String remarks, String unit, SpecCategory category, int safetyStock, String specification) {
-        this.specCode = specCode;
+    private MaterialSpec(String materialName, String remarks, String unit, SpecCategory category, int safetyStock, String specification) {
         this.materialName = materialName;
         this.remarks = remarks;
         this.unit = unit;
@@ -33,16 +35,35 @@ public class MaterialSpec {
         this.specification = specification;
     }
 
-    public static MaterialSpec of(Long specCode, String materialName, String remarks, String unit, SpecCategory foundCategory, Integer safetyQuantity, String specification) {
+    public static MaterialSpec of(String materialName, String remarks, String unit, SpecCategory foundCategory, Integer safetyStock, String specification) {
         return new MaterialSpec(
-                specCode,
                 materialName,
                 remarks,
                 unit,
                 foundCategory,
-                safetyQuantity,
+                safetyStock,
                 specification
         );
     }
 
+    public void modifyFrom(MaterialSpecModifyRequest request, SpecCategory specCategory) {
+        if (request.getMaterialName() != null && !request.getMaterialName().isBlank()) {
+            this.materialName = request.getMaterialName();
+        }
+        if (request.getCategoryCode() != null) {
+            this.category = specCategory;
+        }
+        if (request.getUnit() != null && !request.getUnit().isBlank()) {
+            this.unit = request.getUnit();
+        }
+        if (request.getSpecification() != null && !request.getSpecification().isBlank()) {
+            this.specification = request.getSpecification();
+        }
+        if (request.getRemarks() != null && !request.getRemarks().isBlank()) {
+            this.remarks = request.getRemarks();
+        }
+        if (request.getSafetyStock() != null) {
+            this.safetyStock = request.getSafetyStock();
+        }
+    }
 }

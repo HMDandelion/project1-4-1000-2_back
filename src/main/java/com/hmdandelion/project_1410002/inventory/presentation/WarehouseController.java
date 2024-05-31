@@ -25,14 +25,15 @@ public class WarehouseController {
     @PostMapping("/warehouse")
     public ResponseEntity<Void> getWarehouses(
             @RequestBody final WarehouseCreateRequest warehouseCreateRequest
-    ){
-            Long warehouseCode = warehouseService.save(warehouseCreateRequest);
-        return ResponseEntity.created(URI.create("/api/v1"+warehouseCode)).build();
+    ) {
+        Long warehouseCode = warehouseService.save(warehouseCreateRequest);
+        return ResponseEntity.created(URI.create("/api/v1" + warehouseCode)).build();
     }
+
     @GetMapping("/warehouse")
     public ResponseEntity<PagingResponse> getWarehouses(
             @RequestParam(defaultValue = "1") final Integer page
-    ){
+    ) {
         final Page<WarehouseResponse> products = warehouseService.getWarehouses(page);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(products);
         final PagingResponse pagingResponse = PagingResponse.of(products.getContent(), pagingButtonInfo);
@@ -43,7 +44,7 @@ public class WarehouseController {
     @GetMapping("/warehouse/{warehouseCode}")
     public ResponseEntity<WarehouseResponse> getWarehouse(
             @PathVariable final Long warehouseCode
-    ){
+    ) {
         Warehouse warehouse = warehouseService.getWarehouse(warehouseCode);
         WarehouseResponse warehouseResponse = WarehouseResponse.of(
                 warehouse.getWarehouseCode(),
@@ -59,16 +60,16 @@ public class WarehouseController {
     public ResponseEntity<Void> modify(
             @PathVariable final Long warehouseCode,
             @RequestBody final WarehouseUpdateRequest warehouseUpdateRequest
-    ){
-        warehouseService.modify(warehouseCode,warehouseUpdateRequest);
+    ) {
+        warehouseService.modify(warehouseCode, warehouseUpdateRequest);
 
-        return ResponseEntity.created(URI.create("/api/v1"+warehouseCode)).build();
+        return ResponseEntity.created(URI.create("/api/v1" + warehouseCode)).build();
     }
 
     @DeleteMapping("/warehouse/{warehouseCode}")
     public ResponseEntity<Void> remove(
             @PathVariable final Long warehouseCode
-    ){
+    ) {
         warehouseService.delete(warehouseCode);
         return ResponseEntity.noContent().build();
     }

@@ -10,6 +10,7 @@ import java.util.List;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SalesClientResponse {
+
     private final Long clientCode;
     private final String clientName;
     private final String address;
