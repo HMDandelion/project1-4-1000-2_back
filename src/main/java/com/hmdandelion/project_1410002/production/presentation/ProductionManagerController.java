@@ -1,19 +1,23 @@
 package com.hmdandelion.project_1410002.production.presentation;
 
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
-import com.hmdandelion.project_1410002.production.dto.request.DailyProductionRequest;
-import com.hmdandelion.project_1410002.production.dto.response.ProductionReportResponse;
+import com.hmdandelion.project_1410002.production.dto.response.production.DefectDetailResponse;
+import com.hmdandelion.project_1410002.production.dto.response.production.ProductionDetailResponse;
+import com.hmdandelion.project_1410002.production.dto.response.production.ProductionReportResponse;
 import com.hmdandelion.project_1410002.production.service.ProductionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -44,13 +48,24 @@ public class ProductionManagerController {
         return ResponseEntity.ok(pagingResponse);
     }
 
-@PostMapping("/production/report")
-    public ResponseEntity<Void> save(
-            @RequestPart @RequestBody final DailyProductionRequest dailyProductionRequest) {
+    /* 상세 목록 조회 */
+    @GetMapping("/production/reports/{productionDetailCode}")
+    public ResponseEntity<List<ProductionDetailResponse>> getProductionDetails(
+            @PathVariable Long productionDetailCode) {
+        List<ProductionDetailResponse> productionDetails = productionService.getProductionDetails(productionDetailCode);
+        return ResponseEntity.ok(productionDetails);
+    }
 
-//    final Long productionStatusCode = productionService.save(dailyProductionRequest);
 
-
-    return ResponseEntity.created(URI.create("/api/v1/production/")).build();
-}
+    /* 불량상세 조회 */
+    @GetMapping("/production/reports/{productionDetailCode}/defects")
+    public ResponseEntity<List<DefectDetailResponse>> getDefectDetails(
+            @PathVariable Long productionDetailCode) {
+        try {
+            List<DefectDetailResponse> defectDetails = productionService.getDefectDetails(productionDetailCode);
+            return ResponseEntity.ok(defectDetails);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
+        }
+    }
 }

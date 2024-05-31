@@ -1,6 +1,8 @@
 package com.hmdandelion.project_1410002.production.domain.entity.production;
 
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
+import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
+import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,6 +28,7 @@ public class ProductionDetail {
     @JoinColumn(name = "work_order_code")
     private WorkOrder workOrder;
 
+//    private Long employeeCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_status_code", insertable = false, updatable = false)
     private ProductionManagement productionManagement;
@@ -42,8 +45,9 @@ public class ProductionDetail {
 
     @Column(name = "completely_quantity")
     private Integer completelyQuantity;
-
-    @Column(name = "memo")
     private String productionMemo;
+
+    @Enumerated(value = EnumType.STRING)
+    private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;;
 
 }

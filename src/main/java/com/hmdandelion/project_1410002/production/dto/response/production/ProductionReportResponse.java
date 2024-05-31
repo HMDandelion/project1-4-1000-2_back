@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.production.dto.response;
+package com.hmdandelion.project_1410002.production.dto.response.production;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionManagement;

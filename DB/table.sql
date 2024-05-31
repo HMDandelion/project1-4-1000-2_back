@@ -74,6 +74,16 @@ INSERT INTO `tbl_department` (`department_code`, `department_name`, `status`, `c
                                                                                                 (2, '생산부', 'ACTIVE', NOW()),
                                                                                                 (3, '물류부', 'ACTIVE', NOW());
 
+CREATE TABLE `tbl_defect_detail`
+(
+    `defect_code`    BIGINT NOT NULL COMMENT '불량상세코드',
+    `production_detail_code`    BIGINT NOT NULL COMMENT '생산 상세 코드',
+    `defect_reason`    VARCHAR(50) COMMENT '불량 사유',
+    `defect_status`    VARCHAR(20) COMMENT '불량 처리',
+    `defect_file`    VARCHAR(50) COMMENT '첨부 파일',
+    PRIMARY KEY (`defect_code`)
+) COMMENT = '불량상세';
+
 CREATE TABLE `tbl_emp_auth`
 (
     `emp_auth_code`    INT NOT NULL COMMENT '권한부여코드',
@@ -307,21 +317,22 @@ CREATE TABLE `tbl_production_detail` (
     `defect_quantity` INT COMMENT '불량 수량',
     `completely_quantity` INT COMMENT '양품 수',
     `production_memo` VARCHAR(50) COMMENT '비고',
+    `production_status`  VARCHAR(20) NOT NULL COMMENT '상태',
     PRIMARY KEY (`production_detail_code`)
 ) COMMENT = '생산 상세';
 
 
 CREATE TABLE IF NOT EXISTS `tbl_production_management`
 (
-    `production_staus_code`    BIGINT NOT NULL COMMENT '생산 현황 코드',
+    `production_status_code`    BIGINT NOT NULL COMMENT '생산 현황 코드',
     `product_code`    INT NOT NULL COMMENT '상품 코드',
     `start_at`    DATETIME NOT NULL COMMENT '생산 시작 일시',
     `completed_at`    DATETIME NOT NULL COMMENT '생산 마감 일시',
     `attachment_file`    VARCHAR(50) COMMENT '생산 관리 서류(첨부 서류)',
     `production_current`    INT COMMENT '현재 생산량',
-    `production_status`    VARCHAR(20) NOT NULL COMMENT '상태',
+    `total_production_status`    VARCHAR(20) NOT NULL COMMENT '상태',
     `inspection_status`    VARCHAR(20) NOT NULL COMMENT '품질 검수 처리',
-    PRIMARY KEY ( `production_staus_code` )
+    PRIMARY KEY ( `production_status_code` )
 ) COMMENT = '일일 생산 보고서';
 
 ALTER TABLE `tbl_production_management`
