@@ -22,7 +22,7 @@ public class ProductionPlanController {
     private final PlanService planService;
 
     /* 내가 설정한 시작날짜 종료날짜에 대한 생산 계획 조회 start */
-    @GetMapping("/production/work-order")
+    @GetMapping("/production/planning")
     public ResponseEntity<PagingResponse> getPlanList (
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) final String dt,
             @RequestParam(defaultValue = "1") final Integer page)
@@ -46,17 +46,21 @@ public class ProductionPlanController {
           // 생산 계획 등록 후에 해당 주문 건을 삭제
 //          orderService.deleteOrder(productionPlanCreateRequest.getOrderId());
 
+          ResponseEntity.ok("생산 계획 등록이 완료 되었습니다.");
+
             return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
     }
     /* 생산 계획 등록 end */
 
     /* 생산 계획 수정 start */
-    @PutMapping("/production/work-order/{planCode}")
+    @PutMapping("/production/planning/{planCode}")
     public ResponseEntity<Void> planModify(
             @PathVariable final Long planCode,
             @RequestBody final ProductionPlanUpdateRequest productionPlanUpdateRequest)
     {
         planService.planModify(planCode, productionPlanUpdateRequest);
+
+        ResponseEntity.ok("생산 계획 수정이 완료 되었습니다.");
 
         return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + planCode)).build();
     }
@@ -68,6 +72,8 @@ public class ProductionPlanController {
             @PathVariable final Long planCode)
             {
                 planService.planRemove(planCode);
+
+                ResponseEntity.ok("생산 계획 삭제가 완료 되었습니다.");
 
                 return ResponseEntity.noContent().build();
             }

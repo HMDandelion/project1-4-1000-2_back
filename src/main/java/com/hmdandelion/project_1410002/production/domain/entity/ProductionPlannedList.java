@@ -21,7 +21,6 @@ public class ProductionPlannedList {
     @Column(name = "plan_list_code")
     private Long planListCode;
 
-
     @Column(name = "product_code")
     private Long productCode;
 

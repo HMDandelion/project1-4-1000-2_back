@@ -59,11 +59,10 @@ public class ProductionPlan {
         return new ProductionPlan(startAt, endAt, plannedOrderList, productionPlanList);
     }
 
-
-    public void planModify(LocalDate startAt, LocalDate endAt, String description, String plannedQuantity) {
+    public void planModify(LocalDate startAt, LocalDate endAt, List<ProductionPlannedList> productionPlanList) {
         this.startAt = startAt;
-//        this.productionPlannedList = description;
-//        this.endAt = endAt;
-//        this.plannedQuantity = plannedQuantity;
+        this.productionPlannedList = productionPlanList;
+        this.endAt = endAt;
     }
+
 }

@@ -21,7 +21,9 @@ public enum ExceptionCode {
  
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
   
-    ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다.");
+    ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
+
+    NOT_FOUND_WORK_ORDER( 8000, "코드를 찾을 수 없습니다.");
 
     private final int code;
     private final String message;

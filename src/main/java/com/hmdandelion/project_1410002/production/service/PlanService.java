@@ -94,11 +94,21 @@ public class PlanService {
         ProductionPlan productionPlan = productionPlanRepo.findByPlanCode(planCode)
                 .orElseThrow(() -> new RuntimeException());
 
+        List<ProductionPlannedList> productionPlanList = productionPlanUpdateRequest.getProductionPlannedLists().stream()
+                .map(productionPlannedListRequest -> {
+                    return ProductionPlannedList.of(
+                            productionPlannedListRequest.getProductCode(),
+                            productionPlannedListRequest.getPlannedQuantity(),
+                            productionPlannedListRequest.getDescription(),
+                            productionPlannedListRequest.getRequiredQuantity()
+
+                    );
+                }).toList();
+
         productionPlan.planModify(
                 productionPlanUpdateRequest.getStartAt(),
                 productionPlanUpdateRequest.getEndAt(),
-                productionPlanUpdateRequest.getDescription(),
-                productionPlanUpdateRequest.getRequiredQuantity()
+                productionPlanList
         );
     }
 

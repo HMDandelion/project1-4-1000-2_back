@@ -1,19 +1,22 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.sound.sampled.Line;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "tbl_work_order")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class WorkOrder {
 
@@ -22,36 +25,36 @@ public class WorkOrder {
     @Column(name = "work_order_code")
     private Long workOrderCode;
 
-    @Column(name = "line_code")
-    private Long lineCode;
+    @CreatedDate
+    @Column(name = "work_written_date", nullable = false)
+    private LocalDate workWrittenDate;
+
+    @Column(name = "ordered_quantity", nullable = false)
+    private int orderedQuantity;
+
+    @Enumerated(value = EnumType.STRING)
+    private WorkOrderStatusType
+            completionStatus = WorkOrderStatusType.IN_PROGRESS;
+
+    @LastModifiedDate
+    @Column(name = "work_modified_date", nullable = false)
+    private LocalDateTime workModifiedDate;
+
+    @Column(name = "work_order_date", nullable = false)
+    private LocalDate workOrderDate;
 
     @Column(name = "product_code")
     private Long productCode;
 
-    @Column(name = "work_written_date", nullable = false)
-    private LocalDateTime workWrittenDate;
+    @Column(name = "line_code", nullable = false)
+    private Long lineCode;
 
-    @Column(name = "ordered_quantity", nullable = false)
-    private String orderedQuantity;
+    @Column(name = "employee_code", nullable = false)
+    private Long employeeCode;
 
-    @Column(name = "completion_status", nullable = false)
-    private LocalDateTime completionStatus;
-    @Enumerated(value = EnumType.STRING)
-    private WorkOrderStatusType
-            status = WorkOrderStatusType.IN_PROGRESS;
-
-    @Column(name = "work_modified_date", nullable = false)
-    private LocalDateTime workModifiedDate;
-
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "line_code", nullable = false)
-//    private Line line; <- line 엔티티 필요
-
-    @Column(name = "work_order_date", nullable = false)
-    private LocalDateTime workOrderDate;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "product_code", nullable = false)
-//    private Product product; <- Product 엔티티 필요
+    public void end() {
+        if (this.completionStatus == WorkOrderStatusType.IN_PROGRESS) {
+            this.completionStatus = WorkOrderStatusType.DONE;
+        }
+    }
 }
