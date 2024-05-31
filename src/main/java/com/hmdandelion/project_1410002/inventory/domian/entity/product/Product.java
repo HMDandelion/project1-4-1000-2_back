@@ -1,7 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.product;
 
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -17,11 +16,12 @@ import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatu
 
 
 @Entity
-@Table(name="tbl_product")
+@Table(name = "tbl_product")
 @EntityListeners(AuditingEntityListener.class)
 @Getter
-@NoArgsConstructor(access= AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long productCode;
@@ -31,7 +31,7 @@ public class Product {
     private Long price;
     private String unit;
     private LocalDateTime updatedAt;
-    @Enumerated(value=EnumType.STRING)
+    @Enumerated(value = EnumType.STRING)
     private ProductStatus status = IN_PRODUCTION;
 
     public Product(String productName, Long price, String unit) {
@@ -55,9 +55,9 @@ public class Product {
     }
 
     public void updateStatus(Product product) {
-        if(product.getStatus()== IN_PRODUCTION){
+        if (product.getStatus() == IN_PRODUCTION) {
             this.status = PRODUCTION_DISCONTINUED;
-        }else{
+        } else {
             this.status = IN_PRODUCTION;
         }
         this.updatedAt = LocalDateTime.now();

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class WarehouseCreateRequest {
+
     private String name;
     private String location;
     private Long volume;

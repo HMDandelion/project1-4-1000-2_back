@@ -4,5 +4,54 @@ GET http://localhost:8001/api/v1/material/safety-stock
 ### 창고별 적재현황 조회
 GET http://localhost:8001/api/v1/material/warehouses/2
 
+### 스펙별 거래내역 조회
+GET http://localhost:8001/api/v1/material/transactions/5
 
 
+### 재고 조회(창고별)
+GET http://localhost:8001/api/v1/material/inventory?warehouseCode=2
+
+### 재고 검색(창고별)
+GET http://localhost:8001/api/v1/material/inventory?warehouseCode=2&materialName=19
+
+### 재고 조회(분류별)
+GET http://localhost:8001/api/v1/material/inventory?specCategoryCode=2
+
+### 재고 검색(분류별)
+GET http://localhost:8001/api/v1/material/inventory?specCategoryCode=2&materialName=17
+
+### 재고 상세조회
+GET http://localhost:8001/api/v1/material/inventory/20
+
+### 스톡 추가 테스트
+POST http://localhost:8001/api/v1/material/inventory
+Content-Type: application/json
+
+{
+  "division": "STOCK",
+  "specCode": 8,
+  "warehouseCode": 3,
+  "incomingQuantity": 50,
+  "actualQuantity": 45,
+  "storageDatetime": "2024-05-28T14:30:00",
+  "remarks": "Initial stock entry",
+  "inspectionDatetime": "2024-05-28T15:00:00",
+  "modificationDatetime": "2024-05-28T16:00:00",
+  "modificationReason": "Initial inspection",
+  "orderCode": 1
+}
+
+### 스톡 수정 테스트
+PUT http://localhost:8001/api/v1/material/inventory
+Content-Type: application/json
+
+{
+  "stockCode": 115,
+  "warehouseCode": 3,
+  "actualQuantity": 45,
+  "modificationReason": "수정되었습니다22",
+  "orderCode": 1
+}
+
+### 스톡 삭제 테스트
+DELETE http://localhost:8001/api/v1/material/inventory/116

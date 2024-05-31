@@ -23,47 +23,50 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/product")
-    public List<Product> getProducts(
-            @RequestParam (defaultValue = "1")final Integer page,
-            @RequestParam(required = false)  final String productName,
-            @RequestParam(required = false)  final String unit,
+    public ResponseEntity<List<Product>> getProducts(
+            @RequestParam(defaultValue = "1") final Integer page,
+            @RequestParam(required = false) final String productName,
+            @RequestParam(required = false) final String unit,
             @RequestParam(required = false) final ProductStatus status
-    ){
-        Pageable pageable = PageRequest.of(page-1,10);
-        return productService.searchProducts(pageable,productName,unit,status);
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        List<Product> products = productService.searchProducts(pageable, productName, unit, status);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/product/{productCode}")
     public ResponseEntity<ProductsResponse> getProduct(
             @PathVariable final Long productCode
-    ){
+    ) {
         final ProductsResponse product = productService.getProduct(productCode);
 
         return ResponseEntity.ok(product);
     }
+
     @PostMapping("/product")
     public ResponseEntity<Void> save(
             @RequestBody final ProductRequest productRequest
-    ){
+    ) {
         final Long productCode = productService.save(productRequest);
-        return ResponseEntity.created(URI.create("/api/v1/product"+productCode)).build();
+        return ResponseEntity.created(URI.create("/api/v1/product" + productCode)).build();
     }
+
     @PutMapping("/product/{productCode}")
     public ResponseEntity<ProductsResponse> modifyProduct(
             @PathVariable final Long productCode,
             @RequestBody final ProductRequest productRequest
-    ){
-            productService.modifyProduct(productCode,productRequest);
-            return ResponseEntity.created(URI.create("/api/v1/product"+productCode)).build();
+    ) {
+        productService.modifyProduct(productCode, productRequest);
+        return ResponseEntity.created(URI.create("/api/v1/product" + productCode)).build();
     }
+
     @DeleteMapping("/product/{productCode}")
     public ResponseEntity<Void> delete(
             @PathVariable final Long productCode
-    ){
+    ) {
         productService.updateStatus(productCode);
         return ResponseEntity.noContent().build();
     }
-
 
 
 }
