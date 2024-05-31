@@ -23,8 +23,11 @@ public class MaterialOrderAnalyzeService {
         List<ProductionPlannedList> plannedLists = plannedOrderListService.findByPlanCode(planCode);
         //생산하려는 제품의 BOM을 조회한다(생산하려는 제품의 요구수치)
         Map<Long, List<Bom>> productCode_BomListMap = new HashMap<>();
-        for (Long productCode : plannedLists.stream().map(ProductionPlannedList::getProductCode).toList())
-        List<Bom> bomlist = bomService.getBomByProductCode()
+        for (Long productCode : plannedLists.stream().map(ProductionPlannedList::getProductCode).toList()) {
+            List<Bom> bomlist = bomService.getBomByProductCode(productCode);
+            productCode_BomListMap.put(productCode, bomlist);
+        }
+
         //필요 원자재 정보를 조회한다(원자재의 정보)
         //원자재의 이름과 총 필요량을 산출하여 데이터를 저장한다 called A
         //생산계획 코드로 원자재 주문을 조회한다
