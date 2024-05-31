@@ -82,4 +82,14 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
                 .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
         return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
     }
+
+    @Override
+    public List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode) {
+        QOrderSpec orderSpec = QOrderSpec.orderSpec;
+
+        return queryFactory
+                .selectFrom(orderSpec)
+                .where(orderSpec.orderCode.eq(orderCode))
+                .fetch();
+    }
 }

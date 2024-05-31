@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.purchase.service;
 
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import lombok.RequiredArgsConstructor;
@@ -58,5 +60,13 @@ public class MaterialOrderService {
         }
 
         return Month.of(monthNumber).name();
+    }
+
+    public List<MaterialOrder> findByPlanCode(Long planCode) {
+        return materialOrderRepo.findByPlanCode(planCode);
+    }
+
+    public List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode) {
+        return materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
     }
 }

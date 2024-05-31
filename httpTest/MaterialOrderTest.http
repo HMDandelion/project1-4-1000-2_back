@@ -1,0 +1,2 @@
+### 필요 자재량 대비 주문량 조회
+GET http://localhost:8001/api/v1/material/order-quantity/6
