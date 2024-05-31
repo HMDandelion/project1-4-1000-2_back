@@ -38,7 +38,7 @@ public class Product {
     @Enumerated(value=EnumType.STRING)
     private ProductStatus status = IN_PRODUCTION;
 
-    public Product(String productName, Long price, String unit) {
+    private Product(String productName, Long price, String unit) {
         this.productName = productName;
         this.price = price;
         this.unit = unit;

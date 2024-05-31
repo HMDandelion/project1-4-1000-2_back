@@ -60,7 +60,7 @@ public class Stock {
         );
     }
 
-    public void modify(Product product, StockType type) {
+    private void modify(Product product, StockType type) {
         this.product = product;
         this.type = type;
     }

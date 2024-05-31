@@ -39,7 +39,7 @@ public class Storage {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    public Storage(Long initialQuantity,Long actualQuantity, Stock stock, Warehouse warehouse) {
+    private Storage(Long initialQuantity,Long actualQuantity, Stock stock, Warehouse warehouse) {
         this.initialQuantity = initialQuantity;
         this.actualQuantity = actualQuantity;
         this.stock = stock;
