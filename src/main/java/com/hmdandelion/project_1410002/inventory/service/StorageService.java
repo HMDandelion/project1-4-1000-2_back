@@ -11,15 +11,17 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRe
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
+import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStock;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageWarehouse;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStockWarehouse;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -224,4 +226,11 @@ public class StorageService {
         );
         return storageWarehouse;
     }
+
+    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity,Long startDate,Long endDate) {
+        System.out.println("123");
+        return storageRepo.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate);
+    }
+
+
 }

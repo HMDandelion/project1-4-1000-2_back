@@ -1,6 +1,8 @@
 package com.hmdandelion.project_1410002.inventory.dto.stock.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
+import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,7 @@ public class StorageWarehouse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
 
-    public static StorageWarehouse of(String moveType, String productName, Long initialQuantity, String name, LocalDateTime createdAt) {
+    public static StorageWarehouse of(String moveType,String productName, Long initialQuantity, String name, LocalDateTime createdAt) {
         return new StorageWarehouse(
                 moveType,
                 productName,

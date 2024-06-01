@@ -1,16 +1,21 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
+import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStock;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageWarehouse;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StorageStockWarehouse;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
 import com.hmdandelion.project_1410002.inventory.service.StorageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -19,6 +24,21 @@ import java.util.List;
 public class StorageController {
 
     private final StorageService storageService;
+
+    /*재고 저장 조회(필터링)*/
+    @GetMapping("/storage")
+    public ResponseEntity<Page<StorageFilterResponse>> getStocks(
+            @RequestParam(defaultValue = "1") final Integer page,
+            @RequestParam(required = false) final Long productCode,
+            @RequestParam(required = false) final Long minQuantity,
+            @RequestParam(required = false) final Long maxQuantity,
+            @RequestParam(defaultValue = "0") final Long startDate,
+            @RequestParam(defaultValue = "100") final Long endDate
+            ) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<StorageFilterResponse> storages = storageService.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate);
+        return ResponseEntity.ok(storages);
+    }
 
     /*재고 창고 배정(재고 수량보다 창고에 배정 된 갯수가 많으면 안됨.)*/
     @PostMapping("/storage/stock/{stockCode}")
