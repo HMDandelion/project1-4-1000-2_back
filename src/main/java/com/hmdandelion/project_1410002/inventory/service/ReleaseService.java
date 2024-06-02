@@ -2,11 +2,14 @@ package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.release.ReleaseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
+import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
@@ -44,6 +47,7 @@ public class ReleaseService {
     private final StorageRepo storageRepo;
     private final StockRepo stockRepo;
     private final ClientRepo clientRepo;
+    private final ProductRepo productRepo;
 
     private Pageable getPageable(final Integer page, final Boolean createdSort) {
         Sort sort = createdSort ? Sort.by("dDay").ascending() : Sort.by("dDay").descending();
@@ -116,5 +120,19 @@ public class ReleaseService {
         List<ReleasePossible> sublist = releasePossibleList.subList(start, end);
 
         return new PageImpl<>(sublist, pageable, releasePossibleList.size());
+    }
+
+    public List<ReleaseOrderProduct> getReleaseOrderProduct(Long orderCode) {
+        List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
+        List<ReleaseOrderProduct> resultList = new ArrayList<>();
+        for(OrderProduct orderProduct:orderProducts){
+            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            ReleaseOrderProduct releaseOrderProduct = ReleaseOrderProduct.of(
+                        product.getProductName(),
+                        orderProduct.getQuantity()
+            );
+            resultList.add(releaseOrderProduct);
+        }
+        return resultList;
     }
 }
