@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
+import com.hmdandelion.project_1410002.production.dto.request.ProductionReportCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.production.DefectDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionReportResponse;
@@ -14,7 +15,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -67,5 +70,16 @@ public class ProductionManagerController {
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
         }
+
+    }
+     /*보고서 등록*/
+    @PostMapping("/production/reports")
+    public ResponseEntity<Void> reportSaved(
+            @RequestPart final ProductionReportCreateRequest productionReportCreateRequest,
+            @RequestPart final MultipartFile attachFile) {
+        final Long productionDetailCode = productionService.reportSave(productionReportCreateRequest, attachFile, ProductionStatusType.REGISTER_PRODUCTION);
+
+        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionDetailCode)).build();
+
     }
 }

@@ -24,4 +24,25 @@ public class DefectDetail {
     private String defectReason;
     private String defectStatus;
     private String defectFile;
+
+    public DefectDetail(ProductionDetail newProductionDetail, String defectReason,
+                        String defectStatus, String defectFile)
+    {
+        this.productionDetail = newProductionDetail;
+        this.defectReason = defectReason;
+        this.defectStatus = defectStatus;
+        this.defectFile = defectFile;
+    }
+
+    public static DefectDetail of(ProductionDetail newProductionDetail, String defectReason,
+                                  String defectStatus, String defectFile)
+    {
+
+        return new DefectDetail(
+        newProductionDetail,
+        defectReason,
+        defectStatus,
+        defectFile
+                );
+    }
 }

@@ -48,6 +48,24 @@ public class ProductionManagement {
     @OneToMany(mappedBy = "productionManagement")
     private List<ProductionDetail> productionDetails;
 
+    public ProductionManagement(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus) {
+        this.startAt = startAt;
+        this.completedAt = completedAt;
+        this.totalProductionQuantity = totalProductionQuantity;
+        this.productionFile = productionFile;
+        this.inspectionStatus = inspectionStatus;
+    }
 
+
+    public static ProductionManagement of(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus) {
+        return new ProductionManagement(
+                startAt,
+                completedAt,
+                totalProductionQuantity,
+                productionFile,
+                productionStatus,
+                inspectionStatus
+        );
+    }
 }
 

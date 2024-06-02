@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProductionRepo extends JpaRepository<ProductionManagement, Long> {
-    /* ProductionStatus 별 검색 */
+    /* 생산 완료만 검색 */
     Page<ProductionManagement> findByProductionStatus(Pageable pageable, ProductionStatusType productionStatusType);
 
     /* ProductionStatus 제외 검색 */
@@ -29,9 +29,5 @@ public interface ProductionRepo extends JpaRepository<ProductionManagement, Long
 
     /*작업 시작 날짜로 조회 */
     Page<ProductionManagement> findByStartAt(Pageable pageable, LocalDateTime startAt);
-
-    /* 생산 보고서 상세 조회*/
-    Optional<ProductionManagement> findByProductionStatusCode(Long productionStatusCode);
-
 
 }

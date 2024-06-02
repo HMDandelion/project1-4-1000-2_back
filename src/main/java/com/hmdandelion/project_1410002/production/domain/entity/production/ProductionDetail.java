@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity.production;
 
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
+import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import jakarta.persistence.*;
@@ -28,7 +29,7 @@ public class ProductionDetail {
     @JoinColumn(name = "work_order_code")
     private WorkOrder workOrder;
 
-//    private Long employeeCode;
+    //    private Long employeeCode;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "production_status_code", insertable = false, updatable = false)
     private ProductionManagement productionManagement;
@@ -48,6 +49,33 @@ public class ProductionDetail {
     private String productionMemo;
 
     @Enumerated(value = EnumType.STRING)
-    private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;;
+    private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
+    public ProductionDetail(ProductionManagement newProductionManagement, LocalDateTime inspectionDate, int productionQuantity, int defectQuantity, int completelyQuantity, String productionMemo, ProductionStatusType productionStatus) {
+
+        this.productionManagement = newProductionManagement;
+        this.inspectionDate = inspectionDate;
+        this.productionQuantity = productionQuantity;
+        this.defectQuantity = defectQuantity;
+        this.completelyQuantity = completelyQuantity;
+        this.productionMemo = productionMemo;
+        this.productionStatus = productionStatus;
+    }
+
+
+    public static ProductionDetail of(ProductionManagement newProductionManagement, LocalDateTime inspectionDate,
+                                      int productionQuantity, int defectQuantity, int completelyQuantity,
+                                      String productionMemo, ProductionStatusType productionStatus)
+    {
+        return new ProductionDetail(
+                newProductionManagement,
+                inspectionDate,
+                productionQuantity,
+                defectQuantity,
+                completelyQuantity,
+                productionMemo,
+                productionStatus
+        );
+    }
 }
+
