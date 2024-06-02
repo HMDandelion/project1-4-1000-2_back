@@ -4,6 +4,7 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLack;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.service.ReleaseService;
@@ -45,6 +46,15 @@ public class ReleaseController {
     ){
         List<ReleaseOrderProduct> releaseOrderProducts= releaseService.getReleaseOrderProduct(orderCode);
         return ResponseEntity.ok(releaseOrderProducts);
+    }
+
+    /*주문 코드 입력하여 상품 별 부족 갯수 출력*/
+    @GetMapping("/release/order/lack/{orderCode}")
+    public ResponseEntity<List<ReleaseOrderLack>> getReleaseOrderLack(
+            @PathVariable final Long orderCode
+    ){
+        List<ReleaseOrderLack> releaseOrderLacks = releaseService.getReleaseOrderLack(orderCode);
+        return ResponseEntity.ok(releaseOrderLacks);
     }
 
 }
