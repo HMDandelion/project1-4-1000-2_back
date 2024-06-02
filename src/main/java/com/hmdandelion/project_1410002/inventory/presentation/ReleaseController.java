@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -55,6 +56,15 @@ public class ReleaseController {
     ){
         List<ReleaseOrderLack> releaseOrderLacks = releaseService.getReleaseOrderLack(orderCode);
         return ResponseEntity.ok(releaseOrderLacks);
+    }
+
+    /*출고 등록(해당하는 주문의 상품의 보관 이력 중 가장 오래 보관 된 것의 실수량 감소)*/
+    @PostMapping("/release/{orderCode}")
+    public ResponseEntity<Void> saveRelease(
+            @PathVariable final Long orderCode
+    ){
+        Long releaseCode = releaseService.saveRelease(orderCode);
+        return ResponseEntity.created(URI.create("/api/v1/releases/orders")).build();
     }
 
 }

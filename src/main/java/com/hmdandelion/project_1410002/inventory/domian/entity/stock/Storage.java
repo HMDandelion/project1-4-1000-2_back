@@ -64,4 +64,12 @@ public class Storage {
         this.destroyQuantity += destroyQuantity;
         this.actualQuantity -= destroyQuantity;
     }
+
+    public void modifyActualQuantity() {
+        this.actualQuantity = 0L;
+    }
+
+    public void minusActualQuantity(long minus) {
+        this.actualQuantity -= minus;
+    }
 }

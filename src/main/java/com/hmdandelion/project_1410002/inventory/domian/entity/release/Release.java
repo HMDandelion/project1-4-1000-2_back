@@ -28,4 +28,11 @@ public class Release {
     @CreatedDate
     private LocalDateTime createdAt;
 
+    public Release(Order order) {
+        this.order = order;
+    }
+
+    public static Release of(Order order) {
+        return new Release(order);
+    }
 }

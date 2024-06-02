@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.service;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.entity.release.Release;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
@@ -76,6 +77,9 @@ public class ReleaseService {
                 }
 
                 if (sum < orderProduct.getQuantity()) {
+                    System.out.println("order.getOrderCode() = " + order.getOrderCode());
+                    System.out.println("sum = " + sum);
+                    System.out.println("orderProduct.getQuantity() = " + orderProduct.getQuantity());
                     result = false;
                 }
             }
@@ -172,5 +176,42 @@ public class ReleaseService {
 
          }
          return releaseOrderLacks;
+    }
+
+    public Long saveRelease(Long orderCode) {
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        Release newRelease = Release.of(
+                order
+        );
+        List<Storage> resultList = new ArrayList<>();
+        List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
+        for(OrderProduct orderProduct : orderProducts){
+            List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
+            for(Stock stock : stocks) {
+                List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
+
+                resultList.addAll(storages);
+                resultList.sort(Comparator.comparing(Storage::getCreatedAt));
+            }
+
+            Long standard = 0L;
+
+            for(Storage storage : resultList){
+                standard+=storage.getActualQuantity();
+                if(standard>orderProduct.getQuantity()){
+                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
+                    modifyStorage.minusActualQuantity(storage.getActualQuantity() - (standard-orderProduct.getQuantity()));
+                    break;
+                }else{
+                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
+                    modifyStorage.modifyActualQuantity();
+                }
+            }
+        }
+
+
+
+
+        return null;
     }
 }
