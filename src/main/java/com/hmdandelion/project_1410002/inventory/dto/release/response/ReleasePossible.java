@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -14,9 +15,18 @@ import java.time.LocalDateTime;
 public class ReleasePossible {
     private Long orderCode;
     private String clientName;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDate deadLine;
     @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate deadLine;
     private Long dDay;
     private Boolean isReleasePossible;
+
+    public static ReleasePossible of(Long orderCode, String clientName, LocalDate deadline,Long dDay, Boolean result) {
+
+        return new ReleasePossible(
+                orderCode,
+                clientName,
+                deadline,
+                dDay,
+                result);
+    }
 }

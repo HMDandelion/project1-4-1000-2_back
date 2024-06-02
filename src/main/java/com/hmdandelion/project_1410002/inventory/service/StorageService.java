@@ -228,7 +228,6 @@ public class StorageService {
     }
 
     public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity,Long startDate,Long endDate,Boolean quantitySort, Boolean dateSort) {
-        System.out.println("123");
         return storageRepo.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort);
     }
 
