@@ -9,5 +9,5 @@ import java.time.LocalDate;
 public interface StorageRepoCustom {
 
 
-    Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate);
+    Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate,Boolean quantitySort, Boolean dateSort);
 }

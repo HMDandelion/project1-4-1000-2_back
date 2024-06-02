@@ -37,7 +37,7 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
     }
 
     @Override
-    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate) {
+    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate, Boolean quantitySort, Boolean dateSort) {
 
         QStock stock = QStock.stock;
         QStorage storage = QStorage.storage;
@@ -72,12 +72,18 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
                 .join(storage.stock.product, product)
                 .where(builder);
 //
-//        // 정렬 조건 추가
-//        if (Boolean.TRUE.equals(sort)) {
-//            query.orderBy(stock.createdAt.asc());
-//        } else if (Boolean.FALSE.equals(sort)) {
-//            query.orderBy(stock.createdAt.desc());
-//        }
+        // 정렬 조건 추가
+        if (Boolean.TRUE.equals(quantitySort)) {
+            query.orderBy(storage.actualQuantity.asc());
+        } else if (Boolean.FALSE.equals(quantitySort)) {
+            query.orderBy(storage.actualQuantity.desc());
+        }
+
+        if (Boolean.TRUE.equals(dateSort)) {
+            query.orderBy(storage.createdAt.asc());
+        } else if (Boolean.FALSE.equals(dateSort)) {
+            query.orderBy(storage.createdAt.desc());
+        }
 
         QueryResults<Storage> queryResults = query
                 .offset(pageable.getOffset())
