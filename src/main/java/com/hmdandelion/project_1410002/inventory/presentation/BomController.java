@@ -48,7 +48,6 @@ public class BomController {
     }
 
     /*productCode에 해당하는 상품의 BOM 추가*/
-    /*TODO: 나중에 MaterailSpec과 연동*/
     @PostMapping("/bom/product/{productCode}")
     public ResponseEntity<Void> saveBomByProductCode(
             @PathVariable final Long productCode,
@@ -59,7 +58,6 @@ public class BomController {
     }
 
     /*bomCode에해당하는 상품의 BOM 수정*/
-    /*TODO: 나중에 MaterailSpec과 연동*/
     @PutMapping("/bom/{bomCode}")
     public ResponseEntity<Void> modifyBomByProductCode(
             @PathVariable final Long bomCode,

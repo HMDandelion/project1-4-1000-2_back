@@ -53,7 +53,6 @@ public class BomService {
                 bomRequest.getSequence(),
                 product,
                 materialSpec
-
         );
 
         Bom bom =  bomRepository.save(newBom);
