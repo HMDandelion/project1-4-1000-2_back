@@ -135,8 +135,8 @@ public class ReleaseService {
         for(OrderProduct orderProduct:orderProducts){
             Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
             ReleaseOrderProduct releaseOrderProduct = ReleaseOrderProduct.of(
-                        product.getProductName(),
-                        orderProduct.getQuantity()
+                    product.getProductName(),
+                    orderProduct.getQuantity()
             );
             resultList.add(releaseOrderProduct);
         }
@@ -147,37 +147,37 @@ public class ReleaseService {
 
         List<ReleaseOrderLack> releaseOrderLacks = new ArrayList<>();
 
-         Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(order.getOrderCode());
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(order.getOrderCode());
 
-         for(OrderProduct orderProduct : orderProducts){
-             Long lackQuantity = 0L;
-             Boolean isLack = false;
-             Long sum = 0L;
-             Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
-             for(Stock stock : stocks){
-                 List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
-                 for(Storage storage : storages){
-                     sum += storage.getActualQuantity();
-                 }
-             }
-             if(sum<orderProduct.getQuantity()){
-                 lackQuantity = orderProduct.getQuantity()-sum;
-                 isLack = true;
-             }else{
-                 lackQuantity = 0L;
-             }
-             ReleaseOrderLack releaseOrderLack = ReleaseOrderLack.of(
-                     product.getProductName(),
-                     lackQuantity,
-                     isLack
-             );
+        for(OrderProduct orderProduct : orderProducts){
+            Long lackQuantity = 0L;
+            Boolean isLack = false;
+            Long sum = 0L;
+            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
+            for(Stock stock : stocks){
+                List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
+                for(Storage storage : storages){
+                    sum += storage.getActualQuantity();
+                }
+            }
+            if(sum<orderProduct.getQuantity()){
+                lackQuantity = orderProduct.getQuantity()-sum;
+                isLack = true;
+            }else{
+                lackQuantity = 0L;
+            }
+            ReleaseOrderLack releaseOrderLack = ReleaseOrderLack.of(
+                    product.getProductName(),
+                    lackQuantity,
+                    isLack
+            );
 
-             releaseOrderLacks.add(releaseOrderLack);
+            releaseOrderLacks.add(releaseOrderLack);
 
-         }
-         return releaseOrderLacks;
+        }
+        return releaseOrderLacks;
     }
 
     public Long saveRelease(Long orderCode) {

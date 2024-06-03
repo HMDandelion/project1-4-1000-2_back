@@ -27,7 +27,8 @@ public enum ExceptionCode {
     BAD_REQUEST_DELETED_STOCK(6501,"삭제 된 재고 정보입니다."),
     BAD_REQUEST_DESTROY_QUANTITY(6502,"파손 수량은 초기 수량보다 클 수 없습니다."),
 
-    ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다.");
+    ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
+    ALREADY_ASSIGNED_STOCK(7501,"이미 창고에 보관 된 재고는 삭제할 수 없습니다.");
 
     private final int code;
     private final String message;
