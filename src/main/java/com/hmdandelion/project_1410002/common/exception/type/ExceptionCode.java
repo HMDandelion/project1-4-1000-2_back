@@ -20,7 +20,8 @@ public enum ExceptionCode {
     NO_CONTENTS_M_ORDERS(4401,"찾으시는 원자재 주문이 존재하지 않습니다." ),
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
-    NOT_FOUND_BOM_CODE(3002, "BOM이 존재하지 않습니다." );
+    NOT_FOUND_BOM_CODE(3002, "BOM이 존재하지 않습니다." ),
+    No_CONTENTS_CLIENT_CODE(4402,"스펙코드에 맞는 거래처가 존재하지 않습니다." );
 
     private final int code;
     private final String message;

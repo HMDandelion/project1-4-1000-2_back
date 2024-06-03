@@ -15,4 +15,6 @@ public interface MaterialOrderRepoCustom {
     List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode);
 
     List<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable);
+
+    List<Long> findClientCodeBySpecCodes(List<Long> materialCodes);
 }

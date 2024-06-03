@@ -2,21 +2,29 @@ package com.hmdandelion.project_1410002.purchase.service;
 
 import com.hmdandelion.project_1410002.common.exception.NoContentsException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
+import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -24,7 +32,10 @@ import java.util.Map;
 public class MaterialOrderService {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialOrderService.class);
+    private final ClientService clientService;
     private final MaterialOrderRepo materialOrderRepo;
+    private final MaterialSpecRepo materialSpecRepo;
+
 
     public Map<String, Double> getMonthTransactionsBySpecCode(long specCode) {
         Map<String, Double> monthTransactions = new LinkedHashMap<>();
@@ -80,5 +91,32 @@ public class MaterialOrderService {
             throw new NoContentsException(ExceptionCode.NO_CONTENTS_M_ORDERS);
         }
         return orders;
+    }
+
+    @Transactional
+    public List<MaterialClientDTO> getClientBySpecList(List<Long> specCodes) {
+        //해당 스펙을 담당자제로 가진 거래처의 목록을 불러옴
+        List<Long> clientCodes =  materialOrderRepo.findClientCodeBySpecCodes(specCodes);
+        if (clientCodes.isEmpty()) {
+            //비어있다면 예외
+            throw new NoContentsException(ExceptionCode.No_CONTENTS_CLIENT_CODE);
+        }
+        // 거래처의 정보를 받아옴
+        List<MaterialClientDTO> clients = clientService.getMaterialClientByCodes(clientCodes);
+        // 필요한 스펙들의 정보를 불러옴
+        Map<Long, List<MaterialSpecDTO>> clientCode_SpecList = materialSpecRepo.getSpecByclientCodes(clientCodes);
+        // 거래처에 맞게 스펙들의 정보를 넣어줌
+        for (Map.Entry<Long, List<MaterialSpecDTO>> entry : clientCode_SpecList.entrySet()) {
+            for (MaterialClientDTO dto : clients) {
+                if (dto.getClientCode() == entry.getKey()) {
+                    // 스펙 코드를 기준으로 정렬
+                    List<MaterialSpecDTO> sortedSpecList = entry.getValue().stream()
+                                                                   .sorted(Comparator.comparing(MaterialSpecDTO::getSpecCode))
+                                                                   .toList();
+                    dto.addMaterials(sortedSpecList);
+                }
+            }
+        }
+        return clients;
     }
 }

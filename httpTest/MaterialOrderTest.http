@@ -3,3 +3,6 @@ GET http://localhost:8001/api/v1/material/order-quantity/6
 
 ### 계획코드로 주문 조회
 GET http://localhost:8001/api/v1/material/orders?planCode=6
+
+### 스펙 코드들로 거래처 조회
+GET http://localhost:8001/api/v1/material/order-materials?specCodes=2,4

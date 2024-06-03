@@ -1,6 +1,11 @@
 package com.hmdandelion.project_1410002.sales.domain.repository.client;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.QAssignedMaterial;
+import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.QClient;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
@@ -98,6 +103,16 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .where(order.clientCode.eq(clientCode))
                 .groupBy(order.orderCode)
                 .fetch();
+    }
+
+    //Material Client...
+    @Override
+    public List<MaterialClientDTO> getMaterialClientByCodes(List<Long> clientCodes) {
+        List<Client> clients = queryFactory
+                .selectFrom(client)
+                .where(client.clientCode.in(clientCodes))
+                .fetch();
+        return clients.stream().map(MaterialClientDTO::from).toList();
     }
 
 }

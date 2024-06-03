@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.Stock.MaterialStockRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.stock.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.CombinedStockBySpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialGraphModel;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;

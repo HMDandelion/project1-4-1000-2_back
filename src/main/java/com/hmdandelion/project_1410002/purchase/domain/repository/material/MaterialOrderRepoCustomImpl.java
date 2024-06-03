@@ -1,11 +1,9 @@
 package com.hmdandelion.project_1410002.purchase.domain.repository.material;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.QMaterialOrder;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.QOrderSpec;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.*;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.QClient;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -148,5 +146,16 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
             System.out.println("=========================");
         }
         return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
+    }
+
+    @Override
+    public List<Long> findClientCodeBySpecCodes(List<Long> specCodes) {
+        QAssignedMaterial assignedMaterial = QAssignedMaterial.assignedMaterial;
+
+        return queryFactory
+                .select(assignedMaterial.clientCode)
+                .from(assignedMaterial)
+                .where(assignedMaterial.specCode.in(specCodes))
+                .fetch();
     }
 }

@@ -5,7 +5,7 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.Stock.MaterialStockRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.stock.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;

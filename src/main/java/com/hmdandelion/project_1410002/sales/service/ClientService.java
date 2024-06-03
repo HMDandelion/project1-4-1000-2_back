@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.sales.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
@@ -79,5 +80,9 @@ public class ClientService {
 
     public void remove(Long clientCode) {
         clientRepo.deleteById(clientCode);
+    }
+
+    public List<MaterialClientDTO> getMaterialClientByCodes(List<Long> clientCodes) {
+        return clientRepo.getMaterialClientByCodes(clientCodes);
     }
 }
