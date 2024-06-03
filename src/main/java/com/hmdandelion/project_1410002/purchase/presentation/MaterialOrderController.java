@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
 import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import lombok.Getter;
@@ -86,4 +87,15 @@ public class MaterialOrderController {
 
         return ResponseEntity.created(URI.create("api/vi/material/orders/" + orderCode)).build();
     }
+
+    //주문 수정
+    @PutMapping("/orders")
+    public ResponseEntity<Void> modifyOrder(
+            @RequestBody final MaterialOrderModifyRequest request
+    ) {
+        final Long orderCode = materialOrderService.modifyOrder(request);
+
+        return ResponseEntity.created(URI.create("api/vi/material/orders/" + orderCode)).build();
+    }
+
 }

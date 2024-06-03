@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.purchase.domain.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
 import com.hmdandelion.project_1410002.purchase.model.MaterialOrderStatus;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import jakarta.persistence.*;
@@ -13,6 +14,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Table(name = "tbl_material_order")
 @Entity
@@ -66,5 +68,23 @@ public class MaterialOrder {
     public void delete(String deletionReason) {
         this.isDeleted = true;
         this.deletionReason = deletionReason;
+    }
+
+    public void modify(MaterialOrderModifyRequest request, Client client) {
+        if (request.getOrderDate() != null) {
+            this.orderDate = request.getOrderDate();
+        }
+        if (request.getDeliveryDueDate() != null) {
+            this.deliveryDueDate = request.getDeliveryDueDate();
+        }
+        if (client != null) {
+            this.client = client;
+        }
+        if (request.getEmployeeCode() != null) {
+            this.employeeCode = request.getEmployeeCode();
+        }
+        if (request.getPlanCode() != null) {
+            this.planCode = request.getPlanCode();
+        }
     }
 }

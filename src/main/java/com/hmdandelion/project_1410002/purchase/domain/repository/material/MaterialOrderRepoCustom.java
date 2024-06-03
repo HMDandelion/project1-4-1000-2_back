@@ -20,4 +20,6 @@ public interface MaterialOrderRepoCustom {
     List<Long> findClientCodeBySpecCodes(List<Long> materialCodes);
 
     void setOrderSpec(Long orderCode, List<OrderSpecCreateDTO> orderSpecList);
+
+    void deleteAllOrderSpecByOrderCode(Long orderCode);
 }

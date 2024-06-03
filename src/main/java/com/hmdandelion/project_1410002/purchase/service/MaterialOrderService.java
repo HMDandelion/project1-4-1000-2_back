@@ -13,6 +13,7 @@ import com.hmdandelion.project_1410002.purchase.domain.repository.material.Mater
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
@@ -152,10 +153,25 @@ public class MaterialOrderService {
 
     @Transactional
     public Long createOrder(MaterialOrderCreateRequest request) {
+        //TODO 예외처리 안됨
         final Client client = clientService.findById(request.getClientCode());
         final MaterialOrder order = MaterialOrder.from(request, client);
         final Long orderCode = materialOrderRepo.save(order).getOrderCode();
         materialOrderRepo.setOrderSpec(orderCode, request.getOrderSpecList());
         return orderCode;
+    }
+
+    @Transactional
+    public Long modifyOrder(MaterialOrderModifyRequest request) {
+        //TODO 예외처리 안됨
+        final Client client = clientService.findById(request.getClientCode());
+        final MaterialOrder order = materialOrderRepo.findById(request.getOrderCode()).orElseThrow(
+                () -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
+        );
+        order.modify(request, client);
+        materialOrderRepo.deleteAllOrderSpecByOrderCode(order.getOrderCode());
+        materialOrderRepo.setOrderSpec(order.getOrderCode(), request.getOrderSpecList());
+
+        return order.getOrderCode();
     }
 }

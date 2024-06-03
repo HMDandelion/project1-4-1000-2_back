@@ -5,7 +5,6 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMateria
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.*;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
-import com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -17,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -194,5 +194,14 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
             );
             entityManager.persist(newOrderSpec);
         }
+    }
+
+    @Override
+    public void deleteAllOrderSpecByOrderCode(Long orderCode) {
+        QOrderSpec orderSpec = QOrderSpec.orderSpec;
+
+        queryFactory.delete(orderSpec)
+                    .where(orderSpec.orderCode.eq(orderCode))
+                    .execute();
     }
 }
