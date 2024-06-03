@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class CombinedStockBySpecDTO {
+
     private final Long specCode;
     private final String materialName;
     private final String remarks;

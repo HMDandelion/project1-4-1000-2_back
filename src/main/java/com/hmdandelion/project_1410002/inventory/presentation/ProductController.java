@@ -38,34 +38,36 @@ public class ProductController {
     @GetMapping("/product/{productCode}")
     public ResponseEntity<ProductsResponse> getProduct(
             @PathVariable final Long productCode
-    ){
+    ) {
         final ProductsResponse product = productService.getProduct(productCode);
 
         return ResponseEntity.ok(product);
     }
+
     @PostMapping("/product")
     public ResponseEntity<Void> save(
             @RequestBody final ProductRequest productRequest
-    ){
+    ) {
         final Long productCode = productService.save(productRequest);
-        return ResponseEntity.created(URI.create("/api/v1/product"+productCode)).build();
+        return ResponseEntity.created(URI.create("/api/v1/product" + productCode)).build();
     }
+
     @PutMapping("/product/{productCode}")
     public ResponseEntity<ProductsResponse> modifyProduct(
             @PathVariable final Long productCode,
             @RequestBody final ProductRequest productRequest
-    ){
-            productService.modifyProduct(productCode,productRequest);
-            return ResponseEntity.created(URI.create("/api/v1/product"+productCode)).build();
+    ) {
+        productService.modifyProduct(productCode, productRequest);
+        return ResponseEntity.created(URI.create("/api/v1/product" + productCode)).build();
     }
+
     @DeleteMapping("/product/{productCode}")
     public ResponseEntity<Void> delete(
             @PathVariable final Long productCode
-    ){
+    ) {
         productService.updateStatus(productCode);
         return ResponseEntity.noContent().build();
     }
-
 
 
 }

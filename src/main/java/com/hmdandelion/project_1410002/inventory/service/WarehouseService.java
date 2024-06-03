@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.common.exception.type.NotWarehouseException;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
@@ -15,14 +16,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.NOT_FOUND_WAREHOUSE_CODE;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class WarehouseService {
 
     private final WarehouseRepo warehouseRepository;
+
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("warehouseCode"));
     }
@@ -46,7 +46,7 @@ public class WarehouseService {
     @Transactional(readOnly = true)
     public Warehouse getWarehouse(Long warehouseCode) {
         Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
-            new NotWarehouseException(NOT_FOUND_WAREHOUSE_CODE)
+            new NotWarehouseException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE)
         );
 
         return warehouse;
@@ -64,7 +64,7 @@ public class WarehouseService {
     }
 
     public void delete(Long warehouseCode) {
-        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() -> new CustomException(NOT_FOUND_WAREHOUSE_CODE));
+        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
         warehouseRepository.delete(warehouse);
     }
 }

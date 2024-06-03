@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class WarehouseResponse {
+
     private Long warehouseCode;
     private String name;
     private String location;
@@ -23,7 +24,7 @@ public class WarehouseResponse {
                 warehouse.getLocation(),
                 warehouse.getVolume(),
                 warehouse.getEmployeeCode()
-                );
+        );
     }
 
     public static WarehouseResponse of(Long warehouseCode, String name, String location, Long volume, Long employeeCode) {

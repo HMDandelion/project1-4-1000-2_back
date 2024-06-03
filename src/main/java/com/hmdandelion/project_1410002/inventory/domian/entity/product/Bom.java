@@ -47,3 +47,4 @@ public class Bom {
         this.sequence = sequence;
     }
 }
+

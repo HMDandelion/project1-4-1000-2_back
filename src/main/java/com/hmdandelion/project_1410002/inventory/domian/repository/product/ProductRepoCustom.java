@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ProductRepoCustom {
     Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status);
+
 }
 

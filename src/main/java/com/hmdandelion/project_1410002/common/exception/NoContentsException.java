@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class NoContentsException extends CustomException {
+
     public NoContentsException(final ExceptionCode exceptionCode) {
         super(exceptionCode);
     }

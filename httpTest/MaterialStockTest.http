@@ -42,21 +42,15 @@ Content-Type: application/json
 }
 
 ### 스톡 수정 테스트
-POST http://localhost:8001/api/v1/material/inventory
+PUT http://localhost:8001/api/v1/material/inventory
 Content-Type: application/json
 
 {
-  "stockCode": 116,
-"division": "STOCK",
-"specCode": 8,
-"warehouseCode": 3,
-"incomingQuantity": 50,
-"actualQuantity": 45,
-"storageDatetime": "2024-05-28T14:30:00",
-"remarks": "Initial stock entry",
-"inspectionDatetime": "2024-05-28T15:00:00",
-"modificationReason": "수정되었습니다22",
-"orderCode": 1
+  "stockCode": 115,
+  "warehouseCode": 3,
+  "actualQuantity": 45,
+  "modificationReason": "수정되었습니다22",
+  "orderCode": 1
 }
 
 ### 스톡 삭제 테스트

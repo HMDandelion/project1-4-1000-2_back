@@ -1,5 +1,5 @@
 package com.hmdandelion.project_1410002.production.domain.entity.material;
 
-public enum MUStatus {
+public enum MaterialUsageStatus {
     READY, DELIVERY, COMPLETED
 }

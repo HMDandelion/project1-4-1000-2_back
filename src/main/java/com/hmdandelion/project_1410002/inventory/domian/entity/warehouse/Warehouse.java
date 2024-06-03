@@ -5,10 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="tbl_warehouse")
+@Table(name = "tbl_warehouse")
 @Getter
 @NoArgsConstructor
 public class Warehouse {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long warehouseCode;

@@ -5,8 +5,9 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.MaterialSpecRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.BomRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.BomRepository;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.BomCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.BomUpdateRequest;
@@ -48,9 +49,9 @@ public class BomService {
         MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new CustomException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
 
         Bom newBom = Bom.of(
-          bomRequest.getQuantity(),
-          bomRequest.getSequence(),
-          product,
+                bomRequest.getQuantity(),
+                bomRequest.getSequence(),
+                product,
                 materialSpec
 
         );
@@ -62,14 +63,14 @@ public class BomService {
 
 
     public void modifyBomByBomCode(Long bomCode, BomUpdateRequest bomRequest) {
-            Bom bom = getBomByBomCode(bomCode);
+        Bom bom = getBomByBomCode(bomCode);
         System.out.println("bom = " + bom);
-            MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new CustomException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
-            bom.modify(
-                    materialSpec,
-                    bomRequest.getQuantity(),
-                    bomRequest.getSequence()
-            );
+        MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new CustomException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
+        bom.modify(
+                materialSpec,
+                bomRequest.getQuantity(),
+                bomRequest.getSequence()
+        );
     }
 
     public void deleteByBomCode(Long bomCode) {
