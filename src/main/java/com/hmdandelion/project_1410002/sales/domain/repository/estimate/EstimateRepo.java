@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface EstimateRepo extends JpaRepository<Estimate, Long>, EstimateRepoCustom{
 
     Optional<Estimate> findByEstimateCodeAndStatusNot(Long estimateCode, EstimateStatus estimateStatus);
+
+    Optional<Estimate> findByEstimateCodeAndIsOrderedFalse(Long estimateCode);
 }
