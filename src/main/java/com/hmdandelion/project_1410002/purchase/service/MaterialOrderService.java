@@ -9,6 +9,7 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -118,5 +119,9 @@ public class MaterialOrderService {
             }
         }
         return clients;
+    }
+
+    public MaterialOrderResponse findDetail(Long orderCode) {
+
     }
 }

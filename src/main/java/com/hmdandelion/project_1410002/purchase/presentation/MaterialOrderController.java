@@ -61,6 +61,8 @@ public class MaterialOrderController {
     public ResponseEntity<MaterialOrderResponse> findDetail(
             @PathVariable final Long orderCode
     ) {
+        MaterialOrderResponse res = materialOrderService.findDetail(orderCode);
 
+        return null;
     }
 }
