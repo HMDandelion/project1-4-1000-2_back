@@ -12,6 +12,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductionPlanUpdateRequest {
 
+    private final Long planCode;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate startAt;
 

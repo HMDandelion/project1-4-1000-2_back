@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.production.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import com.hmdandelion.project_1410002.production.dto.request.WorkOrderCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.WorkOrderResponse;
 import com.hmdandelion.project_1410002.production.service.WorkOrderService;
@@ -43,16 +44,24 @@ public class WorkOrderController {
     }
     /* 작업 지시서 상세 조회 end */
 
+    /* 작업 지시서 등록내에 조회 start */
+    @GetMapping("/production/work-order/")
+    public ResponseEntity<WorkOrderResponse> getWorkOrderInSave (
+    ) {
+        final WorkOrderResponse WorkOrderResponse = workOrderService.getWorkOrderInSave();
+
+        return ResponseEntity.ok(WorkOrderResponse);
+    }
+    /* 작업 지시서 등록내에 조회 end */
 
 
     /* 작업 지시서 등록 start */
     @PostMapping("/production/work-order")
     public ResponseEntity<Void> workOrderSave (
-
             @RequestBody final WorkOrderCreateRequest workOrderCreateRequest)
     {
 
-        final Long workOrderCode = workOrderService.workOrderSave(workOrderCreateRequest);
+        final Long workOrderCode = workOrderService.workOrderSave(workOrderCreateRequest, WorkOrderStatusType.IN_PROGRESS);
 
         ResponseEntity.ok("작업 지시서 등록이 완료 되었습니다.");
 

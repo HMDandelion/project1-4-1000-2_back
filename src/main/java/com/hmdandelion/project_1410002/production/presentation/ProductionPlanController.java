@@ -62,7 +62,7 @@ public class ProductionPlanController {
 
         ResponseEntity.ok("생산 계획 수정이 완료 되었습니다.");
 
-        return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + planCode)).build();
+        return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
     }
     /* 생산 계획 수정 end */
 

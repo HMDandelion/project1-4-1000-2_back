@@ -9,6 +9,8 @@ public enum ExceptionCode {
 
     NOT_FOUND_PRODUCT_CODE(3000, "상품 코드에 해당하는 상품이 존재하지 않습니다."),
     NOT_FOUND_CLIENT_CODE(3100, "거래처 코드에 해당하는 거래처가 존재하지 않습니다."),
+    NOT_FOUND_BOM_CODE (3000, "ㅈㅅ해요 DOM 날렸어요 ㅋㅋㅋㅠㅠ"),
+
     NOT_FOUND_ESTIMATE_CODE(3200, "견적 코드에 해당하는 견적이 존재하지 않습니다."),
     NOT_FOUND_ESTIMATE_PRODUCT_CODE(3201, "견적 상품 코드에 해당하는 견적 상품이 존재하지 않습니다."),
     NOT_FOUND_CATEGORY_CODE(3400,"카테고리 코드에 해당하는 카테고리가 존재하지 않습니다." ),
@@ -23,7 +25,8 @@ public enum ExceptionCode {
   
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
 
-    NOT_FOUND_WORK_ORDER( 8000, "코드를 찾을 수 없습니다.");
+    NOT_FOUND_WORK_ORDER( 8000, "작업 지시서 코드를 찾을 수 없습니다."),
+    NOT_FOUND_PLAN_CODE(3700,"해당 생산 계획이 존재하지 않습니다.");
 
     private final int code;
     private final String message;

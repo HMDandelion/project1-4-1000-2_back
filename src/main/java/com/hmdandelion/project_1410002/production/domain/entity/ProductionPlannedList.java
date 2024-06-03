@@ -34,14 +34,33 @@ public class ProductionPlannedList {
     @Column(name = "description")
     private String description;
 
+//    @ManyToOne
+//    @JoinColumn(name = "plan_code")
+//    private ProductionPlan  productionPlan;
+
     public ProductionPlannedList(Long productCode, String plannedQuantity, String description, String requiredQuantity) {
         this.productCode = productCode;
         this.requiredQuantity = requiredQuantity;
         this.plannedQuantity = plannedQuantity;
         this.description = description;
     }
+    public ProductionPlannedList(Long planListCode, String plannedQuantity, String description) {
+        this.planListCode = planListCode;
+        this.plannedQuantity = plannedQuantity;
+        this.description = description;
+    }
 
     public static ProductionPlannedList of(Long productCode, String plannedQuantity, String description, String requiredQuantity) {
         return new ProductionPlannedList(productCode, plannedQuantity, description, requiredQuantity);
+    }
+
+
+    public static ProductionPlannedList of(Long planListCode, String plannedQuantity, String description) {
+        return new ProductionPlannedList(planListCode, plannedQuantity, description);
+    }
+
+    public void planModify(String plannedQuantity, String description) {
+        this.plannedQuantity = plannedQuantity;
+        this.description = description;
     }
 }

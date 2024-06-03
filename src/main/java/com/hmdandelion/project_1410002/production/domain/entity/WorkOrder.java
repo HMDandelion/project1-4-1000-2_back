@@ -1,6 +1,5 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -51,6 +50,31 @@ public class WorkOrder {
 
     @Column(name = "employee_code", nullable = false)
     private Long employeeCode;
+
+    public WorkOrder(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType workOrderStatusType) {
+        this.workWrittenDate = workWrittenDate;
+        this.workOrderDate = workOrderDate;
+        this.lineCode = lineCode;
+        this.productCode = productCode;
+        this.employeeCode = employeeCode;
+        this.orderedQuantity = orderedQuantity;
+        this.completionStatus = workOrderStatusType;
+    }
+
+
+    public static WorkOrder of(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType workOrderStatusType) {
+        return new WorkOrder(
+                workWrittenDate,
+                workOrderDate,
+                lineCode,
+                productCode,
+                employeeCode,
+                orderedQuantity,
+                workOrderStatusType
+
+        );
+    }
+
 
     public void end() {
         if (this.completionStatus == WorkOrderStatusType.IN_PROGRESS) {
