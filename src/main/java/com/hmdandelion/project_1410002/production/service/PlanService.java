@@ -19,6 +19,7 @@ import java.time.temporal.TemporalAdjusters;
 
 import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.ALREADY_EXIST_PRODUCTION_PLAN;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,7 +37,7 @@ public class PlanService {
         LocalDate startAt = LocalDate.parse(dt + "-01");
         LocalDate endAt = startAt.with(TemporalAdjusters.lastDayOfMonth());
 
-        Page<PlanListResponse> planList = productionRepository.findPlanDetails(getPageable(page), startAt ,endAt);
+        Page<PlanListResponse> planList = productionRepository.findPlanDetails(getPageable(page), startAt, endAt);
 
         return planList;
     }
@@ -68,7 +69,7 @@ public class PlanService {
 
     public void planModify(Long planCode, ProductionPlanUpdateRequest productionPlanUpdateRequest) {
         ProductionPlan productionPlan = productionRepository.findByPlanCode(planCode)
-                .orElseThrow(() -> new RuntimeException());
+                                                            .orElseThrow(() -> new RuntimeException());
 
         productionPlan.planModify(
                 productionPlanUpdateRequest.getStartAt(),

@@ -3,10 +3,13 @@ package com.hmdandelion.project_1410002.inventory.dto.material.dto;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import lombok.*;
 
-@Getter @Setter @ToString
+@Getter
+@Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class MaterialSpecDTO {
+
     private Long specCode;
     private String materialName;
     private String remarks;

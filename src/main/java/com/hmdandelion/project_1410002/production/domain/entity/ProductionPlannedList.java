@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.List;
-
 @Entity
 @Table(name = "tbl_production_plan_list")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
