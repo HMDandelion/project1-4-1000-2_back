@@ -15,6 +15,7 @@ import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrd
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWait;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.OrderProduct;
@@ -265,5 +266,42 @@ public class ReleaseService {
         }
 
         return returnList;
+    }
+
+    public List<ReleaseWait> getReleaseWait(Boolean deadLineSort) {
+        List<ReleaseWait> resultList = new ArrayList<>();
+
+        List<Release> releases = releaseRepo.findByStatus(WAIT);
+        for(Release release : releases){
+            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
+                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
+                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+            ReleaseWait releaseWait = ReleaseWait.of(
+                    order.getOrderCode(),
+                    client.getClientName(),
+                    release.getCreatedAt(),
+                    order.getDeadline()
+            );
+            resultList.add(releaseWait);
+        }
+
+        // deadLineSort 값에 따라 resultList를 정렬
+        if (deadLineSort) {
+            // deadLineSort가 참이면 내림차순 정렬
+            resultList.sort(Comparator.comparing(ReleaseWait::getDeadLine).reversed());
+        } else {
+            // deadLineSort가 거짓이면 오름차순 정렬
+            resultList.sort(Comparator.comparing(ReleaseWait::getDeadLine));
+        }
+
+        return resultList;
+    }
+
+    public void shippingOrder(Long orderCode) {
+
+        Release release = releaseRepo.findByOrderOrderCode(orderCode);
+
+        release.shipping();
     }
 }

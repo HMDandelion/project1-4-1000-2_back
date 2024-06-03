@@ -11,6 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.SHIPPING;
 import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.WAIT;
 
 @Entity
@@ -36,5 +37,9 @@ public class Release {
 
     public static Release of(Order order) {
         return new Release(order);
+    }
+
+    public void shipping() {
+        this.status = SHIPPING;
     }
 }
