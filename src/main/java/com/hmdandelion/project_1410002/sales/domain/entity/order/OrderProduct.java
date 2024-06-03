@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OrderProduct {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderProductCode;
@@ -18,5 +19,21 @@ public class OrderProduct {
     @ManyToOne
     @JoinColumn(name = "order_code")
     private Order order;
-    private Integer productCode;
+    private Long productCode;
+
+    private OrderProduct(Integer quantity, Integer price, Long productCode, Order order) {
+        this.quantity = quantity;
+        this.price = price;
+        this.productCode = productCode;
+        this.order = order;
+    }
+
+    public static OrderProduct of(Integer quantity, Integer price, Long productCode, Order order) {
+        return new OrderProduct(
+                quantity,
+                price,
+                productCode,
+                order
+        );
+    }
 }

@@ -1,9 +1,9 @@
 package com.hmdandelion.project_1410002.sales.domain.repository.client;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
-import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
+import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -24,6 +24,7 @@ import static com.hmdandelion.project_1410002.sales.domain.entity.order.QOrderPr
 
 @RequiredArgsConstructor
 public class ClientRepoCustomImpl implements ClientRepoCustom {
+
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -54,14 +55,14 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
     }
 
     private BooleanExpression containClientName(String clientName) {
-        if(clientName == null || clientName.isEmpty()) {
+        if (clientName == null || clientName.isEmpty()) {
             return null;
         }
         return client.clientName.containsIgnoreCase(clientName);
     }
 
     private BooleanExpression isOrdered(Boolean isOrdered) {
-        if(isOrdered == null || !isOrdered) {
+        if (isOrdered == null || !isOrdered) {
             return null;
         }
         return JPAExpressions
@@ -87,11 +88,11 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
 
         return queryFactory
                 .select(Projections.constructor(ClientOrderDTO.class,
-                        order.orderCode,
-                        order.orderDatetime,
-                        order.deadline,
-                        orderProduct.quantity.multiply(orderProduct.price).sum(),
-                        order.status))
+                                                order.orderCode,
+                                                order.orderDatetime,
+                                                order.deadline,
+                                                orderProduct.quantity.multiply(orderProduct.price).sum(),
+                                                order.status))
                 .from(order)
                 .leftJoin(order.orderProducts, orderProduct)
                 .where(order.clientCode.eq(clientCode))

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class SalesClientsResponse {
+
     private final Long clientCode;
     private final String clientName;
     private final String representativeName;
