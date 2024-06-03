@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrd
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseComplete;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShipping;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWait;
 import com.hmdandelion.project_1410002.inventory.service.ReleaseService;
@@ -113,6 +114,15 @@ public class ReleaseController {
     ){
         releaseService.completeOrder(orderCode);
         return ResponseEntity.created(URI.create("/api/v1/releases/orders")).build();
+    }
+
+    /*배송 완료 재고 조회*/
+    @GetMapping("/release/complete")
+    public ResponseEntity<List<ReleaseComplete>> getReleaseComplete(
+        @RequestParam(defaultValue = "true") final  Boolean completeAt
+    ){
+        List<ReleaseComplete> releaseComplete = releaseService.getReleaseComplete(completeAt);
+        return ResponseEntity.ok(releaseComplete);
     }
 
 }

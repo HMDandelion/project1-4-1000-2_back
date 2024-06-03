@@ -17,6 +17,7 @@ import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrd
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseComplete;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShipping;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWait;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
@@ -325,7 +326,9 @@ public class ReleaseService {
         for(Release release : releases){
             Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
                     .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCode(release.getReleaseCode());
+            System.out.println("release.getReleaseCode() = " + release.getReleaseCode());
+            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),SHIPPING);
+            System.out.println("releaseChange = " + releaseChange);
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
             ReleaseShipping releaseShipping = ReleaseShipping.of(
@@ -365,5 +368,45 @@ public class ReleaseService {
         Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         order.modifyStatus(COMPLETED);
 
+    }
+
+    public List<ReleaseComplete> getReleaseComplete(
+            Boolean completeAt
+    ) {
+
+
+        List<ReleaseComplete> resultList = new ArrayList<>();
+
+        List<Release> releases = releaseRepo.findByStatus(DELIVERY_COMPLETED);
+        for(Release release : releases){
+            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), COMPLETED)
+                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+
+            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),DELIVERY_COMPLETED);
+            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
+                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+            Boolean isDeadLine = true;
+            if(order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())){
+                isDeadLine=false;
+            }
+            ReleaseComplete releaseComplete = ReleaseComplete.of(
+                    order.getOrderCode(),
+                    client.getClientName(),
+                    releaseChange.getChangeAt(),
+                    isDeadLine
+            );
+            resultList.add(releaseComplete);
+        }
+
+        // deadLineSort 값에 따라 resultList를 정렬
+        if (completeAt) {
+            // deadLineSort가 참이면 내림차순 정렬
+            resultList.sort(Comparator.comparing(ReleaseComplete::getCompletedAt).reversed());
+        } else {
+            // deadLineSort가 거짓이면 오름차순 정렬
+            resultList.sort(Comparator.comparing(ReleaseComplete::getCompletedAt));
+        }
+
+        return resultList;
     }
 }
