@@ -1,16 +1,21 @@
 package com.hmdandelion.project_1410002.purchase.service;
 
 import com.hmdandelion.project_1410002.common.exception.NoContentsException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
+import com.hmdandelion.project_1410002.production.service.PlanService;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
+import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
+import com.hmdandelion.project_1410002.sales.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,14 +23,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -36,7 +39,8 @@ public class MaterialOrderService {
     private final ClientService clientService;
     private final MaterialOrderRepo materialOrderRepo;
     private final MaterialSpecRepo materialSpecRepo;
-
+    private final PlanService planService;
+    private final EmployeeService employeeService;
 
     public Map<String, Double> getMonthTransactionsBySpecCode(long specCode) {
         Map<String, Double> monthTransactions = new LinkedHashMap<>();
@@ -122,6 +126,15 @@ public class MaterialOrderService {
     }
 
     public MaterialOrderResponse findDetail(Long orderCode) {
-
+        //TODO 예외처리 안되어있음
+        MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
+                ()-> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
+        );
+        ProductionPlan plan = planService.findById(order.getPlanCode());
+        Employee employee = employeeService.findById(order.getEmployeeCode());
+        String departmentName = employeeService.findDepartmentNameById(employee.getDepartmentCode());
+        String positionName = employeeService.findPositionNameById(employee.getPositionCode());
+        List<OrderSpec> orderSpecs = materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
+        return MaterialOrderResponse.of(plan, order, employee, positionName, departmentName, orderSpecs);
     }
 }

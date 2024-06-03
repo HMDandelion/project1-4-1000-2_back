@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.production.domain.entity.PlannedOrderList;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlannedList;
@@ -106,5 +107,10 @@ public class PlanService {
     public void planRemove(Long planCode) {
 
         productionPlanRepo.deleteById(planCode);
+    }
+
+    //플랜코드로 플랜을 조회하는 코드 (by한결)
+    public ProductionPlan findById(Long planCode) {
+        return productionPlanRepo.findById(planCode).orElseThrow(()-> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
     }
 }

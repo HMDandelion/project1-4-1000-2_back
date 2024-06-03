@@ -56,13 +56,13 @@ public class MaterialOrderController {
 
         return ResponseEntity.ok(res);
     }
-
+    //주문 상세 조회
     @GetMapping("/orders/{orderCode}")
     public ResponseEntity<MaterialOrderResponse> findDetail(
             @PathVariable final Long orderCode
     ) {
         MaterialOrderResponse res = materialOrderService.findDetail(orderCode);
 
-        return null;
+        return ResponseEntity.ok(res);
     }
 }
