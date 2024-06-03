@@ -8,7 +8,11 @@ GET http://localhost:8001/api/v1/production/reports?page=1&productionStatusType=
 GET http://localhost:8001/api/v1/production/reports?page=1&productionStatusCode=3&productionStatusType=PRODUCTION_COMPLETED
 
 ### 상품 상세정보 조회
-GET http://localhost:8001/api/v1/production/reports/3
+GET http://localhost:8001/api/v1/production/reports/3/detail
 
 ### 불량 상세 조회
 GET http://localhost:8001/api/production/reports/1/defects
+
+
+### 보고서 수정
+PUT http://localhost:8001/api/production/reports/19/modify

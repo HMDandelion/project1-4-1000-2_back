@@ -30,4 +30,7 @@ public interface ProductionRepo extends JpaRepository<ProductionManagement, Long
     /*작업 시작 날짜로 조회 */
     Page<ProductionManagement> findByStartAt(Pageable pageable, LocalDateTime startAt);
 
+
+    /* 상세 조회 */
+    Optional<ProductionManagement> findByProductionStatusCode(Long productionStatusCode);
 }

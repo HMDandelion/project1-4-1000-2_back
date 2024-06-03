@@ -10,4 +10,5 @@ public interface DefectDetailRepo extends JpaRepository<DefectDetail, Long> {
     List<DefectDetail> findByDefectCode(Long defectCode);
 
 
+    List<DefectDetail> findByProductionDetail(ProductionDetail productionDetail);
 }
