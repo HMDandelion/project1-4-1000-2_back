@@ -11,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.WAIT;
+
 @Entity
 @Table(name = "tbl_release")
 @Getter
@@ -20,8 +22,8 @@ public class Release {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long releaseCode;
-
-    private ReleaseStatus status;
+    @Enumerated(EnumType.STRING)
+    private ReleaseStatus status=WAIT;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "order_code")
     private Order order;

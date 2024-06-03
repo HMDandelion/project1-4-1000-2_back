@@ -11,8 +11,8 @@ public enum ReleaseStatus {
     ReleaseStatus(String value){this.value=value;}
 
     @JsonCreator
-    public StockType from(String value) {
-        for(StockType type : StockType.values()) {
+    public ReleaseStatus from(String value) {
+        for(ReleaseStatus type : ReleaseStatus.values()) {
             if(type.getValue().equals(value)) {
                 return type;
             }

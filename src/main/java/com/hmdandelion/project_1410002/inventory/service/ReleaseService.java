@@ -10,6 +10,7 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.product.Produ
 import com.hmdandelion.project_1410002.inventory.domian.repository.release.ReleaseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
+import com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLack;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
@@ -34,6 +35,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.WAIT;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.ACTIVE;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
 import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.ORDER_RECEIVED;
@@ -183,6 +185,7 @@ public class ReleaseService {
         Release newRelease = Release.of(
                 order
         );
+
         List<Storage> resultList = new ArrayList<>();
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
         for(OrderProduct orderProduct : orderProducts){
@@ -207,11 +210,9 @@ public class ReleaseService {
                     modifyStorage.modifyActualQuantity();
                 }
             }
+
         }
-
-
-
-
-        return null;
+        Long releaseCode = releaseRepo.save(newRelease).getReleaseCode();
+        return releaseCode;
     }
 }
