@@ -177,10 +177,31 @@ public class ProductionService {
 
     @Transactional
     public void removeReport(Long productionStatusCode) {
-        // 보고서를 삭제하기 전에 해당 보고서를 찾아야 합니다.
+        // 보고서 삭제 전 보고서 찾는 로직
         Optional<ProductionManagement> optionalProductionManagement = productionRepo.findByProductionStatusCode(productionStatusCode);
 
-        // 해당 보고서가 존재하는 경우 삭제합니다.
+        // 보고서가 존재하면 삭제.
         optionalProductionManagement.ifPresent(productionRepo::delete);
     }
+
+
+
+
+
+
+    /* -------------------------- 계산기 --------------------------------------------------*/
+    public int calculateProductionQuantity(int defectQuantity, int completelyQuantity) {
+        return defectQuantity + completelyQuantity;
+    }
+    @Transactional(readOnly = true)
+    public int calculateTotalProductionQuantity() {
+        List<ProductionDetail> allProductionDetails = productionDetailRepo.findAll();
+
+        int totalProductionQuantity = allProductionDetails.stream()
+                .mapToInt(productionDetail -> calculateProductionQuantity(productionDetail.getDefectQuantity(), productionDetail.getCompletelyQuantity()))
+                .sum();
+
+        return totalProductionQuantity;
+    }
+
 }

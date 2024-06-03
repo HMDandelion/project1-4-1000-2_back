@@ -35,12 +35,7 @@ public class ProductionManagerController {
 
     /*조회*/
     @GetMapping("/production/reports")
-    public ResponseEntity<PagingResponse> getProductionReports(
-            @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Long productionStatusCode,
-            @RequestParam(required = false) ProductionStatusType productionStatusType,
-            @RequestParam(required = false) LocalDateTime startAt,
-            @RequestParam(required = false) LocalDateTime completedAt) {
+    public ResponseEntity<PagingResponse> getProductionReports(@RequestParam(required = false) Integer page, @RequestParam(required = false) Long productionStatusCode, @RequestParam(required = false) ProductionStatusType productionStatusType, @RequestParam(required = false) LocalDateTime startAt, @RequestParam(required = false) LocalDateTime completedAt) {
 
         if (page == null || page <= 0) {
             page = 1;
@@ -56,8 +51,7 @@ public class ProductionManagerController {
 
     /* 상세 목록 조회 */
     @GetMapping("/production/reports/{productionStatusCode}/detail")
-    public ResponseEntity<List<ProductionDetailResponse>> getProductionDetails(
-            @PathVariable Long productionStatusCode) {
+    public ResponseEntity<List<ProductionDetailResponse>> getProductionDetails(@PathVariable Long productionStatusCode) {
         List<ProductionDetailResponse> productionDetails = productionService.getProductionDetails(productionStatusCode);
         return ResponseEntity.ok(productionDetails);
     }
@@ -65,8 +59,7 @@ public class ProductionManagerController {
 
     /* 불량상세 조회 */
     @GetMapping("/production/reports/{productionDetailCode}/defects")
-    public ResponseEntity<List<DefectDetailResponse>> getDefectDetails(
-            @PathVariable Long productionDetailCode) {
+    public ResponseEntity<List<DefectDetailResponse>> getDefectDetails(@PathVariable Long productionDetailCode) {
         try {
             List<DefectDetailResponse> defectDetails = productionService.getDefectDetails(productionDetailCode);
             return ResponseEntity.ok(defectDetails);
@@ -78,22 +71,19 @@ public class ProductionManagerController {
 
     /*보고서 등록*/
     @PostMapping("/production/reports")
-    public ResponseEntity<Void> reportSaved(
-            @RequestBody final ProductionReportCreateRequest productionReportCreateRequest
-//            @RequestPart final MultipartFile attachFile
+    public ResponseEntity<Void> reportSaved(@RequestBody final ProductionReportCreateRequest productionReportCreateRequest
+            //  @RequestPart final MultipartFile attachFile
     ) {
         final Long productionStatusCode = productionService.reportSave(productionReportCreateRequest, ProductionStatusType.REGISTER_PRODUCTION);
-
+        // 총 생산량 계산
+        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
         return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
 
     }
 
     /* 보고서 수정 */
     @PutMapping("production/reports/{productionStatusCode}/modify")
-    public ResponseEntity<Void> modify(
-            @PathVariable final Long productionStatusCode,
-            @RequestBody final ProductionReportUpdateRequest productionReportUpdateRequest
-    ) {
+    public ResponseEntity<Void> modify(@PathVariable final Long productionStatusCode, @RequestBody final ProductionReportUpdateRequest productionReportUpdateRequest) {
         productionService.modifyReport(productionStatusCode, productionReportUpdateRequest);
 
         return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
