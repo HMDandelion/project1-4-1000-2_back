@@ -197,14 +197,28 @@ public class StorageService {
 
 
     public void modifyDestroyQuantity(Long storageCode, StorageDestroyRequest destroyQuantity) {
-        Storage storage = storageRepo.findById(storageCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE));
-        List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(storage.getStock().getStockCode(),false);
-        if(storage.getInitialQuantity()<destroyQuantity.getDestroyQuantity()){
+        Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storageCode,false);
+        List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(modifyStorage.getStock().getStockCode(),false);
+        Stock stock = stockRepo.findById(modifyStorage.getStock().getStockCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+        if(modifyStorage.getInitialQuantity()<destroyQuantity.getDestroyQuantity()){
             throw new CustomException(ExceptionCode.BAD_REQUEST_DESTROY_QUANTITY);
         }
-        storage.modifyDestroyQuantity(
+        modifyStorage.modifyDestroyQuantity(
                 destroyQuantity.getDestroyQuantity()
         );
+
+
+        Long standardSum = 0L;
+        for(Storage entityStorage : storages){
+            standardSum+=entityStorage.getActualQuantity();
+        }
+
+        if(standardSum==0){
+            for(Storage entityStorage : storages){
+                entityStorage.modify();
+            }
+            stock.modifyIsDelete();
+        }
     }
 
     public StorageStockWarehouse getStorageByStorageCode(Long storageCode) {

@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
@@ -89,6 +90,8 @@ public class StorageController {
             @RequestBody final StorageDestroyRequest destroyQuantity
     ){
         storageService.modifyDestroyQuantity(storageCode,destroyQuantity);
+
+
         return ResponseEntity.created(URI.create(null)).build();
     }
 

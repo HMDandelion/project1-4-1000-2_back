@@ -71,4 +71,8 @@ public class Stock {
     public void modifyStatus(AssignmentStatus change) {
         this.assignmentStatus = change;
     }
+
+    public void modifyIsDelete() {
+        this.isDelete = true;
+    }
 }

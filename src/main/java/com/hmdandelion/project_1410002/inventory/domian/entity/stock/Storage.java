@@ -72,4 +72,9 @@ public class Storage {
     public void minusActualQuantity(long minus) {
         this.actualQuantity -= minus;
     }
+
+    public void modify() {
+        this.isDelete = true;
+    }
+
 }
