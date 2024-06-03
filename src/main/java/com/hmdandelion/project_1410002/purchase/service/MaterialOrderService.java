@@ -12,7 +12,9 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import com.hmdandelion.project_1410002.sales.service.EmployeeService;
@@ -146,5 +148,14 @@ public class MaterialOrderService {
         );
         order.delete(deletionReason);
         materialOrderRepo.flush();
+    }
+
+    @Transactional
+    public Long createOrder(MaterialOrderCreateRequest request) {
+        final Client client = clientService.findById(request.getClientCode());
+        final MaterialOrder order = MaterialOrder.from(request, client);
+        final Long orderCode = materialOrderRepo.save(order).getOrderCode();
+        materialOrderRepo.setOrderSpec(orderCode, request.getOrderSpecList());
+        return orderCode;
     }
 }

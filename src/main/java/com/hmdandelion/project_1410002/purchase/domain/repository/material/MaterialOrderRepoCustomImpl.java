@@ -1,18 +1,22 @@
 package com.hmdandelion.project_1410002.purchase.domain.repository.material;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.*;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
-import com.hmdandelion.project_1410002.sales.domain.entity.client.QClient;
+import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -23,6 +27,8 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialOrderRepoCustomImpl.class);
     private final JPAQueryFactory queryFactory;
+    @PersistenceContext
+    private EntityManager entityManager;
 
 
     @Override
@@ -157,5 +163,36 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
                 .from(assignedMaterial)
                 .where(assignedMaterial.specCode.in(specCodes))
                 .fetch();
+    }
+
+    @Override
+    public void setOrderSpec(Long orderCode, List<OrderSpecCreateDTO> orderSpecList) {
+        QOrderSpec orderSpec = QOrderSpec.orderSpec;
+        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
+
+        List<Long> specCodes = orderSpecList.stream()
+                .map(OrderSpecCreateDTO::getSpecCode)
+                .toList();
+
+        List<MaterialSpec> specs = queryFactory
+                .selectFrom(materialSpec)
+                .where(materialSpec.specCode.in(specCodes))
+                .orderBy(materialSpec.specCode.asc())
+                .fetch();
+
+        Map<Long, MaterialSpec> specMap = specs.stream()
+                                               .collect(Collectors.toMap(MaterialSpec::getSpecCode, spec -> spec));
+
+        for (OrderSpecCreateDTO dto : orderSpecList) {
+            MaterialSpec spec = specMap.get(dto.getSpecCode());
+
+            OrderSpec newOrderSpec = OrderSpec.of(
+                    orderCode,
+                    spec,
+                    dto.getOrderQuantity(),
+                    dto.getPrice()
+            );
+            entityManager.persist(newOrderSpec);
+        }
     }
 }

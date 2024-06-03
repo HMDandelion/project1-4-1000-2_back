@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
 import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -73,5 +75,15 @@ public class MaterialOrderController {
     ) {
         materialOrderService.deleteOrder(orderCode, deletionReason);
         return ResponseEntity.noContent().build();
+    }
+
+    //주문 등록
+    @PostMapping("/orders")
+    public ResponseEntity<Void> createOrder(
+            @RequestBody final MaterialOrderCreateRequest request
+    ) {
+        final Long orderCode = materialOrderService.createOrder(request);
+
+        return ResponseEntity.created(URI.create("api/vi/material/orders/" + orderCode)).build();
     }
 }

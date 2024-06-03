@@ -85,4 +85,12 @@ public class ClientService {
     public List<MaterialClientDTO> getMaterialClientByCodes(List<Long> clientCodes) {
         return clientRepo.getMaterialClientByCodes(clientCodes);
     }
+
+    // 필요해서 넣었습니다 by한결
+    public Client findById(Long clientCode) {
+        return clientRepo.findById(clientCode).orElseThrow(
+                () -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE)
+        );
+    }
+
 }

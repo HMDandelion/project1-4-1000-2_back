@@ -1,10 +1,12 @@
 package com.hmdandelion.project_1410002.purchase.domain.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
 import com.hmdandelion.project_1410002.purchase.model.MaterialOrderStatus;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -39,6 +41,27 @@ public class MaterialOrder {
     private Long planCode;//TODO 수정필
     private boolean isDeleted;
     private String deletionReason;
+
+    public MaterialOrder(LocalDate orderDate, LocalDate deliveryDueDate, Client client, Long employeeCode, Long planCode) {
+        this.orderDate = orderDate;
+        this.deliveryDueDate = deliveryDueDate;
+        this.client = client;
+        this.employeeCode =employeeCode;
+        this.planCode = planCode;
+
+        this.status = MaterialOrderStatus.ORDER_COMPLETED;
+        this.isDeleted = false;
+    }
+
+    public static MaterialOrder from(MaterialOrderCreateRequest request, Client client) {
+        return new MaterialOrder(
+                request.getOrderDate(),
+                request.getDeliveryDueDate(),
+                client,
+                request.getEmployeeCode(),
+                request.getPlanCode()
+        );
+    }
 
     public void delete(String deletionReason) {
         this.isDeleted = true;
