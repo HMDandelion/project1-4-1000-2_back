@@ -14,6 +14,7 @@ import com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLack;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
+import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.OrderProduct;
@@ -214,5 +215,55 @@ public class ReleaseService {
         }
         Long releaseCode = releaseRepo.save(newRelease).getReleaseCode();
         return releaseCode;
+    }
+
+    public List<ReleaseStorage> getStorageByOrderCode(Long orderCode) {
+        List<Storage> resultList = new ArrayList<>();
+        List<ReleaseStorage> returnList = new ArrayList<>();
+
+        List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
+
+        for(OrderProduct orderProduct : orderProducts){
+            List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
+            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            for(Stock stock : stocks) {
+                List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
+                resultList.addAll(storages);
+                resultList.sort(Comparator.comparing(Storage::getCreatedAt));
+
+            }
+
+            System.out.println("resultList = " + resultList);
+
+            Long standard = 0L;
+            List<String> warehouseNames = new ArrayList<>();
+            List<Long> releaseQuantities = new ArrayList<>();
+
+
+            for(Storage storage : resultList){
+                standard+=storage.getActualQuantity();
+                if(standard>orderProduct.getQuantity()){
+                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
+
+                    warehouseNames.add(modifyStorage.getWarehouse().getName());
+                    releaseQuantities.add(storage.getActualQuantity() - (standard-orderProduct.getQuantity()));
+                    break;
+                }else{
+                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
+                    warehouseNames.add(modifyStorage.getWarehouse().getName());
+                    releaseQuantities.add(modifyStorage.getActualQuantity());
+                }
+            }
+
+                ReleaseStorage releaseStorage = ReleaseStorage.of(
+                        product.getProductName(),
+                        orderProduct.getQuantity(),
+                        warehouseNames,
+                        releaseQuantities
+                        );
+            returnList.add(releaseStorage);
+        }
+
+        return returnList;
     }
 }

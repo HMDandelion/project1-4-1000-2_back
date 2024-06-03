@@ -7,6 +7,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLack;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
+import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
 import com.hmdandelion.project_1410002.inventory.service.ReleaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -65,6 +66,15 @@ public class ReleaseController {
     ){
         Long releaseCode = releaseService.saveRelease(orderCode);
         return ResponseEntity.created(URI.create("/api/v1/releases/orders")).build();
+    }
+
+    /*주문 코드로 출고 재고 정보 상세 보기*/
+    @GetMapping("/release/storage/{orderCode}")
+    public ResponseEntity<List<ReleaseStorage>> getStorageByOrderCode(
+            @PathVariable final Long orderCode
+    ){
+        List<ReleaseStorage> releaseStorages = releaseService.getStorageByOrderCode(orderCode);
+        return ResponseEntity.ok(releaseStorages);
     }
 
 }
