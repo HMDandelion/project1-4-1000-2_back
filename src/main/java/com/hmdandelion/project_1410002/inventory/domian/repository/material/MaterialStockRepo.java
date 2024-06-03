@@ -4,6 +4,6 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.material.Material
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository("productMaterialStockRepo")
+@Repository
 public interface MaterialStockRepo extends JpaRepository<MaterialStock,Long> {
 }

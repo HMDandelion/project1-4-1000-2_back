@@ -52,4 +52,3 @@ public class DefectDetail {
         this.defectFile = defectFile;
     }
 }
-

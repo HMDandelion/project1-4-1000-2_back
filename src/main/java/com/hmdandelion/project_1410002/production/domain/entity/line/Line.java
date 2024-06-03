@@ -20,9 +20,10 @@ public class Line {
     @Column(nullable = false)
     private String lineName;
 
-    private Integer lineProduction;
+    private Integer lineProduction; //  라인별 생산량
 
     @Column(length = 20)
+    @Enumerated(value = EnumType.STRING)
     private String lineStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)

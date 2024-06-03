@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Table(name = "tbl_material_stock")
-@Entity(name = "InventoryMaterialStock") @Getter
+@Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class MaterialStock {
