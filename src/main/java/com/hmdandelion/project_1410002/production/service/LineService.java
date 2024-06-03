@@ -32,5 +32,5 @@ public class LineService {
         return lines.stream()
                 .map(LineResponse::form)
                 .collect(Collectors.toList());
-    }//ㅈㅈㄴㄴㄴㄴ
+    }
 }
