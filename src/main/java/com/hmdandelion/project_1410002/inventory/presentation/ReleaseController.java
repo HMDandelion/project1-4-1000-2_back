@@ -96,7 +96,8 @@ public class ReleaseController {
         return ResponseEntity.created(URI.create("/api/v1/releases/orders")).build();
     }
 
-    /**/
+    /*배송 중인 재고 조회*/
+//    @
 
 
 }

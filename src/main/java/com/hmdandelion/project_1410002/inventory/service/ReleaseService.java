@@ -4,9 +4,11 @@ import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.release.Release;
+import com.hmdandelion.project_1410002.inventory.domian.entity.release.ReleaseChange;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.release.ReleaseChangeRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.release.ReleaseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
@@ -37,6 +39,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.SHIPPING;
 import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.WAIT;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.ACTIVE;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
@@ -54,6 +57,7 @@ public class ReleaseService {
     private final StockRepo stockRepo;
     private final ClientRepo clientRepo;
     private final ProductRepo productRepo;
+    private final ReleaseChangeRepo releaseChangeRepo;
 
     private Pageable getPageable(final Integer page, final Boolean createdSort) {
         Sort sort = createdSort ? Sort.by("dDay").ascending() : Sort.by("dDay").descending();
@@ -303,5 +307,13 @@ public class ReleaseService {
         Release release = releaseRepo.findByOrderOrderCode(orderCode);
 
         release.shipping();
+
+
+        ReleaseChange releaseChange = ReleaseChange.of(
+                SHIPPING,
+                LocalDateTime.now(),
+                release
+        );
+        releaseChangeRepo.save(releaseChange);
     }
 }
