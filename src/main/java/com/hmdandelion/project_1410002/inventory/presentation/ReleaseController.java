@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrd
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShipping;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWait;
 import com.hmdandelion.project_1410002.inventory.service.ReleaseService;
 import lombok.RequiredArgsConstructor;
@@ -88,7 +89,7 @@ public class ReleaseController {
     }
 
     /*출고 대기 중인 재고 배송*/
-    @PutMapping("/release/{orderCode}")
+    @PutMapping("/release/shipping/{orderCode}")
     public ResponseEntity<Void> shippingOrder(
             @PathVariable final Long orderCode
     ){
@@ -97,7 +98,21 @@ public class ReleaseController {
     }
 
     /*배송 중인 재고 조회*/
-//    @
+    @GetMapping("/release/shipping")
+    public ResponseEntity<List<ReleaseShipping>> getReleaseShipping(
+            @RequestParam(defaultValue = "true") final Boolean deadLineSort
+    ){
+        List<ReleaseShipping> releaseShipping = releaseService.getReleaseShipping(deadLineSort);
+        return ResponseEntity.ok(releaseShipping);
+    }
 
+    /*배송 완료*/
+    @PutMapping("/release/complete/{orderCode}")
+    public ResponseEntity<List<Void>> getReleaseComplete(
+        @PathVariable final Long orderCode
+    ){
+        releaseService.completeOrder(orderCode);
+        return ResponseEntity.created(URI.create("/api/v1/releases/orders")).build();
+    }
 
 }

@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReleaseChangeRepo extends JpaRepository<ReleaseChange,Long> {
+    ReleaseChange findByReleaseReleaseCode(Long releaseCode);
 }

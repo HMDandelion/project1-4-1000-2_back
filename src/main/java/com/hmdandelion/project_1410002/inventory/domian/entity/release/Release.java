@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.release;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import jakarta.persistence.*;
@@ -11,8 +12,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.SHIPPING;
-import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.WAIT;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.*;
 
 @Entity
 @Table(name = "tbl_release")
@@ -29,6 +29,7 @@ public class Release {
     @JoinColumn(name = "order_code")
     private Order order;
     @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     public Release(Order order) {
@@ -41,5 +42,9 @@ public class Release {
 
     public void shipping() {
         this.status = SHIPPING;
+    }
+
+    public void complete() {
+        this.status = DELIVERY_COMPLETED;
     }
 }
