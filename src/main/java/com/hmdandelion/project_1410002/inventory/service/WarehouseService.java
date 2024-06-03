@@ -46,7 +46,7 @@ public class WarehouseService {
     @Transactional(readOnly = true)
     public Warehouse getWarehouse(Long warehouseCode) {
         Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
-                                                                                              new NotWarehouseException(ExceptionCode.NOT_FOUND_PRODUCT_CODE)
+            new NotWarehouseException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE)
         );
 
         return warehouse;
@@ -64,8 +64,7 @@ public class WarehouseService {
     }
 
     public void delete(Long warehouseCode) {
-        Warehouse warehouse = warehouseRepository.findById(warehouseCode)
-                                                 .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
         warehouseRepository.delete(warehouse);
     }
 }

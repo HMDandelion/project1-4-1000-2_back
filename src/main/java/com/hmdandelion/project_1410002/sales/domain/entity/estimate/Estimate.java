@@ -38,7 +38,7 @@ public class Estimate {
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EstimateProduct> estimateProducts = new ArrayList<>();
 
-    public Estimate(LocalDate deadline, Long clientCode) {
+    private Estimate(LocalDate deadline, Long clientCode) {
         this.deadline = deadline;
         this.clientCode = clientCode;
     }
@@ -59,4 +59,7 @@ public class Estimate {
         this.estimateProducts = products;
     }
 
+    public void updateOrdered() {
+        this.isOrdered = true;
+    }
 }
