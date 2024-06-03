@@ -16,6 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -39,9 +42,17 @@ public class WarehouseService {
         return warehouse.getWarehouseCode();
     }
     @Transactional(readOnly = true)
-    public Page<WarehouseResponse> getWarehouses(Integer page) {
-        Page<Warehouse> warehouses = warehouseRepository.findAll(getPageable(page));
-        return warehouses.map(WarehouseResponse::from);
+    public List<WarehouseResponse> getWarehouses() {
+        List<WarehouseResponse> resultList = new ArrayList<>();
+
+        List<Warehouse> warehouses  = warehouseRepository.findAll();
+        for(Warehouse warehouse : warehouses) {
+            WarehouseResponse warehouseResponse = WarehouseResponse.from(
+                    warehouse
+            );
+            resultList.add(warehouseResponse);
+        }
+        return resultList;
     }
     @Transactional(readOnly = true)
     public Warehouse getWarehouse(Long warehouseCode) {
