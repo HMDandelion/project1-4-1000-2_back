@@ -131,7 +131,7 @@ public class StorageService {
 
         if(afterSum==0){
             change=NOT_ASSIGNED;
-        }else if(afterSum==stock.getQuantity()){
+        }else if(afterSum.equals(stock.getQuantity())){
             change=FULLY_ASSIGNED;
         }else{
             change=PARTIALLY_ASSIGNED;
