@@ -1,6 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
-import com.hmdandelion.project_1410002.common.exception.BedRequestException;
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
@@ -50,7 +50,7 @@ public class MaterialSpecService {
     @Transactional
     public String removeByList(List<Long> specCodes) {
         if (specCodes.isEmpty()) {
-            throw new BedRequestException(ExceptionCode.BAD_REQUEST_NO_OPTIONS);
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_NO_OPTIONS);
         }
         Long useThisSpec = materialSpecRepo.getUsingSepcCode(specCodes);
         if (useThisSpec > 0) {

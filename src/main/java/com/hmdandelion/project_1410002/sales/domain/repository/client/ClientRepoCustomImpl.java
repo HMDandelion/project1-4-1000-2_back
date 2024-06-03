@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.sales.domain.repository.client;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.querydsl.core.types.Order;
@@ -36,7 +37,8 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .where(
                         containClientName(clientName),
                         isOrdered(isOrdered),
-                        client.status.eq(ClientStatus.ACTIVE)
+                        client.status.eq(ClientStatus.ACTIVE),
+                        client.clientType.eq(ClientType.PRODUCTS)
                 )
                 .orderBy(orderSpecifier)
                 .fetch();
@@ -47,7 +49,8 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .where(
                         containClientName(clientName),
                         isOrdered(isOrdered),
-                        client.status.eq(ClientStatus.ACTIVE)
+                        client.status.eq(ClientStatus.ACTIVE),
+                        client.clientType.eq(ClientType.PRODUCTS)
                 )
                 .orderBy(orderSpecifier);
 
