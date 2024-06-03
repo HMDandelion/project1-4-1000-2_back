@@ -70,5 +70,13 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    /*상품을 거래하는 거래처 리스트*/
+    @GetMapping("/product/client/{productCode}")
+    public ResponseEntity<List<String>> getProductClient(
+            @PathVariable final Long productCode
+    ){
+        List<String> productClient = productService.getProductClient(productCode);
+        return ResponseEntity.ok(productClient);
+    }
 
 }
