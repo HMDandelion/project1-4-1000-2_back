@@ -66,6 +66,7 @@ public class StockService {
         if(stock.getIsDelete()==true){
             throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
         }
+        System.out.println("stock.getAssignmentStatus() = " + stock.getAssignmentStatus());
         if(stock.getAssignmentStatus()!=AssignmentStatus.NOT_ASSIGNED){
             throw new CustomException(ExceptionCode.ALREADY_ASSIGNED_STOCK);
         }

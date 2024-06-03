@@ -83,17 +83,22 @@ public class StorageService {
         System.out.println("afterStorages = " + afterStorages);
         Long afterSum = 0L;
 
+
         for(Storage storage : afterStorages){
             afterSum+=storage.getInitialQuantity();
+
         }
+        System.out.println("afterSum = " + afterSum);
         AssignmentStatus change;
+        System.out.println("stock.getQuantity() = " + stock.getQuantity());
         if(afterSum==0){
             change=NOT_ASSIGNED;
-        }else if(afterSum==stock.getQuantity()){
+        }else if(afterSum.equals(stock.getQuantity())){
             change=FULLY_ASSIGNED;
         }else{
             change=PARTIALLY_ASSIGNED;
         }
+        System.out.println("change = " + change);
         stock.modifyStatus(change);
         return newStorage.getStorageCode();
     }
@@ -193,6 +198,7 @@ public class StorageService {
 
     public void modifyDestroyQuantity(Long storageCode, StorageDestroyRequest destroyQuantity) {
         Storage storage = storageRepo.findById(storageCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE));
+        List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(storage.getStock().getStockCode(),false);
         if(storage.getInitialQuantity()<destroyQuantity.getDestroyQuantity()){
             throw new CustomException(ExceptionCode.BAD_REQUEST_DESTROY_QUANTITY);
         }
@@ -211,7 +217,7 @@ public class StorageService {
         StorageStockWarehouse storageWarehouse = StorageStockWarehouse.of(
                 storage.getInitialQuantity(),
                 storage.getDestroyQuantity(),
-                storage.getStorageCode(),
+                stock.getStockCode(),
                 storage.getActualQuantity(),
                 storage.getCreatedAt(),
                 stock.getQuantity(),

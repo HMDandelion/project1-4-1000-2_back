@@ -51,7 +51,7 @@ public class StorageController {
             @RequestBody StorageCreateRequest storageCreateRequest
             ){
         Long storageCode = storageService.saveStorage(stockCode,storageCreateRequest);
-        return ResponseEntity.created(URI.create(null)).build();
+        return ResponseEntity.created(URI.create("/api/v1/storage")).build();
     }
 
     /*재고 창고 배정 취소(저장 이력 삭제 조건: 삭제 되지 않은 재고,삭제 되지 않은 저장 이력,재고 이력 삭제 될 시 상태 값 변경)*/
