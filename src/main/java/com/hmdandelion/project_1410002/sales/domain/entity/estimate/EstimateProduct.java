@@ -20,7 +20,7 @@ public class EstimateProduct {
     private Estimate estimate;
     private Long productCode;
 
-    public EstimateProduct(Integer quantity, Integer price, Long productCode, Estimate newEstimate) {
+    private EstimateProduct(Integer quantity, Integer price, Long productCode, Estimate newEstimate) {
         this.quantity = quantity;
         this.price = price;
         this.productCode = productCode;
@@ -42,7 +42,4 @@ public class EstimateProduct {
         this.productCode = productCode;
     }
 
-    public void disconnect() {
-        this.estimate = null;
-    }
 }
