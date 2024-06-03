@@ -72,8 +72,8 @@ public class ProductService {
         product.updateStatus(product);
     }
 
-    public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status) {
-        return productRepository.searchProducts(pageable, productName, unit, status);
+    public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status,Boolean createdAtSort) {
+        return productRepository.searchProducts(pageable, productName, unit, status,createdAtSort);
     }
 
 }
