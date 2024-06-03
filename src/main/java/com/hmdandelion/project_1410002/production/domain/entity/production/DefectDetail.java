@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.domain.entity.production;
 
+import com.hmdandelion.project_1410002.production.domain.type.DefectStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,11 +24,12 @@ public class DefectDetail {
     private ProductionDetail productionDetail;
 
     private String defectReason;
-    private String defectStatus;
+    @Enumerated(value = EnumType.STRING)
+    private DefectStatusType defectStatus;
     private String defectFile;
 
     public DefectDetail(ProductionDetail newProductionDetail, String defectReason,
-                        String defectStatus, String defectFile) {
+                        DefectStatusType defectStatus, String defectFile) {
         this.productionDetail = newProductionDetail;
         this.defectReason = defectReason;
         this.defectStatus = defectStatus;
@@ -35,7 +37,7 @@ public class DefectDetail {
     }
 
     public static DefectDetail of(ProductionDetail newProductionDetail, String defectReason,
-                                  String defectStatus, String defectFile) {
+                                  DefectStatusType defectStatus, String defectFile) {
 
         return new DefectDetail(
                 newProductionDetail,
@@ -45,7 +47,7 @@ public class DefectDetail {
         );
     }
 
-    public void modifyDetail(String defectReason, String defectStatus, String defectFile
+    public void modifyDetail(String defectReason, DefectStatusType defectStatus, String defectFile
     ) {
         this.defectReason = defectReason;
         this.defectStatus = defectStatus;

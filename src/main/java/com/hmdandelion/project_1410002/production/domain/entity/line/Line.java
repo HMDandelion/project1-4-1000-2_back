@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity.line;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.production.domain.type.LineStatusType;
 import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -24,7 +25,7 @@ public class Line {
 
     @Column(length = 20)
     @Enumerated(value = EnumType.STRING)
-    private String lineStatus;
+    private LineStatusType lineStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_code")

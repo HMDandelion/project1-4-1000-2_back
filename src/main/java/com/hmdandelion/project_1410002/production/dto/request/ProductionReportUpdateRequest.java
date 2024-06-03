@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.dto.request;
 
+import com.hmdandelion.project_1410002.production.domain.type.DefectStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import lombok.Getter;
@@ -35,7 +36,7 @@ public class ProductionReportUpdateRequest {
     // defectDetail
     private final Long defectCode;
     private final String defectReason;
-    private final String defectStatus;
+    private final DefectStatusType defectStatus;
     private final String defectFile;
 
 }

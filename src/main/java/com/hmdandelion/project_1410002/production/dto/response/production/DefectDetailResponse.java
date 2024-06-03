@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.dto.response.production;
 
 import com.hmdandelion.project_1410002.production.domain.entity.production.DefectDetail;
+import com.hmdandelion.project_1410002.production.domain.type.DefectStatusType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -10,7 +11,7 @@ public class DefectDetailResponse {
     private final Long defectCode;
     private final Long productionDetailCode;
     private final String defectReason;
-    private final String defectStatus;
+    private final DefectStatusType defectStatus;
     private final String defectFile;
 
     public static DefectDetailResponse from(DefectDetail defectDetail) {
