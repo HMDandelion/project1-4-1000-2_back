@@ -40,4 +40,8 @@ public class MaterialOrder {
     private boolean isDeleted;
     private String deletionReason;
 
+    public void delete(String deletionReason) {
+        this.isDeleted = true;
+        this.deletionReason = deletionReason;
+    }
 }

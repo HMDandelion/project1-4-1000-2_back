@@ -125,6 +125,7 @@ public class MaterialOrderService {
         return clients;
     }
 
+    @Transactional(readOnly = true)
     public MaterialOrderResponse findDetail(Long orderCode) {
         //TODO 예외처리 안되어있음
         MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
@@ -136,5 +137,14 @@ public class MaterialOrderService {
         String positionName = employeeService.findPositionNameById(employee.getPositionCode());
         List<OrderSpec> orderSpecs = materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
         return MaterialOrderResponse.of(plan, order, employee, positionName, departmentName, orderSpecs);
+    }
+
+    @Transactional
+    public void deleteOrder(Long orderCode, String deletionReason) {
+        MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
+                ()-> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
+        );
+        order.delete(deletionReason);
+        materialOrderRepo.flush();
     }
 }

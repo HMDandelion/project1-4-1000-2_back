@@ -65,4 +65,13 @@ public class MaterialOrderController {
 
         return ResponseEntity.ok(res);
     }
+    // 주문 삭제
+    @DeleteMapping("/orders/{orderCode}")
+    public ResponseEntity<Void> deleteOrder(
+            @PathVariable final Long orderCode,
+            @RequestParam final String deletionReason
+    ) {
+        materialOrderService.deleteOrder(orderCode, deletionReason);
+        return ResponseEntity.noContent().build();
+    }
 }
