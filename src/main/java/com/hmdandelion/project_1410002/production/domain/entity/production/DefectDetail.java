@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "tbl_defect_detail")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -28,8 +27,7 @@ public class DefectDetail {
     private String defectFile;
 
     public DefectDetail(ProductionDetail newProductionDetail, String defectReason,
-                        String defectStatus, String defectFile)
-    {
+                        String defectStatus, String defectFile) {
         this.productionDetail = newProductionDetail;
         this.defectReason = defectReason;
         this.defectStatus = defectStatus;
@@ -37,14 +35,21 @@ public class DefectDetail {
     }
 
     public static DefectDetail of(ProductionDetail newProductionDetail, String defectReason,
-                                  String defectStatus, String defectFile)
-    {
+                                  String defectStatus, String defectFile) {
 
         return new DefectDetail(
-        newProductionDetail,
-        defectReason,
-        defectStatus,
-        defectFile
-                );
+                newProductionDetail,
+                defectReason,
+                defectStatus,
+                defectFile
+        );
+    }
+
+    public void modifyDetail(String defectReason, String defectStatus, String defectFile
+    ) {
+        this.defectReason = defectReason;
+        this.defectStatus = defectStatus;
+        this.defectFile = defectFile;
     }
 }
+

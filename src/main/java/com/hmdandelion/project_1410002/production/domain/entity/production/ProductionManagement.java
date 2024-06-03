@@ -18,7 +18,6 @@ import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "tbl_production_management")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -68,6 +67,17 @@ public class ProductionManagement {
                 productionStatus,
                 inspectionStatus
         );
+    }
+
+    public void modifyReport(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity,
+                             String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus
+    ) {
+        this.startAt = startAt;
+        this.completedAt = completedAt;
+        this.totalProductionQuantity = totalProductionQuantity;
+        this.productionFile = productionFile;
+        this.productionStatus = productionStatus;
+        this.inspectionStatus = inspectionStatus;
     }
 }
 

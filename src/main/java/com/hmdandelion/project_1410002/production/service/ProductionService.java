@@ -132,42 +132,48 @@ public class ProductionService {
 
 
     @Transactional
-    public void modifyReport(Long productionStatusCode, ProductionReportUpdateRequest request) {
+    public void modifyReport(Long productionStatusCode, ProductionReportUpdateRequest productionReportUpdateRequest) {
         // ProductionManagement 엔터티 가져오기
         ProductionManagement productionManagement = productionRepo.findByProductionStatusCode(productionStatusCode)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
 
         // ProductionManagement 엔터티 수정
-        productionManagement.setStartAt(request.getStartAt());
-        productionManagement.setCompletedAt(request.getCompletedAt());
-        productionManagement.setTotalProductionQuantity(request.getTotalProductionQuantity());
-        productionManagement.setProductionFile(request.getProductionFile());
-        productionManagement.setProductionStatus(request.getProductionStatus());
-        productionManagement.setInspectionStatus(request.getInspectionStatus());
-
+        productionManagement.modifyReport(
+                productionReportUpdateRequest.getStartAt(),
+                productionReportUpdateRequest.getCompletedAt(),
+                productionReportUpdateRequest.getTotalProductionQuantity(),
+                productionReportUpdateRequest.getProductionFile(),
+                productionReportUpdateRequest.getProductionStatus(),
+                productionReportUpdateRequest.getInspectionStatus()
+        );
         // ProductionDetail 엔터티 수정
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
-            if (productionDetail.getProductionDetailCode().equals(request.getProductionDetailCode())) {
-                productionDetail.setInspectionDate(request.getInspectionDate());
-                productionDetail.setProductionQuantity(request.getProductionQuantity());
-                productionDetail.setDefectQuantity(request.getDefectQuantity());
-                productionDetail.setCompletelyQuantity(request.getCompletelyQuantity());
-                productionDetail.setProductionMemo(request.getProductionMemo());
-                productionDetail.setProductionStatus(request.getProductionStatus());
+            if (productionDetail.getProductionDetailCode().equals(productionReportUpdateRequest.getProductionDetailCode())) {
+                productionDetail.modifyDetail(
+                        productionReportUpdateRequest.getInspectionDate(),
+                        productionReportUpdateRequest.getProductionQuantity(),
+                        productionReportUpdateRequest.getDefectQuantity(),
+                        productionReportUpdateRequest.getCompletelyQuantity(),
+                        productionReportUpdateRequest.getProductionMemo(),
+                        productionReportUpdateRequest.getProductionStatus()
+                );
 
                 // 연관된 불량 상세 정보 수정
                 List<DefectDetail> defectDetails = defectDetailRepo.findByProductionDetail(productionDetail);
                 for (DefectDetail defectDetail : defectDetails) {
-                    defectDetail.setDefectReason(request.getDefectReason());
-                    defectDetail.setDefectStatus(request.getDefectStatus());
-                    defectDetail.setDefectFile(request.getDefectFile());
+                    defectDetail.modifyDetail(
+                            productionReportUpdateRequest.getDefectReason(),
+                            productionReportUpdateRequest.getDefectStatus(),
+                            productionReportUpdateRequest.getDefectFile()
+                    );
                 }
             }
         }
-
-        // 저장된 엔터티를 업데이트
+// 저장된 엔터티를 업데이트
         productionRepo.save(productionManagement);
     }
+
+        // 저장된 엔터티를 업데이트
 
     @Transactional
     public void removeReport(Long productionStatusCode) {

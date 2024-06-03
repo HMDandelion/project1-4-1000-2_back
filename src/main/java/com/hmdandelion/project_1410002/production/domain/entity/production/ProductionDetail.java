@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "tbl_production_detail")
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -78,6 +77,17 @@ public class ProductionDetail {
                 productionMemo,
                 productionStatus
         );
+    }
+
+    public void modifyDetail(LocalDateTime inspectionDate, int productionQuantity, int defectQuantity,
+                             int completelyQuantity, String productionMemo, ProductionStatusType productionStatus
+    ) {
+        this.inspectionDate = inspectionDate;
+        this.productionQuantity = productionQuantity;
+        this.defectQuantity = defectQuantity;
+        this.completelyQuantity = completelyQuantity;
+        this.productionMemo = productionMemo;
+        this.productionStatus = productionStatus;
     }
 }
 
