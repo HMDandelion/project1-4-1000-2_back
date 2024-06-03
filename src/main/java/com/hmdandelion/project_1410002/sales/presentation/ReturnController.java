@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.sales.domain.type.ManageType;
 import com.hmdandelion.project_1410002.sales.dto.request.ReturnCreateRequest;
+import com.hmdandelion.project_1410002.sales.dto.response.ReturnResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.ReturnsResponse;
 import com.hmdandelion.project_1410002.sales.service.ReturnService;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +44,17 @@ public class ReturnController {
         final PagingResponse pagingResponse = PagingResponse.of(returns.getContent(), pagingButtonInfo);
 
         return ResponseEntity.ok(pagingResponse);
+    }
+
+    @GetMapping("/returns/{returnCode}")
+    public ResponseEntity<ReturnResponse> getReturn(@PathVariable final Long returnCode) {
+        ReturnResponse returnResponse = returnService.getReturn(returnCode);
+        return ResponseEntity.ok(returnResponse);
+    }
+
+    @PutMapping("/returns/{returnCode}")
+    public ResponseEntity<Void> cancelReturn(@PathVariable final Long returnCode) {
+        returnService.cancel(returnCode);
+        return ResponseEntity.created(URI.create("/api/v1/returns/" + returnCode)).build();
     }
 }

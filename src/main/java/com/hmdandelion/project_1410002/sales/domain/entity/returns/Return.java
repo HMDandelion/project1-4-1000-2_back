@@ -61,4 +61,12 @@ public class Return {
     public void modifyProducts(List<ReturnProduct> returnProducts) {
         this.returnProducts = returnProducts;
     }
+
+    public void modifyReturnStatus(ReturnStatus returnStatus) {
+        this.returnStatus = returnStatus;
+    }
+    public void modifyManageStatus(ManageStatus manageStatus) {
+        this.manageStatus = manageStatus;
+    }
+
 }
