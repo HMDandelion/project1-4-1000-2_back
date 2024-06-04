@@ -18,4 +18,15 @@ public class AssignedMaterial {
     private Long assignedMaterialCode;
     private Long specCode;
     private Long clientCode;
+
+    private AssignedMaterial(Long clientCode, Long specCode) {
+        this.specCode = specCode;
+        this.clientCode = clientCode;
+    }
+
+    public static AssignedMaterial of(Long clientCode, Long specCode) {
+        return new AssignedMaterial(
+                clientCode, specCode
+        );
+    }
 }

@@ -6,3 +6,19 @@ GET http://localhost:8001/api/v1/material/clients?clientName=A
 
 ### 공급업체 상새조회
 GET http://localhost:8001/api/v1/material/clients/1
+
+### 공급업체 등록
+POST http://localhost:8001/api/v1/material/clients
+Content-Type: application/json
+
+{
+  "clientName": "새로운원자재거래처",
+  "address": "경기도 의정부시",
+  "addressDetail": "이성계동상 앞",
+  "postcode": "12345",
+  "representativeName": "김덕배",
+  "phone": "010-1234-1234",
+  "specCodes": [
+    2,5,6
+  ]
+}

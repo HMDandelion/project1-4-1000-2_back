@@ -4,6 +4,7 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialClientDetailResponse;
 import com.hmdandelion.project_1410002.purchase.service.MaterialClientService;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -55,6 +57,15 @@ public class MaterialClientController {
         materialClientService.deleteClients(clientCode);
         return ResponseEntity.noContent().build();
     }
-    // 공급업체 상세 조회
+
+    // 공급업체 등록
+    @PostMapping("/clients")
+    public ResponseEntity<Void> createClients(
+            @RequestBody final MaterialClientCreateRequest request
+            ) {
+        final Long clientCode = materialClientService.createClients(request);
+
+        return ResponseEntity.created(URI.create("api/v1/material/clients/" + clientCode)).build();
+    }
 
 }

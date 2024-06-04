@@ -5,8 +5,8 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialClientDetailResponse;
-import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,7 @@ public class MaterialClientService {
     private final ClientService clientService;
     private final MaterialOrderService materialOrderService;
     private final MaterialSpecService materialSpecService;
+    private final AssignedMaterialService assignedMaterialService;
 
 
     @Transactional
@@ -39,7 +40,7 @@ public class MaterialClientService {
         // 거래처의 정보를 받아옴
         List<MaterialClientDTO> clients = clientService.getMaterialClientByCodes(clientCodes);
         // 필요한 스펙들의 정보를 불러옴
-        clients = addAssignedMaterial(clients);
+        addAssignedMaterial(clients);
         return clients;
     }
 
@@ -50,8 +51,9 @@ public class MaterialClientService {
         return clients;
     }
 
+    @Transactional
     public void deleteClients(Long clientCode) {
-        materialSpecService.deleteAssignedByClientCode(clientCode);
+        assignedMaterialService.deleteAssignedByClientCode(clientCode);
         clientService.remove(clientCode);
     }
 
@@ -59,11 +61,11 @@ public class MaterialClientService {
         MaterialClientDetailResponse detail = clientService.getMaterialClientDetail(clientCode);
         List<MaterialClientDTO> temp = new ArrayList<>();
         temp.add(detail);
-        temp = addAssignedMaterial(temp);
+        addAssignedMaterial(temp);
         return (MaterialClientDetailResponse) temp.get(0);
     }
 
-    private List<MaterialClientDTO> addAssignedMaterial(List<MaterialClientDTO> targetList) {
+    private void addAssignedMaterial(List<MaterialClientDTO> targetList) {
         List<Long> clientCodes = targetList.stream().map(MaterialClientDTO::getClientCode).toList();
         Map<Long, List<MaterialSpecDTO>> clientCode_SpecList = materialSpecService.getSpecByClientCodes(clientCodes);
         // 거래처에 맞게 스펙들의 정보를 넣어줌
@@ -78,6 +80,12 @@ public class MaterialClientService {
                 }
             }
         }
-        return targetList;
+    }
+
+    @Transactional
+    public Long createClients(MaterialClientCreateRequest request) {
+        final Long clientCode = clientService.save(request, ClientType.RAW_MATERIALS);
+        assignedMaterialService.insertAssignedByClientCodeAndSpecList(clientCode, request.getSpecCodes());
+        return clientCode;
     }
 }

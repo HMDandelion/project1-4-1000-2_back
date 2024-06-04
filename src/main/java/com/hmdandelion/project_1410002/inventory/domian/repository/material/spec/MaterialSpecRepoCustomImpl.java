@@ -89,21 +89,6 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
         return resultMap;
     }
 
-    @Override
-    public void deleteAssignedByClientCode(Long clientCode)  {
-        QAssignedMaterial assignedMaterial = QAssignedMaterial.assignedMaterial;
 
-        AssignedMaterial temp = queryFactory
-                .selectFrom(assignedMaterial)
-                .where(assignedMaterial.clientCode.eq(clientCode))
-                .fetchFirst();
-        if (temp != null) {
-            queryFactory
-                    .delete(assignedMaterial)
-                    .where(assignedMaterial.clientCode.eq(clientCode))
-                    .execute();
-        }
-
-    }
 
 }
