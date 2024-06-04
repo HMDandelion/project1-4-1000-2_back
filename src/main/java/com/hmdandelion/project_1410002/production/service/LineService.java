@@ -15,9 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static com.hmdandelion.project_1410002.production.domain.type.LineStatusType.PRODUCTION_COMPLETED;
 
 @Service
 @RequiredArgsConstructor
@@ -37,11 +34,11 @@ public class LineService {
         } else {
             lines = lineRepo.findAll(pageable);
         }
-
         return lines.map(LineResponse::form);
     }
 
     /*라인 등록*/
+    @Transactional
     public Long save(final LineCreateRequest lineCreateRequest) {
 
         final Line
@@ -50,12 +47,13 @@ public class LineService {
                 lineCreateRequest.getLineProduction(),
                 lineCreateRequest.getLineStatusType()
         );
-
         final Line line = lineRepo.save(newLine);
 
-     return line.getLineCode();
+        return line.getLineCode();
     }
 
+    /* 수정 */
+    @Transactional
     public void modify(Long lineCode, LineUpdateRequest lineUpdateRequest) {
 
         Line line = (Line) lineRepo.findLineByLineCode(lineCode)
@@ -69,6 +67,7 @@ public class LineService {
         lineRepo.save(line);
     }
 
+    /* 삭제 */
     public void remove(Long lineCode) {
 
         lineRepo.deleteById(lineCode);
