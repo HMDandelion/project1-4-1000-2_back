@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientCreateRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialClientDetailResponse;
 import com.hmdandelion.project_1410002.purchase.service.MaterialClientService;
 import lombok.RequiredArgsConstructor;
@@ -64,6 +65,17 @@ public class MaterialClientController {
             @RequestBody final MaterialClientCreateRequest request
             ) {
         final Long clientCode = materialClientService.createClients(request);
+
+        return ResponseEntity.created(URI.create("api/v1/material/clients/" + clientCode)).build();
+    }
+
+    // 공급업체 수정
+    @PutMapping("/clients/{clientCode}")
+    public ResponseEntity<Void> modifyClients(
+            @PathVariable final Long clientCode,
+            @RequestBody final MaterialClientModifyRequest request
+            ) {
+        materialClientService.modifyClients(clientCode,request);
 
         return ResponseEntity.created(URI.create("api/v1/material/clients/" + clientCode)).build();
     }

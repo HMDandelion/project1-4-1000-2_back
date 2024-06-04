@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDT
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientCreateRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialClientDetailResponse;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
@@ -87,5 +88,11 @@ public class MaterialClientService {
         final Long clientCode = clientService.save(request, ClientType.RAW_MATERIALS);
         assignedMaterialService.insertAssignedByClientCodeAndSpecList(clientCode, request.getSpecCodes());
         return clientCode;
+    }
+
+    public void modifyClients(Long clientCode, MaterialClientModifyRequest request) {
+        clientService.modify(clientCode,request, ClientType.RAW_MATERIALS);
+        assignedMaterialService.deleteAssignedByClientCode(clientCode);
+        assignedMaterialService.insertAssignedByClientCodeAndSpecList(clientCode, request.getSpecCodes());
     }
 }

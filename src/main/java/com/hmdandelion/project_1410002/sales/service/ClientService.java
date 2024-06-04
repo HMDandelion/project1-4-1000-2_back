@@ -70,8 +70,8 @@ public class ClientService {
         return client.getClientCode();
     }
 
-    public void modify(Long clientCode, ClientUpdateRequest clientRequest) {
-        Client client = findByClientCodeAndType(clientCode, ClientType.PRODUCTS);
+    public void modify(Long clientCode, ClientUpdateRequest clientRequest, ClientType clientType) {
+        Client client = findByClientCodeAndType(clientCode, clientType);
 
         client.modify(
                 clientRequest.getClientName(),
