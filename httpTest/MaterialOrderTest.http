@@ -31,3 +31,23 @@ Content-Type: application/json
     }
   ]
 }
+
+### 주문 수정
+PUT http://localhost:8001/api/v1/material/orders
+Content-Type: application/json
+
+{
+  "orderCode": 36,
+  "orderDate": "2024-05-29",
+  "deliveryDueDate": "2024-06-12",
+  "clientCode": 2,
+  "employeeCode": 1,
+  "planCode": 1,
+  "orderSpecList": [
+    {
+      "specCode": 2,
+      "price": 2000,
+      "orderQuantity": 200
+    }
+  ]
+}

@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlanne
 import com.hmdandelion.project_1410002.production.service.ProductionPlannedListService;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
+import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,7 @@ public class MaterialOrderAnalyzeService {
     private final ProductionPlannedListService plannedOrderListService;
     private final BomService bomService;
     private final MaterialOrderService materialOrderService;
+    private final MaterialClientService materialClientService;
 
     public List<MaterialGraphModel> findOrderByMaterialRequirementRatio(Long planCode) {
         List<MaterialGraphModel> result = new ArrayList<>();
@@ -65,4 +67,7 @@ public class MaterialOrderAnalyzeService {
     }
 
 
+    public List<MaterialClientDTO> getClientBySpecList(List<Long> specCodes) {
+        return materialClientService.getClientBySpecList(specCodes);
+    }
 }

@@ -15,5 +15,5 @@ public interface MaterialSpecRepoCustom {
 
     Long getUsingSepcCode(List<Long> specCodes);
 
-    Map<Long, List<MaterialSpecDTO>> getSpecByclientCodes(List<Long> clientCodes);
+    Map<Long, List<MaterialSpecDTO>> getSpecByClientCodes(List<Long> clientCodes);
 }

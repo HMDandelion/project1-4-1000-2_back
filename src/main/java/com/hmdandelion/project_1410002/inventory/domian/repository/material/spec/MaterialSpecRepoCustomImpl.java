@@ -67,7 +67,7 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
     }
 
     @Override
-    public Map<Long, List<MaterialSpecDTO>> getSpecByclientCodes(List<Long> clientCodes) {
+    public Map<Long, List<MaterialSpecDTO>> getSpecByClientCodes(List<Long> clientCodes) {
         QAssignedMaterial assignedMaterial = QAssignedMaterial.assignedMaterial;
         QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
 

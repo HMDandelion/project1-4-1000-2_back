@@ -101,32 +101,7 @@ public class MaterialOrderService {
         return orders;
     }
 
-    @Transactional
-    public List<MaterialClientDTO> getClientBySpecList(List<Long> specCodes) {
-        //해당 스펙을 담당자제로 가진 거래처의 목록을 불러옴
-        List<Long> clientCodes =  materialOrderRepo.findClientCodeBySpecCodes(specCodes);
-        if (clientCodes.isEmpty()) {
-            //비어있다면 예외
-            throw new NoContentsException(ExceptionCode.No_CONTENTS_CLIENT_CODE);
-        }
-        // 거래처의 정보를 받아옴
-        List<MaterialClientDTO> clients = clientService.getMaterialClientByCodes(clientCodes);
-        // 필요한 스펙들의 정보를 불러옴
-        Map<Long, List<MaterialSpecDTO>> clientCode_SpecList = materialSpecRepo.getSpecByclientCodes(clientCodes);
-        // 거래처에 맞게 스펙들의 정보를 넣어줌
-        for (Map.Entry<Long, List<MaterialSpecDTO>> entry : clientCode_SpecList.entrySet()) {
-            for (MaterialClientDTO dto : clients) {
-                if (dto.getClientCode() == entry.getKey()) {
-                    // 스펙 코드를 기준으로 정렬
-                    List<MaterialSpecDTO> sortedSpecList = entry.getValue().stream()
-                                                                   .sorted(Comparator.comparing(MaterialSpecDTO::getSpecCode))
-                                                                   .toList();
-                    dto.addMaterials(sortedSpecList);
-                }
-            }
-        }
-        return clients;
-    }
+
 
     @Transactional(readOnly = true)
     public MaterialOrderResponse findDetail(Long orderCode) {
@@ -169,9 +144,16 @@ public class MaterialOrderService {
                 () -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
         );
         order.modify(request, client);
+        //수정 소요가 너무 심해서 삭제로 진행합니다
         materialOrderRepo.deleteAllOrderSpecByOrderCode(order.getOrderCode());
         materialOrderRepo.setOrderSpec(order.getOrderCode(), request.getOrderSpecList());
 
         return order.getOrderCode();
     }
+
+    public List<Long> findClientCodeBySpecCodes(List<Long> specCodes) {
+        return materialOrderRepo.findClientCodeBySpecCodes(specCodes);
+    }
+
+
 }
