@@ -1,12 +1,11 @@
 package com.hmdandelion.project_1410002.production.domain.entity.line;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.type.LineStatusType;
-import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 
 @Table(name = "tbl_line")
 @Entity
@@ -28,5 +27,25 @@ public class Line {
     private LineStatusType lineStatus;
 
 
+    private Line(String lineName, Integer lineProduction, LineStatusType lineStatusType
+    ) {
+        this.lineName = lineName;
+        this.lineProduction = lineProduction;
+        this.lineStatus = lineStatusType;
+    }
+    public static Line of(String lineName, Integer lineProduction, LineStatusType lineStatusType) {
+        return new Line(
+                lineName,
+                lineProduction,
+                lineStatusType
+        );
+    }
+
+    public void modify(String lineName, Integer lineProduction, LineStatusType lineStatusType) {
+
+        this.lineName = lineName;
+        this.lineProduction = lineProduction;
+        this.lineStatus = lineStatusType;
+    }
 }
 

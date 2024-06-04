@@ -6,6 +6,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface LineRepo extends JpaRepository<Line, Long> {
     Page<Line> findByLineStatusNot(LineStatusType lineStatusType, Pageable pageable);
+
+
+    Optional<Object> findLineByLineCode(Long lineCode);
 }
