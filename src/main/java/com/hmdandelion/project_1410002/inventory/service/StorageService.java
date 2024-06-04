@@ -271,4 +271,42 @@ public class StorageService {
 
         return ratioRounded.doubleValue();
     }
+
+    public List<ProductDestroy> getProductDestroyRatio() {
+        List<ProductDestroy> resultList = new ArrayList<>();
+
+        List<Product> products = productRepo.findAll();
+
+        for(Product product : products){
+            List<Stock> stocks = stockRepo.findByProductProductCode(product.getProductCode());
+            for(Stock stock : stocks) {
+                List<Storage> storages = storageRepo.findStoragesByStockStockCode(stock.getStockCode());
+                Long productSum = 0L;
+                Long productDestroySum = 0L;
+                for (Storage storage : storages) {
+                    productSum += storage.getInitialQuantity();
+                    productDestroySum += storage.getDestroyQuantity();
+                }
+
+                System.out.println("product.getProductName() = " + product.getProductName());
+                System.out.println("productSum = " + productSum);
+                System.out.println("productDestroySum = " + productDestroySum);
+
+                Double ratio;
+                if (productSum == 0) {
+                    ratio = 0.0;
+                } else {
+                    ratio = (double)productDestroySum / productSum;
+                }
+                BigDecimal ratioRounded = new BigDecimal(ratio).setScale(10, RoundingMode.HALF_UP);
+                ProductDestroy productDestroy = ProductDestroy.of(
+                        product.getProductName(),
+                        productSum,
+                        ratioRounded.doubleValue()
+                );
+                resultList.add(productDestroy);
+            }
+        }
+        return resultList;
+    }
 }

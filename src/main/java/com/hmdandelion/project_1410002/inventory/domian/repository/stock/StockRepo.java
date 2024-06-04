@@ -22,4 +22,6 @@ public interface StockRepo extends JpaRepository<Stock,Long>, StockRepoCustom {
     Long getAccumulateStockByProductCode(Long productCode);
 
     List<Stock> findByProductProductCodeAndIsDelete(Long productCode,Boolean isDelete);
+
+    List<Stock> findByProductProductCode(Long productCode);
 }

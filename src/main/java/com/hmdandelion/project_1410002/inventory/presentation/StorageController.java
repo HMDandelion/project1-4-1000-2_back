@@ -102,6 +102,13 @@ public class StorageController {
         return ResponseEntity.ok(ratio);
     }
 
+    /*상품별 파손률 계산*/
+    @GetMapping("/storage/product/destroy")
+    public ResponseEntity<List<ProductDestroy>> getProductDestroyRatio(){
+        List<ProductDestroy> productDestroys = storageService.getProductDestroyRatio();
+        return ResponseEntity.ok(productDestroys);
+    }
+
     /*창고 보관코드로 보관 이력 조회*/
     @GetMapping("/storage/{storageCode}")
     public ResponseEntity<StorageStockWarehouse> getStorageByStorageCode(

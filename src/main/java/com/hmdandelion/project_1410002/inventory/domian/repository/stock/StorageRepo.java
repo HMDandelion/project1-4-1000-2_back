@@ -10,6 +10,8 @@ import java.util.List;
 public interface StorageRepo extends JpaRepository<Storage,Long>, StorageRepoCustom  {
     List<Storage> findStoragesByStockStockCodeAndIsDelete(Long stockCode,Boolean isDelete);
 
+    List<Storage> findStoragesByStockStockCode(Long stockCode);
+
     Storage findStorageByStorageCodeAndIsDelete(Long storageCode,Boolean isDelete);
 
     List<Storage> findStoragesByWarehouseWarehouseCodeAndIsDelete(Long warehouseCode,Boolean isDelete);
