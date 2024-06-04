@@ -16,5 +16,7 @@ public class ProductionPlanUpdateRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate endAt;
 
+    private final String requiredQuantity;
+
     private final String description;
 }

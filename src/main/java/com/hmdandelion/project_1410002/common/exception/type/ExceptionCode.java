@@ -24,8 +24,12 @@ public enum ExceptionCode {
     NOT_FOUND_PRODUCTION_DETAIL(3601 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
 
 
+    NOT_FOUND_PLAN_CODE(3700,"계획코드에 맞는 계획이 존재하지 않습니다." ),
+    NOT_FOUND_EMPLOYEE_CODE(3800, "사번에 해당하는 사원이 존재하지 않습니다." ),
 
     NO_CONTENTS_MATERIAL_STOCK(4400, "요구하신 조건에 맞는 원자재 재고가 없습니다."),
+    NO_CONTENTS_M_ORDERS(4401,"찾으시는 원자재 주문이 존재하지 않습니다." ),
+    No_CONTENTS_CLIENT_CODE(4402,"조건에 맞는 거래처가 존재하지 않습니다." ),
 
     BAD_REQUEST_ORDER_EXIST_CLIENT(6100, "주문건이 존재하는 거래처는 삭제할 수 없습니다."),
     BAD_REQUEST_ORDERED_ESTIMATE(6200, "주문이 진행된 견적은 삭제할 수 없습니다."),
@@ -37,6 +41,7 @@ public enum ExceptionCode {
 
 
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다.");
+
 
 
 

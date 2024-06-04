@@ -73,7 +73,7 @@ tasks.named('asciidoctor') {
     dependsOn test
 }
 
-tasks.register('copyPrivate') {
+tasks.register('copyPrivate') {햣
     copy {
         from './project_1410002_settings'
         include "application.yml"

@@ -16,4 +16,8 @@ public class MaterialGraphModel implements Serializable {
         this.subject = subject;
         this.compare = compare;
     }
+
+    public void addSubject(int value) {
+        this.subject += value;
+    }
 }

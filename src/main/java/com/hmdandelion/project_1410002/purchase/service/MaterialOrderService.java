@@ -1,14 +1,34 @@
 package com.hmdandelion.project_1410002.purchase.service;
 
+import com.hmdandelion.project_1410002.common.exception.NoContentsException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
+import com.hmdandelion.project_1410002.production.service.PlanService;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.domain.repository.material.MaterialOrderRepo;
+import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
+import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
+import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
+import com.hmdandelion.project_1410002.sales.service.ClientService;
+import com.hmdandelion.project_1410002.sales.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +39,11 @@ import java.util.Map;
 public class MaterialOrderService {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialOrderService.class);
+    private final ClientService clientService;
     private final MaterialOrderRepo materialOrderRepo;
+    private final MaterialSpecRepo materialSpecRepo;
+    private final PlanService planService;
+    private final EmployeeService employeeService;
 
     public Map<String, Double> getMonthTransactionsBySpecCode(long specCode) {
         Map<String, Double> monthTransactions = new LinkedHashMap<>();
@@ -59,4 +83,77 @@ public class MaterialOrderService {
 
         return Month.of(monthNumber).name();
     }
+
+    public List<MaterialOrder> findByPlanCode(Long planCode) {
+        return materialOrderRepo.findByPlanCode(planCode);
+    }
+
+    public List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode) {
+        return materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
+    }
+
+    public List<MaterialOrderDTO> getOrders(Long planCode, String clientName, Pageable pageable) {
+        List<MaterialOrderDTO> orders = materialOrderRepo.gerOrders(planCode, clientName, pageable);
+        log.info("조회된 주문정보 {}건.",orders.size());
+        if (orders == null || orders.isEmpty()) {
+            throw new NoContentsException(ExceptionCode.NO_CONTENTS_M_ORDERS);
+        }
+        return orders;
+    }
+
+
+
+    @Transactional(readOnly = true)
+    public MaterialOrderResponse findDetail(Long orderCode) {
+        //TODO 예외처리 안되어있음
+        MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
+                ()-> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
+        );
+        ProductionPlan plan = planService.findById(order.getPlanCode());
+        Employee employee = employeeService.findById(order.getEmployeeCode());
+        String departmentName = employeeService.findDepartmentNameById(employee.getDepartmentCode());
+        String positionName = employeeService.findPositionNameById(employee.getPositionCode());
+        List<OrderSpec> orderSpecs = materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
+        return MaterialOrderResponse.of(plan, order, employee, positionName, departmentName, orderSpecs);
+    }
+
+    @Transactional
+    public void deleteOrder(Long orderCode, String deletionReason) {
+        MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
+                ()-> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
+        );
+        order.delete(deletionReason);
+        materialOrderRepo.flush();
+    }
+
+    @Transactional
+    public Long createOrder(MaterialOrderCreateRequest request) {
+        //TODO 예외처리 안됨
+        final Client client = clientService.findById(request.getClientCode());
+        final MaterialOrder order = MaterialOrder.from(request, client);
+        final Long orderCode = materialOrderRepo.save(order).getOrderCode();
+        materialOrderRepo.setOrderSpec(orderCode, request.getOrderSpecList());
+        return orderCode;
+    }
+
+    @Transactional
+    public Long modifyOrder(MaterialOrderModifyRequest request) {
+        //TODO 예외처리 안됨
+        final Client client = clientService.findById(request.getClientCode());
+        final MaterialOrder order = materialOrderRepo.findById(request.getOrderCode()).orElseThrow(
+                () -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
+        );
+        order.modify(request, client);
+        //수정 소요가 너무 심해서 삭제로 진행합니다
+        materialOrderRepo.deleteAllOrderSpecByOrderCode(order.getOrderCode());
+        materialOrderRepo.setOrderSpec(order.getOrderCode(), request.getOrderSpecList());
+
+        return order.getOrderCode();
+    }
+
+    public List<Long> findClientCodeBySpecCodes(List<Long> specCodes) {
+        return materialOrderRepo.findClientCodeBySpecCodes(specCodes);
+    }
+
+
 }

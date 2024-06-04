@@ -1,0 +1,53 @@
+### 필요 자재량 대비 주문량 조회
+GET http://localhost:8001/api/v1/material/order-quantity/6
+
+### 계획코드로 주문 조회
+GET http://localhost:8001/api/v1/material/orders?planCode=6
+
+### 스펙 코드들로 거래처 조회
+GET http://localhost:8001/api/v1/material/order-materials?specCodes=2,4
+
+### 원자재 주문 상세 조회
+GET http://localhost:8001/api/v1/material/orders/1
+
+### 원자재 주문 삭제
+DELETE http://localhost:8001/api/v1/material/orders/34?deletionReason=테스트용도로삭제함22
+
+### 주문 등록
+POST http://localhost:8001/api/v1/material/orders
+Content-Type: application/json
+
+{
+  "orderDate": "2024-05-29",
+  "deliveryDueDate": "2024-06-12",
+  "clientCode": 1,
+  "employeeCode": 1,
+  "planCode": 1,
+  "orderSpecList": [
+    {
+      "specCode": 2,
+      "price": 2000,
+      "orderQuantity": 20
+    }
+  ]
+}
+
+### 주문 수정
+PUT http://localhost:8001/api/v1/material/orders
+Content-Type: application/json
+
+{
+  "orderCode": 36,
+  "orderDate": "2024-05-29",
+  "deliveryDueDate": "2024-06-12",
+  "clientCode": 2,
+  "employeeCode": 1,
+  "planCode": 1,
+  "orderSpecList": [
+    {
+      "specCode": 2,
+      "price": 2000,
+      "orderQuantity": 200
+    }
+  ]
+}

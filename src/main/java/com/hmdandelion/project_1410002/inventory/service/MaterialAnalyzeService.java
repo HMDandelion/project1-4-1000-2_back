@@ -1,8 +1,9 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
-import com.hmdandelion.project_1410002.inventory.domian.repository.material.Stock.MaterialStockRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.stock.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.CombinedStockBySpecDTO;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialGraphModel;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,12 +16,17 @@ public class MaterialAnalyzeService {
 
     private final MaterialStockRepo materialStockRepo;
 
-    public List<CombinedStockBySpecDTO> findStocksBySpec() {
-        List<MaterialStock> stocks = materialStockRepo.findMaterialStocksWithPositiveActualQuantity();
+    public List<MaterialGraphModel> findStocksBySpec() {
+        final List<MaterialStock> stocks = materialStockRepo.findMaterialStocksWithPositiveActualQuantity();
+        final List<CombinedStockBySpecDTO> combined = stocks.stream()
+                                                            .map(CombinedStockBySpecDTO::from)
+                                                            .toList();
 
-        return stocks.stream()
-                     .map(CombinedStockBySpecDTO::from)
-                     .toList();
+        return combined.stream()
+                       .map(stock -> new MaterialGraphModel(stock.getMaterialName(),
+                                                            stock.getActualQuantity(),
+                                                            stock.getSafetyStock()))
+                       .toList();
     }
 
     public List<MaterialStockSimpleDTO> findBywarehouseCode(long warehouseCode) {

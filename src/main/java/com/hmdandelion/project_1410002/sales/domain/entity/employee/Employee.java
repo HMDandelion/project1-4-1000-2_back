@@ -35,8 +35,8 @@ public class Employee {
     @Column(nullable = false)
     private String ssn;
     @Column(nullable = false)
-    private Integer positionCode;
-    private Integer departmentCode;
+    private Long positionCode;
+    private Long departmentCode; //integer로 되어있어서 수정함
     private String profileImage;
     private LocalDate hireDate;
     private LocalDate resignDate;

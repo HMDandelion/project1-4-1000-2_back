@@ -18,12 +18,17 @@ public class PlannedOrderList {
     @Column(name = "planned_list_code")
     private Long plannedListCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "plan_code", nullable = false)
-    private ProductionPlan productionPlan;
+    @Column(name = "plan_code")
+    private Long planCode;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @JoinColumn(name = "order_code", nullable = false)
-    //    private Order orderCode; <- order 엔티티 필요
+    @Column(name = "order_code")
+    private Long orderCode;
 
+    public PlannedOrderList(Long orderCode) {
+        this.orderCode = orderCode;
+    }
+
+    public static PlannedOrderList of(Long orderCode) {
+        return new PlannedOrderList(orderCode);
+    }
 }
