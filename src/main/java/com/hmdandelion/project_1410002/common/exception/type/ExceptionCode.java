@@ -36,10 +36,14 @@ public enum ExceptionCode {
     NOT_FOUND_PRODUCTION_DETAIL(30000 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
 
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
+
     NOT_FOUND_WORK_ORDER( 3701, "해당 작업 지시서를 찾을 수 없습니다."),
 
     NOT_FOUND_PLAN_CODE(3700,"해당 생산 계획이 존재하지 않습니다."),
-    ALREADY_EXIST_WORK_ORDER(7701,"이미 해당 날짜에 작업이 등록 되어 있습니다.");
+
+    ALREADY_EXIST_WORK_ORDER(7701,"이미 해당 날짜에 작업이 등록 되어 있습니다."),
+
+    BAD_REQUEST_WORK_ORDER_DONE(6700, "이미 완료된 작업지시서는 수정할 수 없습니다." );
 
     private final int code;
     private final String message;

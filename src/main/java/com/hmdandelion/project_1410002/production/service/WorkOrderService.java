@@ -42,6 +42,7 @@ public class WorkOrderService {
 
     @Transactional(readOnly = true)
     public Page<WorkOrderResponse> getWorkOrders(Integer page) {
+
         Page<WorkOrderResponse> workOrders = workOrderRepo.getWorkOrders(getPageable(page));
 
         return workOrders;
@@ -50,7 +51,7 @@ public class WorkOrderService {
     @Transactional(readOnly = true)
     public WorkOrderResponse getWorkOrder(Long workOrderCode) {
         WorkOrderResponse workOrder = workOrderRepo.getWorkOrder(workOrderCode)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ESTIMATE_CODE));
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_WORK_ORDER));
         return workOrder;
     }
 
@@ -111,15 +112,18 @@ public class WorkOrderService {
 
         // 작업이 존재하는 경우에만 작업의 상태를 확인하여 수정 가능 여부를 결정
         if (workOrder.getCompletionStatus() == WorkOrderStatusType.IN_PROGRESS) {
-            // 작업 수정
+            // 작업 수정 코드
             workOrder.workOrderModify(
                     workOrderUpdateRequest.getWorkOrderDate(),
                     workOrderUpdateRequest.getOrderedQuantity(),
                     workOrderUpdateRequest.getLineCode(),
                     workOrderUpdateRequest.getEmployeeCode()
             );
+        } else if (workOrder.getCompletionStatus() == WorkOrderStatusType.DONE) {
+            // 완료 상태인 경우 수정할 수 없음을 알림
+            throw new NotFoundException(ExceptionCode.BAD_REQUEST_WORK_ORDER_DONE);
         } else {
-            // 작업이 없거나 완료 상태인 경우 수정할 수 없음을 알림
+            // 작업이 없는 경우 수정할 수 없음을 알림
             throw new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER);
         }
     }
