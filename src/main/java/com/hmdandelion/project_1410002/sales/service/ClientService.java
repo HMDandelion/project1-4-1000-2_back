@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.sales.service;
 
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
@@ -78,6 +79,9 @@ public class ClientService {
     }
 
     public void remove(Long clientCode) {
+        if(!clientRepo.getOrderList(clientCode).isEmpty()) {
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_ORDER_EXIST_CLIENT);
+        }
         clientRepo.deleteById(clientCode);
     }
 }
