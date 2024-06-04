@@ -11,6 +11,7 @@ GET http://localhost:8001/api/v1/estimates/5
 ### 견적 등록 (기존 거래처 선택)
 POST http://localhost:8001/api/v1/estimates
 Content-Type: application/json
+Access-Token: Bearer eyJkYXRlIjoxNzE3NDg0MjA2Mjc3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImVtcGxveWVlTm8iOiJFTVAwMDEiLCJhdXRob3JpdGllcyI6Ik1BTkFHRVJTQUxFUyIsImV4cCI6MTcxNzQ4NzgwNn0.hUsA9HAoJIJ66VSG7my5TfsM5NFBzNLYuGahIfErxVDAEvH8CLeWEI0e6ZBxAQnv_shzp2Hhslgbk4vLBZpjUA
 
 {
   "deadline": "2024-10-31",
@@ -38,6 +39,7 @@ Content-Type: application/json
 ### 견적 등록 (신규 거래처 등록)
 POST http://localhost:8001/api/v1/estimates
 Content-Type: application/json
+Access-Token: Bearer eyJkYXRlIjoxNzE3NDg0MjA2Mjc3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImVtcGxveWVlTm8iOiJFTVAwMDEiLCJhdXRob3JpdGllcyI6Ik1BTkFHRVJTQUxFUyIsImV4cCI6MTcxNzQ4NzgwNn0.hUsA9HAoJIJ66VSG7my5TfsM5NFBzNLYuGahIfErxVDAEvH8CLeWEI0e6ZBxAQnv_shzp2Hhslgbk4vLBZpjUA
 
 {
   "deadline": "2024-10-31",
@@ -66,6 +68,7 @@ Content-Type: application/json
 ### 견적 수정 (기존 견적상품코드를 기입할 경우 기존 견적상품 내용 수정, 코드를 기입하지 않을 경우 새로 등록)
 PUT http://localhost:8001/api/v1/estimates/6
 Content-Type: application/json
+Access-Token: Bearer eyJkYXRlIjoxNzE3NDg0MjA2Mjc3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImVtcGxveWVlTm8iOiJFTVAwMDEiLCJhdXRob3JpdGllcyI6Ik1BTkFHRVJTQUxFUyIsImV4cCI6MTcxNzQ4NzgwNn0.hUsA9HAoJIJ66VSG7my5TfsM5NFBzNLYuGahIfErxVDAEvH8CLeWEI0e6ZBxAQnv_shzp2Hhslgbk4vLBZpjUA
 
 {
   "deadline": "2024-10-31",
@@ -87,4 +90,4 @@ Content-Type: application/json
 
 ### 견적 삭제
 DELETE http://localhost:8001/api/v1/estimates/3
-
+Access-Token: Bearer eyJkYXRlIjoxNzE3NDg0MjA2Mjc3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImVtcGxveWVlTm8iOiJFTVAwMDEiLCJhdXRob3JpdGllcyI6Ik1BTkFHRVJTQUxFUyIsImV4cCI6MTcxNzQ4NzgwNn0.hUsA9HAoJIJ66VSG7my5TfsM5NFBzNLYuGahIfErxVDAEvH8CLeWEI0e6ZBxAQnv_shzp2Hhslgbk4vLBZpjUA

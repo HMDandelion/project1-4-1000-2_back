@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.sales.domain.entity.employee;
+package com.hmdandelion.project_1410002.employee.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -35,8 +35,8 @@ public class Employee {
     @Column(nullable = false)
     private String ssn;
     @Column(nullable = false)
-    private Integer positionCode;
-    private Integer departmentCode;
+    private Long positionCode;
+    private Long departmentCode;
     private String profileImage;
     private LocalDate hireDate;
     private LocalDate resignDate;
@@ -48,6 +48,11 @@ public class Employee {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    @Column(length = 300)
+    // @Column(length = 300)
     private String refreshToken;
+
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }
