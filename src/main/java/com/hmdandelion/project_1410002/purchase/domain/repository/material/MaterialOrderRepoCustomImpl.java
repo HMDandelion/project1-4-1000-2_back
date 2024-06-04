@@ -1,7 +1,6 @@
 package com.hmdandelion.project_1410002.purchase.domain.repository.material;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.*;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
@@ -15,11 +14,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec.materialSpec;
+import static com.hmdandelion.project_1410002.purchase.domain.entity.material.QAssignedMaterial.assignedMaterial;
+import static com.hmdandelion.project_1410002.purchase.domain.entity.material.QMaterialOrder.materialOrder;
+import static com.hmdandelion.project_1410002.purchase.domain.entity.material.QOrderSpec.orderSpec;
 
 
 @RequiredArgsConstructor
@@ -33,9 +37,6 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     @Override
     public List<MaterialOrderDTO> findMaterialOrderBySpecCodeAndYearMonth(Long specCode, int year, int month) {
-        QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
-        QOrderSpec orderSpec = QOrderSpec.orderSpec;
-        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
 
         LocalDate startDate = LocalDate.of(year, month, 1);
         LocalDate endDate = startDate.plusMonths(1).minusDays(1);
@@ -68,9 +69,6 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     @Override
     public List<MaterialOrderDTO> getLast10OrderBySpecCode(long specCode) {
-        QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
-        QOrderSpec orderSpec = QOrderSpec.orderSpec;
-        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
 
         List<Long> orderCodesWithSpec = queryFactory
                 .select(orderSpec.orderCode)
@@ -95,7 +93,6 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     @Override
     public List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode) {
-        QOrderSpec orderSpec = QOrderSpec.orderSpec;
 
         return queryFactory
                 .selectFrom(orderSpec)
@@ -105,8 +102,6 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     @Override
     public List<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable) {
-        QMaterialOrder materialOrder = QMaterialOrder.materialOrder;
-        QOrderSpec orderSpec = QOrderSpec.orderSpec;
         BooleanBuilder builder = new BooleanBuilder();
 
         if (planCode != null && planCode > 0) {
@@ -119,44 +114,17 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
         List<MaterialOrder> orders = queryFactory
                 .selectFrom(materialOrder)
                 .where(builder)
+                .where(materialOrder.arrivalDatetime.isNull())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(materialOrder.orderDate.desc())
                 .fetch();
-        log.info("검색된 주문건의 수...{}",orders.size());
-        for (MaterialOrder bb : orders) {
-            log.info("주문번호...{}",bb.getOrderCode());
-        }
-        List<OrderSpec> orderSpecs = queryFactory
-                .selectFrom(orderSpec)
-                .leftJoin(orderSpec.materialSpec).fetchJoin() // 이 부분이 수정된 부분입니다.
-                .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())))
-                .fetch();
 
-        for (OrderSpec ccc : orderSpecs) {
-            System.out.println(ccc.getOrderSpecCode());
-            System.out.println(ccc.getMaterialSpec().getMaterialName());
-        }
-
-        Map<Long, List<OrderSpec>> specsMap = orderSpecs.stream()
-                                                        .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
-
-
-        log.info("연결된 specsMap의 수...{}",specsMap.size());
-        for (Map.Entry<Long, List<OrderSpec>> entry : specsMap.entrySet()) {
-            System.out.println("=========================");
-            System.out.println("key : " + entry.getKey());
-            for (OrderSpec aaaa : entry.getValue()) {
-                System.out.println(aaaa.getMaterialSpec().getMaterialName());
-            }
-            System.out.println("=========================");
-        }
-        return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
+        return getMaterialOrderDTOS(orders);
     }
 
     @Override
     public List<Long> findClientCodeBySpecCodes(List<Long> specCodes) {
-        QAssignedMaterial assignedMaterial = QAssignedMaterial.assignedMaterial;
 
         return queryFactory
                 .select(assignedMaterial.clientCode)
@@ -167,8 +135,6 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     @Override
     public void setOrderSpec(Long orderCode, List<OrderSpecCreateDTO> orderSpecList) {
-        QOrderSpec orderSpec = QOrderSpec.orderSpec;
-        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
 
         List<Long> specCodes = orderSpecList.stream()
                 .map(OrderSpecCreateDTO::getSpecCode)
@@ -198,10 +164,51 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
 
     @Override
     public void deleteAllOrderSpecByOrderCode(Long orderCode) {
-        QOrderSpec orderSpec = QOrderSpec.orderSpec;
 
         queryFactory.delete(orderSpec)
                     .where(orderSpec.orderCode.eq(orderCode))
                     .execute();
+    }
+
+    @Override
+    public List<MaterialOrderDTO> getOrderToday(Pageable pageable, LocalDate today) {
+        List<MaterialOrder> orders = queryFactory
+                .selectFrom(materialOrder)
+                .where(materialOrder.deliveryDueDate.eq(today))
+                .fetch();
+        return getMaterialOrderDTOS(orders);
+    }
+
+    @Override
+    public Map<String, Long> orderWeekly(LocalDate targetDate) {
+        Map<String, Long> orderThisWeek = new LinkedHashMap<>();
+        String[] dayOfWeekNames = {"월요일", "화요일","수요일","목요일","금요일","토요일","일요일"};
+        for (int i = 0; i < dayOfWeekNames.length; i++) {
+            String dayOfWeekName = dayOfWeekNames[i];
+            Long cal = queryFactory
+                    .select(materialOrder.count())
+                    .from(materialOrder)
+                    .where(materialOrder.deliveryDueDate.eq(targetDate))
+                    .fetchOne();
+            if (cal == null) cal = 0L;
+            orderThisWeek.put(dayOfWeekName, cal);
+
+            targetDate = targetDate.plusDays(1);
+        }
+
+        return orderThisWeek;
+    }
+
+    private List<MaterialOrderDTO> getMaterialOrderDTOS(List<MaterialOrder> orders) {
+        List<OrderSpec> orderSpecs = queryFactory
+                .selectFrom(orderSpec)
+                .leftJoin(orderSpec.materialSpec).fetchJoin()
+                .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())))
+                .fetch();
+
+        Map<Long, List<OrderSpec>> specsMap = orderSpecs.stream()
+                                                        .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
+
+        return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
     }
 }

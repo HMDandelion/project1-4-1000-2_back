@@ -15,6 +15,7 @@ import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
+import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderWeeklyResponse;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
@@ -22,11 +23,14 @@ import com.hmdandelion.project_1410002.sales.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -156,4 +160,29 @@ public class MaterialOrderService {
     }
 
 
+    public List<MaterialOrderDTO> getOrderToday(Pageable pageable) {
+        final LocalDate today = LocalDate.now();
+        List<MaterialOrderDTO> orders = materialOrderRepo.getOrderToday(pageable, today);
+        if (orders.isEmpty()) {
+            throw new NoContentsException(ExceptionCode.No_CONTENTS_M_ORDER_TODAY);
+        }
+        return orders;
+    }
+
+    public MaterialOrderWeeklyResponse orderWeekly() {
+        LocalDate today = LocalDate.now();
+        int dayOfWeekNumber = today.getDayOfWeek().getValue();
+        LocalDate targetDate = today.minusDays(--dayOfWeekNumber);
+
+        Map<String, Long> orderThisWeek = materialOrderRepo.orderWeekly(targetDate);
+        return MaterialOrderWeeklyResponse.from(orderThisWeek);
+    }
+
+    @Transactional
+    public void orderArrival(Long orderCode) {
+        MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
+                ()-> new NotFoundException(ExceptionCode.NO_CONTENTS_M_ORDERS)
+        );
+        order.setArrival(LocalDateTime.now());
+    }
 }

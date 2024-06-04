@@ -87,4 +87,8 @@ public class MaterialOrder {
             this.planCode = request.getPlanCode();
         }
     }
+
+    public void setArrival(LocalDateTime now) {
+        this.arrivalDatetime = now;
+    }
 }

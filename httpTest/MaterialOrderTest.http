@@ -51,3 +51,9 @@ Content-Type: application/json
     }
   ]
 }
+
+### 금일 입고 예정인 주문 조회
+GET http://localhost:8001/api/v1/material/order-today
+
+### 주간 입고 예정 수량 조회
+GET http://localhost:8001/api/v1/material/order-weekly
