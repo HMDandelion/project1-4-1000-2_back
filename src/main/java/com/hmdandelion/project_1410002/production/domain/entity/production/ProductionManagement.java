@@ -42,8 +42,7 @@ public class ProductionManagement {
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
-    @Enumerated(value = EnumType.STRING)
-    private InspectionStatusType inspectionStatus = InspectionStatusType.BEFORE;
+
 
     @OneToMany(mappedBy = "productionManagement")
     private List<ProductionDetail> productionDetails;
@@ -53,7 +52,6 @@ public class ProductionManagement {
         this.completedAt = completedAt;
         this.totalProductionQuantity = totalProductionQuantity;
         this.productionFile = productionFile;
-        this.inspectionStatus = inspectionStatus;
     }
 
 
@@ -76,7 +74,6 @@ public class ProductionManagement {
         this.totalProductionQuantity = totalProductionQuantity;
         this.productionFile = productionFile;
         this.productionStatus = productionStatus;
-        this.inspectionStatus = inspectionStatus;
     }
 }
 

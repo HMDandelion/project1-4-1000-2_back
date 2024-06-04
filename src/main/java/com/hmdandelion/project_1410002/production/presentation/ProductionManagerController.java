@@ -35,13 +35,16 @@ public class ProductionManagerController {
 
     /*조회*/
     @GetMapping("/production/reports")
-    public ResponseEntity<PagingResponse> getProductionReports(@RequestParam(required = false) Integer page, @RequestParam(required = false) Long productionStatusCode, @RequestParam(required = false) ProductionStatusType productionStatusType, @RequestParam(required = false) LocalDateTime startAt, @RequestParam(required = false) LocalDateTime completedAt) {
+    public ResponseEntity<PagingResponse> getProductionReports(
+            @RequestParam(required = false) Integer page,
+            @RequestParam(required = false) Long productionStatusCode,
+            @RequestParam(required = false) ProductionStatusType productionStatusType,
+            @RequestParam(required = false) LocalDateTime startAt,
+            @RequestParam(required = false) LocalDateTime completedAt) {
 
         if (page == null || page <= 0) {
             page = 1;
         }
-
-
         final Page<ProductionReportResponse> productionReportResponses = productionService.getProductionReportRecords(page, productionStatusCode, productionStatusType, startAt, completedAt);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(productionReportResponses);
         final PagingResponse pagingResponse = PagingResponse.of(productionReportResponses.getContent(), pagingButtonInfo);
@@ -68,31 +71,32 @@ public class ProductionManagerController {
         }
 
     }
-
-    /*보고서 등록*/
-    @PostMapping("/production/reports")
-    public ResponseEntity<Void> reportSaved(@RequestBody final ProductionReportCreateRequest productionReportCreateRequest
-            //  @RequestPart final MultipartFile attachFile
-    ) {
-        final Long productionStatusCode = productionService.reportSave(productionReportCreateRequest, ProductionStatusType.REGISTER_PRODUCTION);
-//        // 총 생산량 계산
-//        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
-        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
-
-    }
-
-    /* 보고서 수정 */
-    @PutMapping("production/reports/{productionStatusCode}/modify")
-    public ResponseEntity<Void> modify(@PathVariable final Long productionStatusCode, @RequestBody final ProductionReportUpdateRequest productionReportUpdateRequest) {
-        productionService.modifyReport(productionStatusCode, productionReportUpdateRequest);
-
-        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
-
-    }
-
-    @DeleteMapping("production/reports/{productionStatusCode}/delete")
-    public ResponseEntity<Void> response(@PathVariable final Long productionStatusCode) {
-        productionService.removeReport(productionStatusCode);
-        return ResponseEntity.noContent().build();
-    }
 }
+//
+//    /*보고서 등록*/
+//    @PostMapping("/production/reports")
+//    public ResponseEntity<Void> reportSaved(@RequestBody final ProductionReportCreateRequest productionReportCreateRequest
+//            //  @RequestPart final MultipartFile attachFile
+//    ) {
+//        final Long productionStatusCode = productionService.reportSave(productionReportCreateRequest, ProductionStatusType.REGISTER_PRODUCTION);
+////        // 총 생산량 계산
+////        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
+//        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
+//
+//    }
+//
+//    /* 보고서 수정 */
+//    @PutMapping("production/reports/{productionStatusCode}/modify")
+//    public ResponseEntity<Void> modify(@PathVariable final Long productionStatusCode, @RequestBody final ProductionReportUpdateRequest productionReportUpdateRequest) {
+//        productionService.modifyReport(productionStatusCode, productionReportUpdateRequest);
+//
+//        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
+//
+//    }
+//
+//    @DeleteMapping("production/reports/{productionStatusCode}/delete")
+//    public ResponseEntity<Void> response(@PathVariable final Long productionStatusCode) {
+//        productionService.removeReport(productionStatusCode);
+//        return ResponseEntity.noContent().build();
+//    }
+//}

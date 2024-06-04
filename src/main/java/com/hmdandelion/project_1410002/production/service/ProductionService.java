@@ -60,14 +60,14 @@ public class ProductionService {
         } else {
             productionManagements = productionRepo.findByProductionStatusNot(getPageable(page), ProductionStatusType.WAIT);
         }
-
         return productionManagements.map(ProductionReportResponse::from);
     }
 
     @Transactional(readOnly = true)
-    public List<ProductionDetailResponse> getProductionDetails(Long productionStatusCode) {
-        Optional<ProductionManagement> optionalProductionManagement = productionRepo.findByProductionStatusCode(productionStatusCode);
-        ProductionManagement productionManagement = optionalProductionManagement.orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
+    public ProductionDetailResponse getProductionDetails(Long productionStatusCode) {
+
+        ProductionManagement productionManagement = productionRepo.findByProductionStatusCodeAndProductionStatusNot(productionStatusCode, ProductionStatusType.PRODUCTION_HOLD)
+                .or(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
 
         List<ProductionDetailResponse> productionDetails = new ArrayList<>();
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
@@ -84,94 +84,93 @@ public class ProductionService {
         if (defectDetails.isEmpty()) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_DETAIL);
         }
-
         return defectDetails.stream()
                 .map(DefectDetailResponse::from)
                 .collect(Collectors.toList());
     }
 
-    /* 보고서 등록 */
-    @Transactional
-    public Long reportSave(ProductionReportCreateRequest productionReportCreateRequest, ProductionStatusType registerProduction) {
-//       ProductionDetail productionDetail = productionDetailRepo.getReferenceById(productionReportCreateRequest.getProductionDetailCode() );
-//        DefectDetail defectDetail = defectDetailRepo.getReferenceById(productionReportCreateRequest.getDefectCode());
-        final ProductionManagement newProductionManagement = ProductionManagement.of(
-                productionReportCreateRequest.getStartAt(),
-                productionReportCreateRequest.getCompletedAt(),
-                productionReportCreateRequest.getTotalProductionQuantity(),
-                productionReportCreateRequest.getProductionFile(),
-                productionReportCreateRequest.getProductionStatus(),
-                productionReportCreateRequest.getInspectionStatus()
-//                productionDetail,
-//                defectDetail
-        );
-        productionRepo.save(newProductionManagement);
-
-        final ProductionDetail newProductionDetail = ProductionDetail.of(
-                newProductionManagement,
-                productionReportCreateRequest.getInspectionDate(),
-                productionReportCreateRequest.getProductionQuantity(),
-                productionReportCreateRequest.getDefectQuantity(),
-                productionReportCreateRequest.getCompletelyQuantity(),
-                productionReportCreateRequest.getProductionMemo(),
-                productionReportCreateRequest.getProductionStatus()
-        );
-        productionDetailRepo.save(newProductionDetail);
-
-        // 불량 상세 정보 생성 및 저장
-        final DefectDetail newDefectDetail = DefectDetail.of(
-                newProductionDetail,
-                productionReportCreateRequest.getDefectReason(),
-                productionReportCreateRequest.getDefectStatus(),
-                productionReportCreateRequest.getDefectFile()
-        );
-        defectDetailRepo.save(newDefectDetail);
-
-        return newProductionDetail.getProductionDetailCode();
-    }
-
-
-    @Transactional
-    public void modifyReport(Long productionStatusCode, ProductionReportUpdateRequest productionReportUpdateRequest) {
-        // ProductionManagement 엔터티 가져오기
-        ProductionManagement productionManagement = productionRepo.findByProductionStatusCode(productionStatusCode)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
-
-        // ProductionManagement 엔터티 수정
-        productionManagement.modifyReport(
-                productionReportUpdateRequest.getStartAt(),
-                productionReportUpdateRequest.getCompletedAt(),
-                productionReportUpdateRequest.getTotalProductionQuantity(),
-                productionReportUpdateRequest.getProductionFile(),
-                productionReportUpdateRequest.getProductionStatus(),
-                productionReportUpdateRequest.getInspectionStatus()
-        );
-        // ProductionDetail 엔터티 수정
-        for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
-            if (productionDetail.getProductionDetailCode().equals(productionReportUpdateRequest.getProductionDetailCode())) {
-                productionDetail.modifyDetail(
-                        productionReportUpdateRequest.getInspectionDate(),
-                        productionReportUpdateRequest.getProductionQuantity(),
-                        productionReportUpdateRequest.getDefectQuantity(),
-                        productionReportUpdateRequest.getCompletelyQuantity(),
-                        productionReportUpdateRequest.getProductionMemo(),
-                        productionReportUpdateRequest.getProductionStatus()
-                );
-
-                // 연관된 불량 상세 정보 수정
-                List<DefectDetail> defectDetails = defectDetailRepo.findByProductionDetail(productionDetail);
-                for (DefectDetail defectDetail : defectDetails) {
-                    defectDetail.modifyDetail(
-                            productionReportUpdateRequest.getDefectReason(),
-                            productionReportUpdateRequest.getDefectStatus(),
-                            productionReportUpdateRequest.getDefectFile()
-                    );
-                }
-            }
-        }
-// 저장된 엔터티를 업데이트
-        productionRepo.save(productionManagement);
-    }
+//    /* 보고서 등록 */
+//    @Transactional
+//    public Long reportSave(ProductionReportCreateRequest productionReportCreateRequest, ProductionStatusType registerProduction) {
+////       ProductionDetail productionDetail = productionDetailRepo.getReferenceById(productionReportCreateRequest.getProductionDetailCode() );
+////        DefectDetail defectDetail = defectDetailRepo.getReferenceById(productionReportCreateRequest.getDefectCode());
+//        final ProductionManagement newProductionManagement = ProductionManagement.of(
+//                productionReportCreateRequest.getStartAt(),
+//                productionReportCreateRequest.getCompletedAt(),
+//                productionReportCreateRequest.getTotalProductionQuantity(),
+//                productionReportCreateRequest.getProductionFile(),
+//                productionReportCreateRequest.getProductionStatus(),
+//                productionReportCreateRequest.getInspectionStatus()
+////                productionDetail,
+////                defectDetail
+//        );
+//        productionRepo.save(newProductionManagement);
+//
+//        final ProductionDetail newProductionDetail = ProductionDetail.of(
+//                newProductionManagement,
+//                productionReportCreateRequest.getInspectionDate(),
+//                productionReportCreateRequest.getProductionQuantity(),
+//                productionReportCreateRequest.getDefectQuantity(),
+//                productionReportCreateRequest.getCompletelyQuantity(),
+//                productionReportCreateRequest.getProductionMemo(),
+//                productionReportCreateRequest.getProductionStatus()
+//        );
+//        productionDetailRepo.save(newProductionDetail);
+//
+//        // 불량 상세 정보 생성 및 저장
+//        final DefectDetail newDefectDetail = DefectDetail.of(
+//                newProductionDetail,
+//                productionReportCreateRequest.getDefectReason(),
+//                productionReportCreateRequest.getDefectStatus(),
+//                productionReportCreateRequest.getDefectFile()
+//        );
+//        defectDetailRepo.save(newDefectDetail);
+//
+//        return newProductionDetail.getProductionDetailCode();
+//    }
+//
+//
+//    @Transactional
+//    public void modifyReport(Long productionStatusCode, ProductionReportUpdateRequest productionReportUpdateRequest) {
+//        // ProductionManagement 엔터티 가져오기
+//        ProductionManagement productionManagement = productionRepo.findByProductionStatusCode(productionStatusCode)
+//                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
+//
+//        // ProductionManagement 엔터티 수정
+//        productionManagement.modifyReport(
+//                productionReportUpdateRequest.getStartAt(),
+//                productionReportUpdateRequest.getCompletedAt(),
+//                productionReportUpdateRequest.getTotalProductionQuantity(),
+//                productionReportUpdateRequest.getProductionFile(),
+//                productionReportUpdateRequest.getProductionStatus(),
+//                productionReportUpdateRequest.getInspectionStatus()
+//        );
+//        // ProductionDetail 엔터티 수정
+//        for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
+//            if (productionDetail.getProductionDetailCode().equals(productionReportUpdateRequest.getProductionDetailCode())) {
+//                productionDetail.modifyDetail(
+//                        productionReportUpdateRequest.getInspectionDate(),
+//                        productionReportUpdateRequest.getProductionQuantity(),
+//                        productionReportUpdateRequest.getDefectQuantity(),
+//                        productionReportUpdateRequest.getCompletelyQuantity(),
+//                        productionReportUpdateRequest.getProductionMemo(),
+//                        productionReportUpdateRequest.getProductionStatus()
+//                );
+//
+//                // 연관된 불량 상세 정보 수정
+//                List<DefectDetail> defectDetails = defectDetailRepo.findByProductionDetail(productionDetail);
+//                for (DefectDetail defectDetail : defectDetails) {
+//                    defectDetail.modifyDetail(
+//                            productionReportUpdateRequest.getDefectReason(),
+//                            productionReportUpdateRequest.getDefectStatus(),
+//                            productionReportUpdateRequest.getDefectFile()
+//                    );
+//                }
+//            }
+//        }
+//// 저장된 엔터티를 업데이트
+//        productionRepo.save(productionManagement);
+//    }
 
         // 저장된 엔터티를 업데이트
 
