@@ -92,7 +92,7 @@ public class StorageController {
         storageService.modifyDestroyQuantity(storageCode,destroyQuantity);
 
 
-        return ResponseEntity.created(URI.create(null)).build();
+        return ResponseEntity.created(URI.create("/api/v1/storage")).build();
     }
 
     /*창고 보관코드로 보관 이력 조회*/

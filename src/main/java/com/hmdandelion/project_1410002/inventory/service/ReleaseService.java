@@ -39,6 +39,7 @@ import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.*;
@@ -68,6 +69,24 @@ public class ReleaseService {
 
     public Page<ReleasePossible> getReleasePossibles(Integer page, Boolean isReleasePossible, Boolean createdSort) {
         List<Order> orders = orderRepo.findAllByStatus(ORDER_RECEIVED);
+        List<Order> filterOrders = new ArrayList<>();
+        List<Release> releases = releaseRepo.findAll();
+
+        System.out.println("orders = " + orders.size());
+
+        for(Order order : orders){
+            for(Release release : releases){
+                if(Objects.equals(release.getOrder().getOrderCode(), order.getOrderCode())){
+                   filterOrders.add(order);
+                }
+            }
+        }
+
+        orders.removeAll(filterOrders);
+        System.out.println("filterOrders = " + filterOrders);
+
+        System.out.println("orders = " + orders.size());
+
         List<ReleasePossible> releasePossibleList = new ArrayList<>();
 
         for (Order order : orders) {
