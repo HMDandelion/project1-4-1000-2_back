@@ -485,3 +485,15 @@ CREATE TABLE `tbl_work_order` (
 
 ALTER TABLE `tbl_work_order`
     ADD CONSTRAINT `tbl_work_order_CK` CHECK ( `completion_status` IN ('IN_PROGRESS', 'DONE'));
+
+ALTER TABLE tbl_bom DROP INDEX quantity;
+
+ALTER TABLE tbl_stock DROP INDEX is_delete;
+ALTER TABLE tbl_stock DROP INDEX quantity;
+
+ALTER TABLE tbl_stock
+    ADD COLUMN assignment_status ENUM('NOT_ASSIGNED', 'PARTIALLY_ASSIGNED', 'FULLY_ASSIGNED')
+DEFAULT 'NOT_ASSIGNED';
+
+ALTER TABLE tbl_release_change DROP FOREIGN KEY tbl_release_change_fk1;
+ALTER TABLE tbl_release MODIFY COLUMN release_code INT AUTO_INCREMENT;

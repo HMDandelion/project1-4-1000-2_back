@@ -40,8 +40,7 @@ public class StorageController {
 
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<StorageFilterResponse> storages = storageService.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort
-        );
+        Page<StorageFilterResponse> storages = storageService.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort);
         return ResponseEntity.ok(storages);
     }
 
