@@ -37,12 +37,12 @@ public class LineService {
     public Long save(final LineCreateRequest lineCreateRequest) {
 
         final Line newLine = Line.of(
-                lineCreateRequest.getlineName
+                lineCreateRequest.get
         );
-        final Line line =  lineRepo.save(line);
+        final Line line =  lineRepo.save(newLine);
 
 
-     return line.getLineCode(newLine);
+     return line.getLineCode();
     }
 }
 
