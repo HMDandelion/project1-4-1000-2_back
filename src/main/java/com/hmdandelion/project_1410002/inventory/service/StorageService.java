@@ -21,6 +21,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -252,4 +254,21 @@ public class StorageService {
     }
 
 
+    public Double getDestroyRatio() {
+        List<Storage> storages = storageRepo.findAll();
+        Long destroyTotal = 0L;
+        Long total = 0L;
+        for(Storage storage : storages){
+            total+=storage.getInitialQuantity();
+            destroyTotal+=storage.getDestroyQuantity();
+        }
+
+        System.out.println("total = " + total);
+        System.out.println("destroyTotal = " + destroyTotal);
+
+        Double ratio = (double)destroyTotal/total;
+        BigDecimal ratioRounded = new BigDecimal(ratio).setScale(4, RoundingMode.HALF_UP);
+
+        return ratioRounded.doubleValue();
+    }
 }

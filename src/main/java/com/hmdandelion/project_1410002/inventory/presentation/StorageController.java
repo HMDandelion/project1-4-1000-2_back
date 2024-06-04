@@ -95,6 +95,13 @@ public class StorageController {
         return ResponseEntity.created(URI.create("/api/v1/storage")).build();
     }
 
+    /*총 파손률 계산*/
+    @GetMapping("/storage/destroy")
+    public ResponseEntity<Double> getDestroyRatio(){
+        Double ratio = storageService.getDestroyRatio();
+        return ResponseEntity.ok(ratio);
+    }
+
     /*창고 보관코드로 보관 이력 조회*/
     @GetMapping("/storage/{storageCode}")
     public ResponseEntity<StorageStockWarehouse> getStorageByStorageCode(
