@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class LineCreateRequest {
+public class LineUpdateRequest {
 
     @NotNull
     @NotBlank
