@@ -1,0 +1,40 @@
+
+### 반품 신청
+POST http://localhost:8001/api/v1/returns
+Content-Type: application/json
+
+{
+  "orderCode": 1,
+  "manageType": "EXCHANGE",
+  "deadline": "2024-11-15",
+  "products": [
+    {
+      "quantity": 50,
+      "refundPrice": 1500,
+      "productCode": 1
+    }
+  ]
+}
+
+### 반품 목록 조회 (검색 조건 X)
+GET http://localhost:8001/api/v1/returns
+
+
+### 반품 목록 조회 (포함된 상품명으로 검색)
+GET http://localhost:8001/api/v1/returns?productName=마스크
+
+
+### 반품 목록 조회 (거래처명으로 검색)
+GET http://localhost:8001/api/v1/returns?clientName=종로
+
+
+### 반품 목록 조회 (처리 유형으로 검색)
+GET http://localhost:8001/api/v1/returns?manageType=EXCHANGE
+
+
+### 반품 상세 조회
+GET http://localhost:8001/api/v1/returns/1
+
+
+### 반품 취소
+PUT http://localhost:8001/api/v1/returns/1

@@ -2,7 +2,11 @@ package com.hmdandelion.project_1410002.sales.domain.repository.returns;
 
 import com.hmdandelion.project_1410002.sales.domain.entity.returns.QReturn;
 import com.hmdandelion.project_1410002.sales.domain.type.ManageType;
+import com.hmdandelion.project_1410002.sales.dto.response.ExchangeOrderResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.ReturnProductResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.ReturnResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.ReturnsResponse;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
@@ -16,9 +20,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct.product;
 import static com.hmdandelion.project_1410002.sales.domain.entity.client.QClient.client;
+import static com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder.order;
 import static com.hmdandelion.project_1410002.sales.domain.entity.returns.QReturn.return$;
 import static com.hmdandelion.project_1410002.sales.domain.entity.returns.QReturnProduct.returnProduct;
 
@@ -107,5 +114,45 @@ public class ReturnRepoCustomImpl implements ReturnRepoCustom{
             return null;
         }
         return return$.orderCode.eq(orderCode);
+    }
+
+    @Override
+    public Optional<ReturnResponse> getReturn(Long returnCode) {
+        Map<Long, ReturnResponse> result = queryFactory
+                .from(return$)
+                .leftJoin(client).on(return$.clientCode.eq(client.clientCode))
+                .leftJoin(order).on(order.orderCode.eq(return$.exchangeOrder))
+                .leftJoin(return$.returnProducts, returnProduct)
+                .leftJoin(product).on(returnProduct.productCode.eq(product.productCode))
+                .where(
+                        return$.returnCode.eq(returnCode)
+                )
+                .transform(
+                        GroupBy.groupBy(return$.returnCode).as(
+                                Projections.constructor(ReturnResponse.class,
+                                        return$.returnCode,
+                                        return$.returnDatetime,
+                                        return$.manageType,
+                                        return$.manageStatus,
+                                        return$.returnStatus,
+                                        client.clientName,
+                                        return$.orderCode,
+                                        Projections.constructor(ExchangeOrderResponse.class,
+                                                order.orderCode,
+                                                order.orderDatetime,
+                                                order.deadline,
+                                                order.status
+                                        ),
+                                        GroupBy.list(Projections.constructor(ReturnProductResponse.class,
+                                                product.productCode,
+                                                product.productName,
+                                                returnProduct.quantity,
+                                                returnProduct.refundPrice
+                                        ))
+                                )
+                        )
+                );
+
+        return Optional.ofNullable(result.get(returnCode));
     }
 }
