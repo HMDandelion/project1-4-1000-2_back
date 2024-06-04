@@ -4,6 +4,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.material.Material
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialStock;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.AssignedMaterial;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.QAssignedMaterial;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
@@ -86,6 +87,23 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
         }
 
         return resultMap;
+    }
+
+    @Override
+    public void deleteAssignedByClientCode(Long clientCode)  {
+        QAssignedMaterial assignedMaterial = QAssignedMaterial.assignedMaterial;
+
+        AssignedMaterial temp = queryFactory
+                .selectFrom(assignedMaterial)
+                .where(assignedMaterial.clientCode.eq(clientCode))
+                .fetchFirst();
+        if (temp != null) {
+            queryFactory
+                    .delete(assignedMaterial)
+                    .where(assignedMaterial.clientCode.eq(clientCode))
+                    .execute();
+        }
+
     }
 
 }

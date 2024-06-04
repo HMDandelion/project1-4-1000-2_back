@@ -9,6 +9,7 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
+import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ public class MaterialSpecService {
 
     private final MaterialSpecRepo materialSpecRepo;
     private final MaterialSpecCategoryService materialSpecCategoryService;
-
     public List<MaterialSpecDTO> findAll() {
         return null;
     }
@@ -75,5 +75,9 @@ public class MaterialSpecService {
 
     public Map<Long, List<MaterialSpecDTO>> getSpecByClientCodes(List<Long> clientCodes) {
         return materialSpecRepo.getSpecByClientCodes(clientCodes);
+    }
+
+    public void deleteAssignedByClientCode(Long clientCode) {
+        materialSpecRepo.deleteAssignedByClientCode(clientCode);
     }
 }

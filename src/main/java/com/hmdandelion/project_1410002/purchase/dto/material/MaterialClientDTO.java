@@ -19,6 +19,13 @@ public class MaterialClientDTO {
     private final String representativeName;
     private final List<MaterialSpecDTO> materials;
 
+    protected MaterialClientDTO(Client client) {
+        this.clientCode = client.getClientCode();
+        this.clientName = client.getClientName();
+        this.representativeName = client.getRepresentativeName();
+        this.materials = new ArrayList<>();
+    }
+
     public static MaterialClientDTO from(Client client) {
         return new MaterialClientDTO(
                 client.getClientCode(),

@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
+import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialClientDetailResponse;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -44,8 +46,21 @@ public class MaterialClientService {
 
     public List<MaterialClientDTO> searchClients(Pageable pageable, String clientName) {
         List<MaterialClientDTO> clients = clientService.searchMateClients(pageable, clientName);
-        clients = addAssignedMaterial(clients);
+        addAssignedMaterial(clients);
         return clients;
+    }
+
+    public void deleteClients(Long clientCode) {
+        materialSpecService.deleteAssignedByClientCode(clientCode);
+        clientService.remove(clientCode);
+    }
+
+    public MaterialClientDetailResponse getDetail(Long clientCode) {
+        MaterialClientDetailResponse detail = clientService.getMaterialClientDetail(clientCode);
+        List<MaterialClientDTO> temp = new ArrayList<>();
+        temp.add(detail);
+        temp = addAssignedMaterial(temp);
+        return (MaterialClientDetailResponse) temp.get(0);
     }
 
     private List<MaterialClientDTO> addAssignedMaterial(List<MaterialClientDTO> targetList) {
