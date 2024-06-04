@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.sales.service;
 
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.sales.domain.entity.estimate.Estimate;
@@ -130,6 +131,13 @@ public class EstimateService {
     }
 
     public void remove(Long estimateCode) {
-        estimateRepo.deleteById(estimateCode);
+        Estimate deletedEstimate = estimateRepo.findById(estimateCode)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ESTIMATE_CODE));
+
+        if(deletedEstimate.getIsOrdered()) {
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_ORDERED_ESTIMATE);
+        }
+
+        estimateRepo.delete(deletedEstimate);
     }
 }
