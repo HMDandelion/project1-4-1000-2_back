@@ -11,6 +11,8 @@ import com.hmdandelion.project_1410002.production.service.WorkOrderService;
 import com.hmdandelion.project_1410002.sales.dto.response.EstimateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +28,10 @@ public class WorkOrderController {
     /* 작업 지시서 전체 목록 조회 start */
     @GetMapping("/production/work-order")
     public ResponseEntity<PagingResponse> getWorkOrders (
-            @RequestParam(defaultValue = "1") final Integer page
+            @RequestParam(defaultValue = "1") final Integer page,
+            @RequestParam(defaultValue = "10") final int size
     ) {
-
+        Pageable pageable = PageRequest.of(page - 1, size);
         final Page<WorkOrderResponse> workOrders = workOrderService.getWorkOrders(page);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(workOrders);
         final PagingResponse pagingResponse = PagingResponse.of(workOrders.getContent(), pagingButtonInfo);

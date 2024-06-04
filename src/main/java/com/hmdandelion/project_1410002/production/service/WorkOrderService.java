@@ -71,8 +71,9 @@ public class WorkOrderService {
 
     public Long workOrderSave(WorkOrderCreateRequest workOrderCreateRequest, WorkOrderStatusType workOrderStatusType) {
         LocalDate workOrderDate = workOrderCreateRequest.getWorkOrderDate();
+
         // 이미 등록된 작업인지 확인
-        if (workOrderRepo.existsByWorkOrderDate(workOrderDate)) {
+        if (workOrderRepo.existsByWorkOrderDateAndLineCode(workOrderDate, workOrderCreateRequest.getLineCode())) {
             throw new NotFoundException(ALREADY_EXIST_WORK_ORDER);
         }
         final WorkOrder newWorkOrder = WorkOrder.of(

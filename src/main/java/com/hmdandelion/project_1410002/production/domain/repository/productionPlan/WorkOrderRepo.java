@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface WorkOrderRepo extends JpaRepository<WorkOrder, Long>, WorkOrderRepoCustom {
     Optional<WorkOrder> findByWorkOrderCodeAndCompletionStatus(Long workOrderCode, WorkOrderStatusType workOrderStatusType);
 
-    boolean existsByWorkOrderDate(LocalDate workOrderDate);
-
     Optional<WorkOrder> findByWorkOrderCode(Long workOrderCode);
+
+    boolean existsByWorkOrderDateAndLineCode(LocalDate workOrderDate, Long lineCode);
 }
