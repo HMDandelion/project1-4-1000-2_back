@@ -174,6 +174,7 @@ public class ReleaseService {
 
         List<ReleaseOrderLack> releaseOrderLacks = new ArrayList<>();
 
+        System.out.println("orderCode = " + orderCode);
         Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(order.getOrderCode());
 
@@ -238,7 +239,21 @@ public class ReleaseService {
                 }
             }
 
+            Long standardSum = 0L;
+            for(Storage entityStorage : resultList){
+                standardSum+=entityStorage.getActualQuantity();
+                if(standardSum==0){
+                    entityStorage.modify();
+                }
+            }
+
+            if(standardSum==0){
+                stocks.get(0).modifyIsDelete();
+            }
+
         }
+
+
         Long releaseCode = releaseRepo.save(newRelease).getReleaseCode();
         return releaseCode;
     }
@@ -248,15 +263,16 @@ public class ReleaseService {
         List<ReleaseStorage> returnList = new ArrayList<>();
 
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
-
+        System.out.println("orderProducts = " + orderProducts);
+        System.out.println("orderProducts.get(0).getProductCode() = " + orderProducts.get(0).getProductCode());
         for(OrderProduct orderProduct : orderProducts){
             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
             Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            System.out.println("stocks = " + stocks);
             for(Stock stock : stocks) {
                 List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
                 resultList.addAll(storages);
                 resultList.sort(Comparator.comparing(Storage::getCreatedAt));
-
             }
 
             System.out.println("resultList = " + resultList);

@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.AccumulateProduct;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -89,12 +91,12 @@ public class StockController {
     }
 
     /*상품 별 누적 재고 조회*/
-    @GetMapping("/stock/{productCode}/accumulate")
-    public ResponseEntity<Integer> getAccumulateStockByProductCode(
-            @PathVariable final Integer productCode
+    @GetMapping("/stock/product/accumulate")
+    public ResponseEntity<List<AccumulateProduct>> getAccumulateStockByProductCode(
+
     ){
-        Integer sum = stockService.getAccumulateStockByProductCode(productCode);
-        return ResponseEntity.ok(sum);
+        List<AccumulateProduct> accumulateProducts = stockService.getAccumulateStockByProductCode();
+        return ResponseEntity.ok(accumulateProducts);
     }
 
 }

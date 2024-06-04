@@ -211,12 +211,12 @@ public class StorageService {
         Long standardSum = 0L;
         for(Storage entityStorage : storages){
             standardSum+=entityStorage.getActualQuantity();
+            if(standardSum==0){
+                entityStorage.modify();
+            }
         }
 
         if(standardSum==0){
-            for(Storage entityStorage : storages){
-                entityStorage.modify();
-            }
             stock.modifyIsDelete();
         }
     }

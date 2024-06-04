@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.product.Produ
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.AccumulateProduct;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
@@ -19,7 +20,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -78,10 +83,30 @@ public class StockService {
         return sum;
     }
 
-    public Integer getAccumulateStockByProductCode(Integer productCode) {
-        Integer sum = stockRepo.getAccumulateStockByProductCode(productCode);
-        return sum;
+    public List<AccumulateProduct> getAccumulateStockByProductCode() {
+        List<AccumulateProduct> resultList = new ArrayList<>();
+        List<Product> products = productRepo.findAll();
+        Integer totalSum = stockRepo.getAccumulateStock();
+        for(Product product : products){
+            Long sum = stockRepo.getAccumulateStockByProductCode(product.getProductCode());
+            System.out.println("product.getProductCode() = " + product.getProductCode());
+            System.out.println("sum = " + sum);
+            if(sum==null){
+                sum = 0L;
+            }
+            Double ratio = (double)sum/totalSum;
+            BigDecimal ratioRounded = new BigDecimal(ratio).setScale(2, RoundingMode.HALF_UP);
+            AccumulateProduct accumulateProduct = AccumulateProduct.of(
+                    product.getProductName(),
+                    sum,
+                    ratioRounded.doubleValue()
+            );
+            resultList.add(accumulateProduct);
+        }
+
+        return resultList;
     }
+
 
     public StockProduct getStock(Long stockCode) {
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
@@ -109,4 +134,6 @@ public class StockService {
         );
         return stockProduct;
     }
+
+
 }

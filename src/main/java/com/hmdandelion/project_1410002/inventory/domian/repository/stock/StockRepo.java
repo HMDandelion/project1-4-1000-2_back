@@ -19,7 +19,7 @@ public interface StockRepo extends JpaRepository<Stock,Long>, StockRepoCustom {
 @Query("SELECT SUM(s.quantity) FROM Stock s WHERE s.isDelete=false")
     Integer getAccumulateStock();
 @Query("SELECT SUM(s.quantity) FROM Stock s WHERE s.product.productCode = :productCode AND s.isDelete=false")
-    Integer getAccumulateStockByProductCode(Integer productCode);
+    Long getAccumulateStockByProductCode(Long productCode);
 
     List<Stock> findByProductProductCodeAndIsDelete(Long productCode,Boolean isDelete);
 }
