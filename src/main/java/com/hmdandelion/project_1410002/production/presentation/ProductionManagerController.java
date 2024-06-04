@@ -75,8 +75,8 @@ public class ProductionManagerController {
             //  @RequestPart final MultipartFile attachFile
     ) {
         final Long productionStatusCode = productionService.reportSave(productionReportCreateRequest, ProductionStatusType.REGISTER_PRODUCTION);
-        // 총 생산량 계산
-        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
+//        // 총 생산량 계산
+//        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
         return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
 
     }
