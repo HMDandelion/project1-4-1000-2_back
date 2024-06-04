@@ -20,9 +20,7 @@ public class WorkOrderResponse {
 
     private final int orderedQuantity;
 
-    private final WorkOrderStatusType completedStatus;
-
-    private final Long productCode;
+    private final WorkOrderStatusType completionStatus;
 
     private final String productName;
 

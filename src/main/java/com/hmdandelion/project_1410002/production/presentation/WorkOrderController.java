@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import com.hmdandelion.project_1410002.production.dto.request.WorkOrderCreateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.WorkOrderUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.WorkOrderResponse;
 import com.hmdandelion.project_1410002.production.service.WorkOrderService;
 import com.hmdandelion.project_1410002.sales.dto.response.EstimateResponse;
@@ -70,9 +71,18 @@ public class WorkOrderController {
     /* 작업 지시서 등록 end */
 
     /* 작업 지시서 수정 start */
+    @PutMapping("/production/work-order/{workOrderCode}")
+    public ResponseEntity<Void> workOrderModify (
+            @PathVariable final Long workOrderCode,
+            @RequestBody final WorkOrderUpdateRequest workOrderUpdateRequest)
+    {
+        workOrderService.workOrderModify(workOrderCode, workOrderUpdateRequest);
+
+        ResponseEntity.ok("작업 지시서 수정이 완료 되었습니다.");
+
+        return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + workOrderCode)).build();
+    }
     /* 작업 지시서 수정 end */
-
-
 
     /* 작업 지시서 삭제 start */
     @DeleteMapping("/production/work-order/{workOrderCode}")
@@ -86,8 +96,10 @@ public class WorkOrderController {
         return ResponseEntity.noContent().build();
     }
     /* 작업 지시서 삭제 end */
+
+    /* 작업 지시서 상태 변경 start */
     @PostMapping("/production/{workOrderCode}/workOrderEnd")
-    public ResponseEntity<String> endOver(
+    public ResponseEntity<String> endOver (
             @PathVariable Long workOrderCode
     ){
         workOrderService.end(workOrderCode);
@@ -95,5 +107,6 @@ public class WorkOrderController {
                 "상태 변경이 완료 되었습니다."
         );
     }
+    /* 작업 지시서 상태 변경 end */
 
 }

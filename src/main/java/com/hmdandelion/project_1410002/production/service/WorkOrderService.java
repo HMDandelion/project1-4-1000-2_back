@@ -2,17 +2,13 @@ package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.service.ProductService;
-import com.hmdandelion.project_1410002.production.domain.entity.Employee;
-import com.hmdandelion.project_1410002.production.domain.entity.Line;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
-import com.hmdandelion.project_1410002.production.domain.repository.WorkOrderRepo;
+import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.WorkOrderRepo;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import com.hmdandelion.project_1410002.production.dto.request.WorkOrderCreateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.WorkOrderUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.WorkOrderResponse;
-import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
-import com.hmdandelion.project_1410002.sales.dto.response.EstimateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +17,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+
+import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.ALREADY_EXIST_WORK_ORDER;
 import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.NOT_FOUND_WORK_ORDER;
-import static com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType.DONE;
+
 
 @Service
 @RequiredArgsConstructor
@@ -70,6 +69,11 @@ public class WorkOrderService {
     }
 
     public Long workOrderSave(WorkOrderCreateRequest workOrderCreateRequest, WorkOrderStatusType workOrderStatusType) {
+        LocalDate workOrderDate = workOrderCreateRequest.getWorkOrderDate();
+        // 이미 등록된 작업인지 확인
+        if (workOrderRepo.existsByWorkOrderDate(workOrderDate)) {
+            throw new NotFoundException(ALREADY_EXIST_WORK_ORDER);
+        }
         final WorkOrder newWorkOrder = WorkOrder.of(
                 workOrderCreateRequest.getWorkWrittenDate(),
                 workOrderCreateRequest.getWorkOrderDate(),
@@ -79,7 +83,6 @@ public class WorkOrderService {
                 workOrderCreateRequest.getOrderedQuantity(),
                 workOrderStatusType
         );
-
 
         final WorkOrder workOrder = workOrderRepo.save(newWorkOrder);
 
@@ -99,5 +102,25 @@ public class WorkOrderService {
 //        return workOrder;
 
         return null;
+    }
+
+    public void workOrderModify(Long workOrderCode, WorkOrderUpdateRequest workOrderUpdateRequest) {
+        // 작업 코드로 작업을 조회
+        WorkOrder workOrder = workOrderRepo.findByWorkOrderCode(workOrderCode)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER));
+
+        // 작업이 존재하는 경우에만 작업의 상태를 확인하여 수정 가능 여부를 결정
+        if (workOrder.getCompletionStatus() == WorkOrderStatusType.IN_PROGRESS) {
+            // 작업 수정
+            workOrder.workOrderModify(
+                    workOrderUpdateRequest.getWorkOrderDate(),
+                    workOrderUpdateRequest.getOrderedQuantity(),
+                    workOrderUpdateRequest.getLineCode(),
+                    workOrderUpdateRequest.getEmployeeCode()
+            );
+        } else {
+            // 작업이 없거나 완료 상태인 경우 수정할 수 없음을 알림
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER);
+        }
     }
 }

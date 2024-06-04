@@ -1,6 +1,4 @@
-package com.hmdandelion.project_1410002.production.domain.repository;
-
-import com.hmdandelion.project_1410002.production.domain.entity.QEmployee;
+package com.hmdandelion.project_1410002.production.domain.repository.productionPlan;
 import com.hmdandelion.project_1410002.production.dto.response.WorkOrderResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -9,15 +7,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.expression.spel.ast.Projection;
 
 import java.util.List;
 import java.util.Optional;
 
 import static com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct.product;
-import static com.hmdandelion.project_1410002.production.domain.entity.QEmployee.employee;
-import static com.hmdandelion.project_1410002.production.domain.entity.QLine.line;
 import static com.hmdandelion.project_1410002.production.domain.entity.QWorkOrder.workOrder;
+import static com.hmdandelion.project_1410002.production.domain.entity.line.QLine.line;
+import static com.hmdandelion.project_1410002.sales.domain.entity.employee.QEmployee.employee;
 
 @RequiredArgsConstructor
 public class WorkOrderRepoCustomImpl implements WorkOrderRepoCustom{
@@ -27,8 +24,8 @@ public class WorkOrderRepoCustomImpl implements WorkOrderRepoCustom{
     @Override
     public Page<WorkOrderResponse> getWorkOrders(Pageable pageable) {
         /* workOrder query dsl 작성...해!!! 당장!!!!! */
-        List<WorkOrderResponse> workOrders = queryFactory.select(Projections.constructor
-                (WorkOrderResponse.class,
+        List<WorkOrderResponse> workOrders = queryFactory
+                .select(Projections.constructor(WorkOrderResponse.class,
                         workOrder.workOrderCode,
                         workOrder.workOrderDate,
                         workOrder.workWrittenDate,

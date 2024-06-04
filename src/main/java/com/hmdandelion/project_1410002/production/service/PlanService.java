@@ -4,12 +4,10 @@ import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.production.domain.entity.PlannedOrderList;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlannedList;
-import com.hmdandelion.project_1410002.production.domain.repository.ProductionPlanRepo;
-import com.hmdandelion.project_1410002.production.dto.request.PlannedOrderListRequest;
+import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.ProductionPlanRepo;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
-import com.hmdandelion.project_1410002.sales.domain.entity.estimate.Estimate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,11 +56,6 @@ public class PlanService {
             // 겹치는 계획이 있으면 예외를 발생시킵니다.
             throw new NotFoundException(ALREADY_EXIST_PRODUCTION_PLAN);
         }
-
-//        final ProductionPlan newPlan = ProductionPlan.of(
-//                productionPlanCreateRequest.getStartAt(),
-//                productionPlanCreateRequest.getEndAt()
-//        );
 
         List<ProductionPlannedList> productionPlanList = productionPlanCreateRequest.getProductionPlannedLists().stream()
                 .map(productionPlannedListRequest -> {
@@ -118,7 +111,6 @@ public class PlanService {
                     );
                 }
         );
-
         productionPlan.planModify(
                 productionPlanUpdateRequest.getStartAt(),
                 productionPlanUpdateRequest.getEndAt()

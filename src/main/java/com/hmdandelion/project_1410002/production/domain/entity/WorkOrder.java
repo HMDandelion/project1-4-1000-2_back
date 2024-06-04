@@ -51,18 +51,18 @@ public class WorkOrder {
     @Column(name = "employee_code", nullable = false)
     private Long employeeCode;
 
-    public WorkOrder(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType workOrderStatusType) {
+    public WorkOrder(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType completionStatus) {
         this.workWrittenDate = workWrittenDate;
         this.workOrderDate = workOrderDate;
         this.lineCode = lineCode;
         this.productCode = productCode;
         this.employeeCode = employeeCode;
         this.orderedQuantity = orderedQuantity;
-        this.completionStatus = workOrderStatusType;
+        this.completionStatus = completionStatus;
     }
 
 
-    public static WorkOrder of(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType workOrderStatusType) {
+    public static WorkOrder of(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType completionStatus) {
         return new WorkOrder(
                 workWrittenDate,
                 workOrderDate,
@@ -70,7 +70,7 @@ public class WorkOrder {
                 productCode,
                 employeeCode,
                 orderedQuantity,
-                workOrderStatusType
+                completionStatus
 
         );
     }
@@ -80,5 +80,12 @@ public class WorkOrder {
         if (this.completionStatus == WorkOrderStatusType.IN_PROGRESS) {
             this.completionStatus = WorkOrderStatusType.DONE;
         }
+    }
+
+    public void workOrderModify(LocalDate workOrderDate, Integer orderedQuantity, Long lineCode, Long employeeCode) {
+        this.workOrderDate = workOrderDate;
+        this.orderedQuantity = orderedQuantity;
+        this.lineCode = lineCode;
+        this.employeeCode = employeeCode;
     }
 }
