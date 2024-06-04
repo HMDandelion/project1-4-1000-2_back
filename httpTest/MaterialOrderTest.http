@@ -57,3 +57,6 @@ GET http://localhost:8001/api/v1/material/order-today
 
 ### 주간 입고 예정 수량 조회
 GET http://localhost:8001/api/v1/material/order-weekly
+
+### 주문 도착처리
+PUT http://localhost:8001/api/v1/material/order-arrival/8
