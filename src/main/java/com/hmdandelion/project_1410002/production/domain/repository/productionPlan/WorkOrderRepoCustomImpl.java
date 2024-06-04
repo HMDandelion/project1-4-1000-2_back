@@ -33,7 +33,6 @@ public class WorkOrderRepoCustomImpl implements WorkOrderRepoCustom{
                         workOrder.completionStatus,
                         product.productName,
                         employee.employeeName,
-                        line.lineCode,
                         line.lineName
                 )).from(workOrder)
                 .leftJoin(product).on(workOrder.productCode.eq(product.productCode))

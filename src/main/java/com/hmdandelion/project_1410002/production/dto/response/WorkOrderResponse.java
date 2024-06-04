@@ -26,7 +26,5 @@ public class WorkOrderResponse {
 
     private final String employeeName;
 
-    private final Long lineCode;
-
     private final String lineName;
 }
