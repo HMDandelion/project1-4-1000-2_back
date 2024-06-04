@@ -8,9 +8,12 @@ import com.hmdandelion.project_1410002.sales.domain.entity.returns.Return;
 import com.hmdandelion.project_1410002.sales.domain.entity.returns.ReturnProduct;
 import com.hmdandelion.project_1410002.sales.domain.repository.returns.ReturnRepo;
 import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderRepo;
+import com.hmdandelion.project_1410002.sales.domain.type.ManageStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.ManageType;
 import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ReturnStatus;
 import com.hmdandelion.project_1410002.sales.dto.request.ReturnCreateRequest;
+import com.hmdandelion.project_1410002.sales.dto.response.ReturnResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.ReturnsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -89,5 +92,28 @@ public class ReturnService {
     ) {
         Page<ReturnsResponse> returns = returnRepo.search(getPageable(page), orderCode, manageType, clientName, productName, sort);
         return returns;
+    }
+
+    @Transactional(readOnly = true)
+    public ReturnResponse getReturn(Long returnCode) {
+        ReturnResponse returnResponse = returnRepo.getReturn(returnCode)
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_RETURN_CODE));
+        return returnResponse;
+    }
+
+    public void cancel(Long returnCode) {
+        Return canceledReturn = returnRepo.findByReturnCodeAndManageStatusAndReturnStatus(
+                returnCode, ManageStatus.RETURN_RECEIVED, ReturnStatus.AWAITING_INSPECTION
+        ).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_RETURN_CODE));
+
+        canceledReturn.modifyReturnStatus(ReturnStatus.CANCELED);
+        canceledReturn.modifyManageStatus(ManageStatus.CANCELED);
+
+        if(ManageType.EXCHANGE.equals(canceledReturn.getManageType())) {
+            Order exchangeOrder = orderRepo.findByOrderCodeAndStatus(canceledReturn.getExchangeOrder(), OrderStatus.ORDER_RECEIVED)
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+
+            exchangeOrder.modifyStatus(OrderStatus.CANCELED);
+        }
     }
 }
