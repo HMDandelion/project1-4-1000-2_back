@@ -1,15 +1,12 @@
 package com.hmdandelion.project_1410002.sales.domain.repository.client;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
-import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.QAssignedMaterial;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
-import com.hmdandelion.project_1410002.sales.domain.entity.client.QClient;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -108,7 +105,7 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .fetch();
     }
 
-    //Material Client...
+    //region Material Client...
     @Override
     public List<MaterialClientDTO> getMaterialClientByCodes(List<Long> clientCodes) {
         List<Client> clients = queryFactory
@@ -118,4 +115,22 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
         return clients.stream().map(MaterialClientDTO::from).toList();
     }
 
+    @Override
+    public List<MaterialClientDTO> searchMaterialClient(Pageable pageable, String clientName) {
+        BooleanBuilder builder = new BooleanBuilder();
+        if (clientName != null) {
+            builder.and(client.clientName.contains(clientName));
+        }
+        List<Client> clients = queryFactory
+                .selectFrom(client)
+                .where(builder)
+                .where(client.clientType.eq(ClientType.RAW_MATERIALS))
+                .orderBy(client.clientName.asc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return clients.stream().map(MaterialClientDTO::from).toList();
+    }
+    //endregion
 }

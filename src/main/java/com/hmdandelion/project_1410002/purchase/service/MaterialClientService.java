@@ -5,6 +5,8 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
+import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -35,10 +37,23 @@ public class MaterialClientService {
         // 거래처의 정보를 받아옴
         List<MaterialClientDTO> clients = clientService.getMaterialClientByCodes(clientCodes);
         // 필요한 스펙들의 정보를 불러옴
+        clients = addAssignedMaterial(clients);
+        return clients;
+    }
+
+
+    public List<MaterialClientDTO> searchClients(Pageable pageable, String clientName) {
+        List<MaterialClientDTO> clients = clientService.searchMateClients(pageable, clientName);
+        clients = addAssignedMaterial(clients);
+        return clients;
+    }
+
+    private List<MaterialClientDTO> addAssignedMaterial(List<MaterialClientDTO> targetList) {
+        List<Long> clientCodes = targetList.stream().map(MaterialClientDTO::getClientCode).toList();
         Map<Long, List<MaterialSpecDTO>> clientCode_SpecList = materialSpecService.getSpecByClientCodes(clientCodes);
         // 거래처에 맞게 스펙들의 정보를 넣어줌
         for (Map.Entry<Long, List<MaterialSpecDTO>> entry : clientCode_SpecList.entrySet()) {
-            for (MaterialClientDTO dto : clients) {
+            for (MaterialClientDTO dto : targetList) {
                 if (dto.getClientCode() == entry.getKey()) {
                     // 스펙 코드를 기준으로 정렬
                     List<MaterialSpecDTO> sortedSpecList = entry.getValue().stream()
@@ -48,11 +63,6 @@ public class MaterialClientService {
                 }
             }
         }
-        return clients;
-    }
-
-
-    public List<MaterialClientDTO> searchClients(Pageable pageable, String clientName) {
-
+        return targetList;
     }
 }

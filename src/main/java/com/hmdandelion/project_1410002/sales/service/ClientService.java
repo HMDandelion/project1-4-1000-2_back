@@ -90,11 +90,21 @@ public class ClientService {
         return clientRepo.getMaterialClientByCodes(clientCodes);
     }
 
-    // 필요해서 넣었습니다 by한결
+    //region MaterialClient...
+
     public Client findById(Long clientCode) {
         return clientRepo.findById(clientCode).orElseThrow(
                 () -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE)
         );
     }
 
+    public List<MaterialClientDTO> searchMateClients(Pageable pageable, String clientName) {
+        List<MaterialClientDTO> clients = clientRepo.searchMaterialClient(pageable, clientName);
+        if (clients.isEmpty()) {
+            throw new NotFoundException(ExceptionCode.No_CONTENTS_CLIENT_CODE);
+        }
+        return clients;
+    }
+
+    //endregion
 }
