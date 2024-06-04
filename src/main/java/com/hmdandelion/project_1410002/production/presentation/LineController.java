@@ -5,6 +5,9 @@ import com.hmdandelion.project_1410002.production.dto.response.line.LineResponse
 import com.hmdandelion.project_1410002.production.service.LineService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,14 +22,16 @@ public class LineController {
     private final LineService lineService;
 
     @GetMapping("/lines")
-    public ResponseEntity<List<LineResponse>> getLines(
+    public ResponseEntity<Page<LineResponse>> getLines(
             @RequestParam(required = false) Long lineCode,
             @RequestParam(required = false) String lineName,
             @RequestParam(required = false) Integer lineProduction,
-            @RequestParam(required = false) LineStatusType lineStatusType) {
+            @RequestParam(required = false) LineStatusType lineStatusType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
 
-        final List<LineResponse> lineResponses = lineService.getLineInfo(lineCode, lineName, lineProduction, lineStatusType);
-       log.info("찾은이름값은{} ",lineResponses.get(0).getLineName() );
+
+        final Page<LineResponse> lineResponses = lineService.getLineInfo(lineCode, lineName, lineProduction, lineStatusType);
 
         return ResponseEntity.ok(lineResponses);
     }

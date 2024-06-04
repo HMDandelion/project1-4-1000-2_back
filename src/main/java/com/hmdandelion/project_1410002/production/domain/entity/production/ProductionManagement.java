@@ -39,7 +39,6 @@ public class ProductionManagement {
 
     private String productionFile;
 
-
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
