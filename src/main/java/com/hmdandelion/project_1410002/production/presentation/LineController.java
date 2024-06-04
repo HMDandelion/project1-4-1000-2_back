@@ -38,8 +38,10 @@ public class LineController {
         return ResponseEntity.ok(lineResponses);
     }
     @PostMapping("/lines")
-    public ResponseEntity<Void>save(@Valid LineCreateRequest lineCreateRequest){
-
-        return ResponseEntity.created(URI.create("/api/v1/lines/")).build();
+    public ResponseEntity<Void>save(
+            @RequestBody @Valid LineCreateRequest lineCreateRequest
+    ){
+        final Long lineCode = lineService.save(lineCreateRequest);
+        return ResponseEntity.created(URI.create("/api/v1/lines/" + lineCode)).build();
     }
 }
