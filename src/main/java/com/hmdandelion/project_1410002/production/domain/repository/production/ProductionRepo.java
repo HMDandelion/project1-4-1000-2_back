@@ -32,8 +32,6 @@ public interface ProductionRepo extends JpaRepository<ProductionManagement, Long
 
 
     /* 상세 조회 */
-    Optional<ProductionManagement> findByProductionStatusCode(Long productionStatusCode);
+    Optional<ProductionManagement>findByProductionStatusCode(Long productionStatusCode);
 
-    /* 상세 조회 */
-    ProductionManagement findByProductionStatusCodeAndProductionStatusNot(Long productionStatusCode, ProductionStatusType productionStatusType);
 }

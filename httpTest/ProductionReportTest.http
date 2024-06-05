@@ -11,8 +11,8 @@ GET http://localhost:8001/api/v1/production/reports?page=1&productionStatusCode=
 GET http://localhost:8001/api/v1/production/reports/1/detail
 
 ### 불량 상세 조회
-GET http://localhost:8001/api/production/reports/3/defects
-Content-Type: application/json
+GET http://localhost:8001/api/v1/production/reports/1/defects
+
 
 ### 보고서 등록
 POST http://localhost:8001/api/production/reports

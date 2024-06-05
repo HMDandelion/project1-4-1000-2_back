@@ -1,8 +1,8 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.common.exception.type.NotWarehouseException;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.request.WarehouseCreateRequest;
@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.NOT_FOUND_WAREHOUSE_CODE;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +48,7 @@ public class WarehouseService {
     @Transactional(readOnly = true)
     public Warehouse getWarehouse(Long warehouseCode) {
         Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
-            new NotWarehouseException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE)
+            new NotFoundException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE)
         );
 
         return warehouse;

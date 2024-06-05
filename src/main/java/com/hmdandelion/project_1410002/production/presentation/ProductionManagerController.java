@@ -48,7 +48,6 @@ public class ProductionManagerController {
         final Page<ProductionReportResponse> productionReportResponses = productionService.getProductionReportRecords(page, productionStatusCode, productionStatusType, startAt, completedAt);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(productionReportResponses);
         final PagingResponse pagingResponse = PagingResponse.of(productionReportResponses.getContent(), pagingButtonInfo);
-
         return ResponseEntity.ok(pagingResponse);
     }
 
@@ -59,17 +58,11 @@ public class ProductionManagerController {
         return ResponseEntity.ok(productionDetails);
     }
 
-
     /* 불량상세 조회 */
     @GetMapping("/production/reports/{productionDetailCode}/defects")
     public ResponseEntity<List<DefectDetailResponse>> getDefectDetails(@PathVariable Long productionDetailCode) {
-        try {
-            List<DefectDetailResponse> defectDetails = productionService.getDefectDetails(productionDetailCode);
-            return ResponseEntity.ok(defectDetails);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyList());
-        }
-
+     List<DefectDetailResponse> defectDetailResponses = productionService.getDefectDetails(productionDetailCode);
+     return ResponseEntity.ok(defectDetailResponses);
     }
 }
 //

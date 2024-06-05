@@ -25,13 +25,11 @@ public class LineController {
     @GetMapping("/lines")
     public ResponseEntity<Page<LineResponse>> getLines(
             @RequestParam(required = false) Long lineCode,
-            @RequestParam(required = false) String lineName,
-            @RequestParam(required = false) Integer lineProduction,
             @RequestParam(required = false) LineStatusType lineStatusType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
 
-        final Page<LineResponse> lineResponses = lineService.getLineInfo(lineCode, lineName, lineProduction, lineStatusType);
+        final Page<LineResponse> lineResponses = lineService.getLineInfo(lineCode, lineStatusType);
 
         return ResponseEntity.ok(lineResponses);
     }

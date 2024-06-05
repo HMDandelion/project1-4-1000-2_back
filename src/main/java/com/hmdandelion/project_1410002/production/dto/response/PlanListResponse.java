@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.lang.reflect.Field;
 import java.time.LocalDate;
 
 @Getter
@@ -15,13 +16,13 @@ import java.time.LocalDate;
 public class PlanListResponse {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate startAt;
+    private final LocalDate startAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate endAt;
-    private String requiredQuantity;
-    private String plannedQuantity;
-    private Long productCode;
-    private String productName;
+    private final LocalDate endAt;
+    private final String requiredQuantity;
+    private final String plannedQuantity;
+    private final Long productCode;
+    private final String productName;
 
 
     public PlanListResponse(ProductionPlannedList productionPlannedList
