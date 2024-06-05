@@ -12,6 +12,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -26,7 +27,8 @@ import static com.hmdandelion.project_1410002.sales.domain.entity.estimate.QEsti
 import static com.hmdandelion.project_1410002.sales.domain.entity.estimate.QEstimateProduct.estimateProduct;
 
 @RequiredArgsConstructor
-public class EstimateRepoCustomImpl implements EstimateRepoCustom{
+public class EstimateRepoCustomImpl implements EstimateRepoCustom {
+
     private final JPAQueryFactory queryFactory;
 
     private OrderSpecifier createOrderSpecifier(String sort) {
