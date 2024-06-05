@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.type.MaterialUsageStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -26,18 +27,22 @@ public class MaterialUsage {
     @LastModifiedDate
     private LocalDateTime usageDatetime;
     private Long employeeCode; //TODO 수정필
-    private Long workOrderCode; //TODO 수정필
+    //    private Long workOrderCode; //TODO 수정필
+    @ManyToOne
+    @JoinColumn(name = "work_order_code")
+    private WorkOrder workOrder;
+    @Enumerated(value = EnumType.STRING)
     private MaterialUsageStatus status;
 
-    public MaterialUsage(Long workOrderCode, LocalDateTime usageDatetime) {
-        this.workOrderCode = workOrderCode;
+    public MaterialUsage(WorkOrder workOrder, LocalDateTime usageDatetime) {
+        this.workOrder = workOrder;
         this.usageDatetime = usageDatetime;
         this.status = MaterialUsageStatus.READY;
     }
 
-    public static MaterialUsage of(Long workOrderCode, LocalDate workOrderDate) {
+    public static MaterialUsage of(WorkOrder workOrder) {
         return new MaterialUsage(
-                workOrderCode, workOrderDate.atStartOfDay()
+                workOrder, workOrder.getWorkOrderDate().atStartOfDay()
         );
     }
 }

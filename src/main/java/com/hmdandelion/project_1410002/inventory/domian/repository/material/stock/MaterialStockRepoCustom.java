@@ -10,4 +10,6 @@ public interface MaterialStockRepoCustom {
     List<MaterialStock> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode);
 
     MaterialStock getStockByCode(Long stockCode);
+
+    List<Long> searchMaterialStockByMaterialName(String materialName);
 }

@@ -36,6 +36,7 @@ public enum ExceptionCode {
     NO_CONTENTS_M_ORDERS(4401,"찾으시는 원자재 주문이 존재하지 않습니다." ),
     No_CONTENTS_CLIENT_CODE(4402,"조건에 맞는 거래처가 존재하지 않습니다." ),
     No_CONTENTS_M_ORDER_TODAY(4403,"금일 입고 예정인 주문이 없습니다." ),
+    NO_CONTENTS_MATERIAL_USE(4404,"조건에 맞는 원자재 사용이 존재하지 않습니다." ),
 
     BAD_REQUEST_ORDER_EXIST_CLIENT(6100, "주문건이 존재하는 거래처는 삭제할 수 없습니다."),
     BAD_REQUEST_ORDERED_ESTIMATE(6200, "주문이 진행된 견적은 삭제할 수 없습니다."),

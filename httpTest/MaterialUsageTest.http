@@ -11,3 +11,6 @@ Content-Type: application/json
   "workOrderStatusType": "IN_PROGRESS",
   "orderedQuantity": 444
 }
+
+### 전체조회 테스트
+GET http://localhost:8001/api/v1/material/use

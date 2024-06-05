@@ -87,4 +87,9 @@ public class MaterialStockService {
         stock.modifyFrom(request, warehouse);
         return stock.getStockCode();
     }
+
+    public List<Long> searchMaterialStockByMaterialName(String materialName) {
+
+        return materialStockRepo.searchMaterialStockByMaterialName(materialName);
+    }
 }
