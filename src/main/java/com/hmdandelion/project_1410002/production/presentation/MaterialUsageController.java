@@ -22,5 +22,5 @@ public class MaterialUsageController {
 
     private final MaterialUsageService materialUsageService;
 
-    //
+    //사용 조회
 }

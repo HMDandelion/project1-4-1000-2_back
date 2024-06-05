@@ -31,6 +31,7 @@ public class WorkOrderService {
     private final WorkOrderRepo workOrderRepo;
 
     private final ProductService productService;
+    private final MaterialUsageService materialUsageService;
 
 //    private final EmployeeService employeeService;
 //
@@ -87,6 +88,7 @@ public class WorkOrderService {
         );
 
         final WorkOrder workOrder = workOrderRepo.save(newWorkOrder);
+        materialUsageService.usageCreate(workOrder.getWorkOrderCode(), workOrder.getWorkOrderDate());
 
         return workOrder.getWorkOrderCode();
     }

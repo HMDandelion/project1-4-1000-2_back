@@ -1,0 +1,13 @@
+### usage 자동등록 테스트
+POST http://localhost:8001/api/v1/production/work-order
+Content-Type: application/json
+
+{
+  "workWrittenDate": "2024-06-05",
+  "workOrderDate": "2024-06-04",
+  "lineCode": 3,
+  "employeeCode": 1,
+  "productCode": 1,
+  "workOrderStatusType": "IN_PROGRESS",
+  "orderedQuantity": 444
+}
