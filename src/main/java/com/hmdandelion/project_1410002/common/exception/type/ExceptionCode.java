@@ -22,8 +22,6 @@ public enum ExceptionCode {
     NOT_FOUND_STORAGE_CODE(3502,"저장 이력 코드가 존재하지 않습니다."),
     NOT_FOUND_PRODUCTION_CODE(3600, "상품 코드에 해당하는 생산 보고서가 존재하지 않습니다."),
     NOT_FOUND_PRODUCTION_DETAIL(3601 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
-
-
     NOT_FOUND_PLAN_CODE(3700,"계획코드에 맞는 계획이 존재하지 않습니다." ),
     NOT_FOUND_EMPLOYEE_CODE(3800, "사번에 해당하는 사원이 존재하지 않습니다." ),
 
@@ -43,8 +41,6 @@ public enum ExceptionCode {
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
 
     ALREADY_EXIST_WORK_ORDER(7701,"이미 해당 날짜에 작업이 등록 되어 있습니다."),
-
-    NOT_FOUND_PLAN_CODE(3700,"해당 생산 계획이 존재하지 않습니다."),
 
     NOT_FOUND_WORK_ORDER( 3701, "해당 작업 지시서를 찾을 수 없습니다."),
 
