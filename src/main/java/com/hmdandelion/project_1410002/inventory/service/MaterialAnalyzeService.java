@@ -29,7 +29,7 @@ public class MaterialAnalyzeService {
                        .toList();
     }
 
-    public List<MaterialStockSimpleDTO> findBywarehouseCode(long warehouseCode) {
+    public List<MaterialStockSimpleDTO> findBywWrehouseCode(long warehouseCode) {
         List<MaterialStock> stocks = materialStockRepo.findAllByWarehouseWarehouseCodeAndActualQuantityIsGreaterThan(warehouseCode, 0);
 
         return stocks.stream()

@@ -29,8 +29,8 @@ public class MaterialOrderAnalyzeService {
         List<ProductionPlannedList> plannedLists = plannedOrderListService.findByPlanCode(planCode);
         //생산하려는 제품의 BOM을 조회한다(생산하려는 제품의 요구수치)
         for (ProductionPlannedList plannedList : plannedLists) {
-            List<Bom> bomlist = bomService.getBomByProductCode(plannedList.getProductCode());
-            for (Bom bom : bomlist) {
+            List<Bom> bomList = bomService.getBomByProductCode(plannedList.getProductCode());
+            for (Bom bom : bomList) {
                 String materialName = bom.getMaterialSpec().getMaterialName();
                 long requiredQuantity = bom.getQuantity();
 
