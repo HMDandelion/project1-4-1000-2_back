@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.employee.domain.repository;
 
 import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
-import com.hmdandelion.project_1410002.employee.domain.type.Authority;
+import com.hmdandelion.project_1410002.employee.domain.type.AuthorityType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -17,7 +17,7 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long> {
             "WHERE ea.authorityCode = a.authorityCode " +
             "AND ea.employeeCode = :employeeCode"
     )
-    List<Authority> findAuthNamesByEmployeeNo(Long employeeCode);
+    List<AuthorityType> findAuthNamesByEmployeeNo(Long employeeCode);
 
     Optional<Employee> findByRefreshToken(String refreshToken);
 }

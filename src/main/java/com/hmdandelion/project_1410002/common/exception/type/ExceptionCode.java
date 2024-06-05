@@ -40,7 +40,7 @@ public enum ExceptionCode {
     FAIL_LOGIN(9900, "로그인에 실패하였습니다."),
     NOT_FOUND_REFRESH_TOKEN(9901, "리프레시 토큰이 유효하지 않습니다."),
     UNAUTHORIZED(9902, "인증되지 않은 요청입니다."),
-    ACCESS_DENIED(9903, "허가되지 않은 요청입니다."),;
+    ACCESS_DENIED(9903, "인가되지 않은 요청입니다.");
 
 
     private final int code;

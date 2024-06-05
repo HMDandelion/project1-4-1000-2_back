@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.auth.dto;
 
 import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
-import com.hmdandelion.project_1410002.employee.domain.type.Authority;
+import com.hmdandelion.project_1410002.employee.domain.type.AuthorityType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +17,9 @@ public class LoginDTO {
     private final Long employeeCode;
     private final String employeeNo;
     private final String password;
-    private final List<Authority> authorities;
+    private final List<AuthorityType> authorities;
 
-    public static LoginDTO from(Employee employee, List<Authority> authorities) {
+    public static LoginDTO from(Employee employee, List<AuthorityType> authorities) {
         return new LoginDTO(
                 employee.getEmployeeCode(),
                 employee.getEmployeeNo(),
