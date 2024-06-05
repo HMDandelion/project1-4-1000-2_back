@@ -27,7 +27,7 @@ public class LineService {
 
         Page<Line> lines = null;
         if (lineCode != null && lineCode > 0) {
-            lines = lineRepo.findByLineStatusNot(LineStatusType.PRODUCTION_START, pageable);
+            lines = lineRepo.findByLineStatusNot(LineStatusType.INACTIVE, pageable);
         } else {
             lines = lineRepo.findAll(pageable);
         }
