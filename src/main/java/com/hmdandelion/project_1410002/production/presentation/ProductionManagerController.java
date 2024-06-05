@@ -56,6 +56,9 @@ public class ProductionManagerController {
         return ResponseEntity.ok(productionDetails);
     }
 
+    /*동환 : 생산 완료로 상태 변화*/
+    @PutMapping("/production")
+
 
     /* 불량상세 조회 */
     @GetMapping("/production/reports/{productionDetailCode}/defects")

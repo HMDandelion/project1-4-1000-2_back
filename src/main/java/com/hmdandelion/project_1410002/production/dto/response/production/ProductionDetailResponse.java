@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.production.dto.response.production;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionDetail;
+import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -18,6 +19,7 @@ public class ProductionDetailResponse {
     private final Integer defectQuantity;
     private final Integer completelyQuantity;
     private final String productionMemo;
+    private final ProductionStatusType productionStatusType;
 
     public static ProductionDetailResponse from(ProductionDetail productionDetail) {
         return new ProductionDetailResponse(
@@ -27,7 +29,8 @@ public class ProductionDetailResponse {
                 productionDetail.getProductionQuantity(),
                 productionDetail.getDefectQuantity(),
                 productionDetail.getCompletelyQuantity(),
-                productionDetail.getProductionMemo()
+                productionDetail.getProductionMemo(),
+                productionDetail.getProductionStatus()
         );
     }
 }

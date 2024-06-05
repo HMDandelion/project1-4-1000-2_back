@@ -19,7 +19,6 @@ public class ProductionReportResponse {
     private int totalProductionQuantity;
     private String productionFile;
     private String productionStatus;
-    private String inspectionStatus;
 
     public static ProductionReportResponse from(ProductionManagement productionManagement) {
         return new ProductionReportResponse(
@@ -28,8 +27,7 @@ public class ProductionReportResponse {
                 productionManagement.getCompletedAt(),
                 productionManagement.getTotalProductionQuantity(),
                 productionManagement.getProductionFile(),
-                productionManagement.getProductionStatus().toString(),
-                productionManagement.getInspectionStatus().toString()
+                productionManagement.getProductionStatus().toString()
         );
     }
 }

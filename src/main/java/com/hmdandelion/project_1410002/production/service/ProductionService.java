@@ -66,11 +66,14 @@ public class ProductionService {
 
     @Transactional(readOnly = true)
     public List<ProductionDetailResponse> getProductionDetails(Long productionStatusCode) {
+        System.out.println("1");
         Optional<ProductionManagement> optionalProductionManagement = productionRepo.findByProductionStatusCode(productionStatusCode);
+        System.out.println("2");
         ProductionManagement productionManagement = optionalProductionManagement.orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
-
+        System.out.println("productionManagement = " + productionManagement);
         List<ProductionDetailResponse> productionDetails = new ArrayList<>();
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
+            System.out.println("productionDetail = " + productionDetail);
             productionDetails.add(ProductionDetailResponse.from(productionDetail));
         }
         return productionDetails;
@@ -100,8 +103,7 @@ public class ProductionService {
                 productionReportCreateRequest.getCompletedAt(),
                 productionReportCreateRequest.getTotalProductionQuantity(),
                 productionReportCreateRequest.getProductionFile(),
-                productionReportCreateRequest.getProductionStatus(),
-                productionReportCreateRequest.getInspectionStatus()
+                productionReportCreateRequest.getProductionStatus()
 //                productionDetail,
 //                defectDetail
         );
@@ -143,8 +145,7 @@ public class ProductionService {
                 productionReportUpdateRequest.getCompletedAt(),
                 productionReportUpdateRequest.getTotalProductionQuantity(),
                 productionReportUpdateRequest.getProductionFile(),
-                productionReportUpdateRequest.getProductionStatus(),
-                productionReportUpdateRequest.getInspectionStatus()
+                productionReportUpdateRequest.getProductionStatus()
         );
         // ProductionDetail 엔터티 수정
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
