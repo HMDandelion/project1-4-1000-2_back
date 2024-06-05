@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.production.domain.entity.line.Line;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -28,7 +30,6 @@ public class WorkOrder {
     private String orderedQuantity;
 
     @Column(name = "completion_status", nullable = false)
-    private LocalDateTime completionStatus;
     @Enumerated(value = EnumType.STRING)
     private WorkOrderStatusType
             status = WorkOrderStatusType.IN_PROGRESS;
@@ -36,14 +37,14 @@ public class WorkOrder {
     @Column(name = "work_modified_date", nullable = false)
     private LocalDateTime workModifiedDate;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @JoinColumn(name = "line_code", nullable = false)
-    //    private Line line; <- line 엔티티 필요
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "line_code", nullable = false)
+        private Line line;
 
     @Column(name = "work_order_date", nullable = false)
     private LocalDateTime workOrderDate;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @JoinColumn(name = "product_code", nullable = false)
-    //    private Product product; <- Product 엔티티 필요
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "product_code", nullable = false)
+        private Product product;
 }

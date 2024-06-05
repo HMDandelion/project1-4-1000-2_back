@@ -14,6 +14,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+import static com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType.PRODUCTION_COMPLETED;
+
 @Entity
 @Getter
 @Table(name = "tbl_production_detail")
@@ -88,6 +90,10 @@ public class ProductionDetail {
         this.completelyQuantity = completelyQuantity;
         this.productionMemo = productionMemo;
         this.productionStatus = productionStatus;
+    }
+
+    public void modify() {
+        this.productionStatus = PRODUCTION_COMPLETED;
     }
 }
 
