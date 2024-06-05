@@ -22,7 +22,7 @@ public class LineService {
     private final LineRepo lineRepo;
 
     @Transactional(readOnly = true)
-    public Page<LineResponse> getLineInfo(final Long lineCode, final String lineName, final Integer lineProduction, final LineStatusType lineStatusType) {
+    public Page<LineResponse> getLineInfo(final Long lineCode, final LineStatusType lineStatusType) {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<Line> lines = null;
