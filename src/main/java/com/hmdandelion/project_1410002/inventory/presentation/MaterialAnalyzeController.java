@@ -38,7 +38,7 @@ public class MaterialAnalyzeController {
     public ResponseEntity<MaterialObjectListResponse> findStockByWarehouse(
             @PathVariable final long warehouseCode
     ) {
-        final List<MaterialStockSimpleDTO> list = materialAnalyzeService.findBywarehouseCode(warehouseCode);
+        final List<MaterialStockSimpleDTO> list = materialAnalyzeService.findBywWrehouseCode(warehouseCode);
         final MaterialObjectListResponse res = MaterialObjectListResponse.from(Collections.singletonList(list));
         return ResponseEntity.ok(res);
     }

@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.common.exception.handler;
 
+import com.hmdandelion.project_1410002.common.exception.NoContentsException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.dto.response.ExceptionResponse;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,13 @@ public class ExceptionHandlingController {
         final ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getCode(), e.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionResponse);
+    }
+
+    @ExceptionHandler(NoContentsException.class)
+    public ResponseEntity<ExceptionResponse> noContentsException(NoContentsException e) {
+        final ExceptionResponse res = ExceptionResponse.of(e.getCode(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
     }
 
 

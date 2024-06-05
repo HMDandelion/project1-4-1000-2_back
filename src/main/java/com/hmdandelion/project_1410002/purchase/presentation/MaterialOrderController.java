@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
+import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderWeeklyResponse;
 import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -83,6 +84,35 @@ public class MaterialOrderController {
         final Long orderCode = materialOrderService.modifyOrder(request);
 
         return ResponseEntity.created(URI.create("api/vi/material/orders/" + orderCode)).build();
+    }
+
+    //금일 입고 예정목록 조회
+    @GetMapping("/order-today")
+    public ResponseEntity<PagingResponse> orderToday() {
+        Pageable pageable = PageRequest.of(0, 100);
+
+        List<MaterialOrderDTO> orders = materialOrderService.getOrderToday(pageable);
+        Page<MaterialOrderDTO> toPage = new PageImpl<>(orders, pageable, orders.size());
+
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
+        PagingResponse res = new PagingResponse(orders, pagingButtonInfo);
+        return ResponseEntity.ok(res);
+    }
+
+    //주간 입고 예정건 조회
+    @GetMapping("/order-weekly")
+    public ResponseEntity<MaterialOrderWeeklyResponse> orderWeekly() {
+        MaterialOrderWeeklyResponse res = materialOrderService.orderWeekly();
+        return ResponseEntity.ok(res);
+    }
+
+    @PutMapping("/order-arrival/{orderCode}")
+    public ResponseEntity<Void> orderArrival(
+            @PathVariable final Long orderCode
+    ) {
+        materialOrderService.orderArrival(orderCode);
+
+        return ResponseEntity.created(URI.create("/api/v1/material/orders/" + orderCode)).build();
     }
 
 

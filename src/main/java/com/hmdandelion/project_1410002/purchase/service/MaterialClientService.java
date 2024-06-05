@@ -30,7 +30,6 @@ public class MaterialClientService {
     private final AssignedMaterialService assignedMaterialService;
 
 
-    @Transactional
     public List<MaterialClientDTO> getClientBySpecList(List<Long> specCodes) {
         //해당 스펙을 담당자제로 가진 거래처의 목록을 불러옴
         List<Long> clientCodes =  materialOrderService.findClientCodeBySpecCodes(specCodes);
@@ -83,7 +82,6 @@ public class MaterialClientService {
         }
     }
 
-    @Transactional
     public Long createClients(MaterialClientCreateRequest request) {
         final Long clientCode = clientService.save(request, ClientType.RAW_MATERIALS);
         assignedMaterialService.insertAssignedByClientCodeAndSpecList(clientCode, request.getSpecCodes());

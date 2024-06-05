@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderModifyRequest;
 import com.hmdandelion.project_1410002.purchase.model.MaterialOrderStatus;
+import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -86,5 +87,10 @@ public class MaterialOrder {
         if (request.getPlanCode() != null) {
             this.planCode = request.getPlanCode();
         }
+    }
+
+    public void setArrival(LocalDateTime now) {
+        this.arrivalDatetime = now;
+        this.status = MaterialOrderStatus.DELIVERY_COMPLETED;
     }
 }
