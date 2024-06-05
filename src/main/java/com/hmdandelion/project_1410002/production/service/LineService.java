@@ -15,7 +15,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,7 +22,6 @@ public class LineService {
 
     private final LineRepo lineRepo;
 
-    /* 라인 목록 조회 */
     @Transactional(readOnly = true)
     public Page<LineResponse> getLineInfo(final Long lineCode, final String lineName, final Integer lineProduction, final LineStatusType lineStatusType) {
         Pageable pageable = PageRequest.of(0, 10);
@@ -34,6 +32,7 @@ public class LineService {
         } else {
             lines = lineRepo.findAll(pageable);
         }
+
         return lines.map(LineResponse::form);
     }
 
