@@ -3,9 +3,10 @@ package com.hmdandelion.project_1410002.production.service;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
-import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.entity.production.DefectDetail;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionDetail;
@@ -13,7 +14,7 @@ import com.hmdandelion.project_1410002.production.domain.entity.production.Produ
 import com.hmdandelion.project_1410002.production.domain.repository.production.DefectDetailRepo;
 import com.hmdandelion.project_1410002.production.domain.repository.production.ProductionDetailRepo;
 import com.hmdandelion.project_1410002.production.domain.repository.production.ProductionRepo;
-import com.hmdandelion.project_1410002.production.domain.repository.production.WorkOrderRepo;
+import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.WorkOrderRepo;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionReportCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionReportUpdateRequest;
@@ -31,7 +32,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -47,6 +47,7 @@ public class ProductionService {
     private final ProductionDetailRepo productionDetailRepo;
     private final WorkOrderRepo workOrderRepo;
     private final StockRepo stockRepo;
+    private final ProductRepo productRepo;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 20, Sort.by("productionStatusCode").descending());
@@ -224,11 +225,13 @@ public class ProductionService {
         System.out.println("전");
         WorkOrder workOrder = workOrderRepo.findById(productionDetail.getWorkOrder().getWorkOrderCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         System.out.println("후");
+
+        Product product = productRepo.findById(workOrder.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         /*동환 : 재고 추가*/
         Stock newStock = Stock.of(
                 Long.valueOf(productionDetail.getCompletelyQuantity()),
                 RE_INSPECTION,
-                workOrder.getProduct()
+                product
         );
 
         stockRepo.save(newStock);
