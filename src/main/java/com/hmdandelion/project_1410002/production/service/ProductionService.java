@@ -66,11 +66,11 @@ public class ProductionService {
     }
 
     /* 상세 조회 */
+    /* 상세 조회 */
     @Transactional(readOnly = true)
-    public ProductionDetailResponse getProductionDetails(Long productionStatusCode) {
-
-        ProductionManagement productionManagement = productionRepo.findByProductionStatusCodeAndProductionStatusNot(productionStatusCode, ProductionStatusType.PRODUCTION_HOLD)
-                .or(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
+    public List<ProductionDetailResponse> getProductionDetails(Long productionStatusCode) {
+        Optional<ProductionManagement> optionalProductionManagement = productionRepo.findByProductionStatusCode(productionStatusCode);
+        ProductionManagement productionManagement = optionalProductionManagement.orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
 
         List<ProductionDetailResponse> productionDetails = new ArrayList<>();
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
