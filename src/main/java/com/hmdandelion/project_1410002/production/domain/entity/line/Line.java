@@ -1,11 +1,11 @@
 package com.hmdandelion.project_1410002.production.domain.entity.line;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.type.LineStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
 
 @Table(name = "tbl_line")
 @Entity

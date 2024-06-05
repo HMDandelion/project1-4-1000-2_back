@@ -1,0 +1,43 @@
+### 전체 공급업체 조회
+GET http://localhost:8001/api/v1/material/clients
+
+### 공급업체명으로 검색
+GET http://localhost:8001/api/v1/material/clients?clientName=A
+
+### 공급업체 상새조회
+GET http://localhost:8001/api/v1/material/clients/1
+
+### 공급업체 등록
+POST http://localhost:8001/api/v1/material/clients
+Content-Type: application/json
+
+{
+  "clientName": "새로운원자재거래처22",
+  "address": "경기도 의정부시",
+  "addressDetail": "이성계동상 앞",
+  "postcode": "12345",
+  "representativeName": "김덕배",
+  "phone": "010-1234-1234",
+  "specCodes": [
+    2,5,6
+  ]
+}
+
+### 공급업체 수정
+PUT http://localhost:8001/api/v1/material/clients/8
+Content-Type: application/json
+
+{
+  "clientName": "수정된 거래처명",
+  "address": "화성",
+  "addressDetail": "포보스",
+  "postcode": "12345",
+  "representativeName": "화성인",
+  "phone": "010-1234-1234",
+  "specCodes": [
+    3,10,12
+  ]
+}
+
+### 공급업체 삭제
+DELETE http://localhost:8001/api/v1/material/clients?clientCode=7

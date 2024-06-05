@@ -1,7 +1,6 @@
 package com.hmdandelion.project_1410002.production.domain.entity.production;
 
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
-import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

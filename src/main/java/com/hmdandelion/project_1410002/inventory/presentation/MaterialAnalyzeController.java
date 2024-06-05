@@ -1,6 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
-import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObjectListRes;
+import com.hmdandelion.project_1410002.common.dto.response.material.MaterialObjectListResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialGraphResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialTransactionsResponse;
@@ -35,11 +35,11 @@ public class MaterialAnalyzeController {
 
     //창고 별 적재현항 조회
     @GetMapping("/warehouses/{warehouseCode}")
-    public ResponseEntity<MaterialObjectListRes> findStockByWarehouse(
+    public ResponseEntity<MaterialObjectListResponse> findStockByWarehouse(
             @PathVariable final long warehouseCode
     ) {
-        final List<MaterialStockSimpleDTO> list = materialAnalyzeService.findBywarehouseCode(warehouseCode);
-        final MaterialObjectListRes res = MaterialObjectListRes.from(Collections.singletonList(list));
+        final List<MaterialStockSimpleDTO> list = materialAnalyzeService.findBywWrehouseCode(warehouseCode);
+        final MaterialObjectListResponse res = MaterialObjectListResponse.from(Collections.singletonList(list));
         return ResponseEntity.ok(res);
     }
 

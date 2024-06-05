@@ -15,15 +15,7 @@ public class MaterialGraphResponse {
 
     public final List<MaterialGraphModel> data;
 
-    public static MaterialGraphResponse from(List<CombinedStockBySpecDTO> stocks) {
-        List<MaterialGraphModel> data = new ArrayList<>();
-        for (CombinedStockBySpecDTO stock : stocks) {
-            data.add(
-                    new MaterialGraphModel(stock.getMaterialName(),
-                                           stock.getActualQuantity(),
-                                           stock.getSafetyStock())
-            );
-        }
-        return new MaterialGraphResponse(data);
+    public static MaterialGraphResponse from(List<MaterialGraphModel> list) {
+        return new MaterialGraphResponse(list);
     }
 }

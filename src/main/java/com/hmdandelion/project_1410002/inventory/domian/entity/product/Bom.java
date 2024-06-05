@@ -19,10 +19,10 @@ public class Bom {
     private Long quantity;
     private Long sequence;
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="productCode")
+    @JoinColumn(name="product_code")
     private Product product;
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="specCode")
+    @JoinColumn(name="spec_code")
     private MaterialSpec materialSpec;
 
     public Bom(Long quantity, Long sequence, Product product, MaterialSpec materialSpec) {

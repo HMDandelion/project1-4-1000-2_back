@@ -15,25 +15,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
-import static com.hmdandelion.project_1410002.production.domain.type.LineStatusType.PRODUCTION_COMPLETED;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class LineService {
-
     private final LineRepo lineRepo;
 
-    /* 라인 목록 조회 */
     @Transactional(readOnly = true)
-    public Page<LineResponse> getLineInfo(final Long lineCode, final String lineName, final Integer lineProduction, final LineStatusType lineStatusType) {
+    public Page<LineResponse> getLineInfo(final Long lineCode, final LineStatusType lineStatusType) {
         Pageable pageable = PageRequest.of(0, 10);
 
         Page<Line> lines = null;
         if (lineCode != null && lineCode > 0) {
-            lines = lineRepo.findByLineStatusNot(LineStatusType.PRODUCTION_START, pageable);
+            lines = lineRepo.findByLineStatusNot(LineStatusType.INACTIVE, pageable);
         } else {
             lines = lineRepo.findAll(pageable);
         }
@@ -42,6 +36,7 @@ public class LineService {
     }
 
     /*라인 등록*/
+    @Transactional
     public Long save(final LineCreateRequest lineCreateRequest) {
 
         final Line
@@ -50,12 +45,13 @@ public class LineService {
                 lineCreateRequest.getLineProduction(),
                 lineCreateRequest.getLineStatusType()
         );
-
         final Line line = lineRepo.save(newLine);
 
-     return line.getLineCode();
+        return line.getLineCode();
     }
 
+    /* 수정 */
+    @Transactional
     public void modify(Long lineCode, LineUpdateRequest lineUpdateRequest) {
 
         Line line = (Line) lineRepo.findLineByLineCode(lineCode)
@@ -69,6 +65,7 @@ public class LineService {
         lineRepo.save(line);
     }
 
+    /* 삭제 */
     public void remove(Long lineCode) {
 
         lineRepo.deleteById(lineCode);
