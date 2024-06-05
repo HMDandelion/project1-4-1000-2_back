@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.ALREADY_EXIST_PRODUCTION_PLAN;
 
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -40,7 +41,7 @@ public class PlanService {
         LocalDate startAt = LocalDate.parse(dt + "-01");
         LocalDate endAt = startAt.with(TemporalAdjusters.lastDayOfMonth());
 
-        Page<PlanListResponse> planList = productionPlanRepo.findPlanDetails(getPageable(page), startAt ,endAt);
+        Page<PlanListResponse> planList = productionPlanRepo.findPlanDetails(getPageable(page), startAt , endAt);
 
         return planList;
     }
@@ -59,7 +60,7 @@ public class PlanService {
         }
 
         List<ProductionPlannedList> productionPlanList = productionPlanCreateRequest.getProductionPlannedLists().stream()
-                .map(productionPlannedListRequest -> {
+                                                                                    .map(productionPlannedListRequest -> {
                     return ProductionPlannedList.of(
                             productionPlannedListRequest.getProductCode(),
                             productionPlannedListRequest.getPlannedQuantity(),
@@ -97,7 +98,7 @@ public class PlanService {
 
     public void planModify(Long planCode, ProductionPlanUpdateRequest productionPlanUpdateRequest) {
         ProductionPlan productionPlan = productionPlanRepo.findByPlanCode(planCode)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
+                                                          .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
 
         productionPlanUpdateRequest.getProductionPlannedLists().forEach(
                 productionPlannedListRequest -> {
@@ -121,5 +122,10 @@ public class PlanService {
     public void planRemove(Long planCode) {
 
         productionPlanRepo.deleteById(planCode);
+    }
+
+    //플랜코드로 플랜을 조회하는 코드 (by한결)
+    public ProductionPlan findById(Long planCode) {
+        return productionPlanRepo.findById(planCode).orElseThrow(()-> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
     }
 }

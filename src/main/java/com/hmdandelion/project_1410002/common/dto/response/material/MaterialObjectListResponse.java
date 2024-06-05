@@ -8,12 +8,12 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class MaterialObjectListRes {
+public class MaterialObjectListResponse {
 
     private final List<Object> list;
 
-    public static MaterialObjectListRes from(List<Object> materialList) {
-        return new MaterialObjectListRes(
+    public static MaterialObjectListResponse from(List<Object> materialList) {
+        return new MaterialObjectListResponse(
                 materialList
         );
     }
