@@ -65,7 +65,4 @@ public class ProductionPlan {
         this.endAt = endAt;
     }
 
-    public void createPlan(List<ProductionPlannedList> productionPlanList, List<PlannedOrderList> plannedOrderList) {
-
-    }
 }

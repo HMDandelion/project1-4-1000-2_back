@@ -49,13 +49,13 @@ public class WorkOrderController {
     /* 작업 지시서 상세 조회 end */
 
     /* 작업 지시서 등록내에 조회 start */
-    @GetMapping("/production/work-order/")
-    public ResponseEntity<WorkOrderResponse> getWorkOrderInSave (
-    ) {
-        final WorkOrderResponse WorkOrderResponse = workOrderService.getWorkOrderInSave();
-
-        return ResponseEntity.ok(WorkOrderResponse);
-    }
+//    @GetMapping("/production/work-order/")
+//    public ResponseEntity<WorkOrderResponse> getWorkOrderInSave (
+//    ) {
+//        final WorkOrderResponse WorkOrderResponse = workOrderService.getWorkOrderInSave();
+//
+//        return ResponseEntity.ok(WorkOrderResponse);
+//    }
     /* 작업 지시서 등록내에 조회 end */
 
 
@@ -66,8 +66,6 @@ public class WorkOrderController {
     {
 
         final Long workOrderCode = workOrderService.workOrderSave(workOrderCreateRequest, WorkOrderStatusType.IN_PROGRESS);
-
-        ResponseEntity.ok("작업 지시서 등록이 완료 되었습니다.");
 
         return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + workOrderCode)).build();
     }
@@ -81,8 +79,6 @@ public class WorkOrderController {
     {
         workOrderService.workOrderModify(workOrderCode, workOrderUpdateRequest);
 
-        ResponseEntity.ok("작업 지시서 수정이 완료 되었습니다.");
-
         return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + workOrderCode)).build();
     }
     /* 작업 지시서 수정 end */
@@ -93,8 +89,6 @@ public class WorkOrderController {
             @PathVariable final Long workOrderCode)
     {
         workOrderService.workOrderRemove(workOrderCode);
-
-        ResponseEntity.ok("작업 지시서 삭제가 완료 되었습니다.");
 
         return ResponseEntity.noContent().build();
     }

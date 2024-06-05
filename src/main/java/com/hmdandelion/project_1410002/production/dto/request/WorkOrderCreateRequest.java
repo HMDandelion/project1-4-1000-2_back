@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.dto.request;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

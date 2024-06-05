@@ -46,8 +46,6 @@ public class ProductionPlanController {
           // 생산 계획 등록 후에 해당 주문 건을 삭제
 //          orderService.deleteOrder(productionPlanCreateRequest.getOrderId());
 
-          ResponseEntity.ok("생산 계획 등록이 완료 되었습니다.");
-
             return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
     }
     /* 생산 계획 등록 end */
@@ -60,8 +58,6 @@ public class ProductionPlanController {
     {
         planService.planModify(planCode, productionPlanUpdateRequest);
 
-        ResponseEntity.ok("생산 계획 수정이 완료 되었습니다.");
-
         return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
     }
     /* 생산 계획 수정 end */
@@ -72,8 +68,6 @@ public class ProductionPlanController {
             @PathVariable final Long planCode)
             {
                 planService.planRemove(planCode);
-
-                ResponseEntity.ok("생산 계획 삭제가 완료 되었습니다.");
 
                 return ResponseEntity.noContent().build();
             }
