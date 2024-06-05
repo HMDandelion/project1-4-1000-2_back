@@ -37,10 +37,12 @@ public class ProductionService {
     private final DefectDetailRepo defectDetailRepo;
     private final ProductionDetailRepo productionDetailRepo;
 
+    /* 페이징 */
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 20, Sort.by("productionStatusCode").descending());
     }
 
+    /* 전체 조회*/
     @Transactional(readOnly = true)
     public Page<ProductionReportResponse> getProductionReportRecords(final Integer page, final Long productionStatusCode, final ProductionStatusType productionStatusType, final LocalDateTime startAt, final LocalDateTime completedAt) {
 
@@ -63,6 +65,7 @@ public class ProductionService {
         return productionManagements.map(ProductionReportResponse::from);
     }
 
+    /* 상세 조회 */
     @Transactional(readOnly = true)
     public ProductionDetailResponse getProductionDetails(Long productionStatusCode) {
 
@@ -172,7 +175,7 @@ public class ProductionService {
 //        productionRepo.save(productionManagement);
 //    }
 
-        // 저장된 엔터티를 업데이트
+    // 저장된 엔터티를 업데이트
 
     @Transactional
     public void removeReport(Long productionStatusCode) {
@@ -184,14 +187,11 @@ public class ProductionService {
     }
 
 
-
-
-
-
     /* -------------------------- 계산기 --------------------------------------------------*/
     public int calculateProductionQuantity(int defectQuantity, int completelyQuantity) {
         return defectQuantity + completelyQuantity;
     }
+
     @Transactional(readOnly = true)
     public int calculateTotalProductionQuantity() {
         List<ProductionDetail> allProductionDetails = productionDetailRepo.findAll();
