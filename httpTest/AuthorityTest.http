@@ -1,0 +1,42 @@
+### 로그인 : 영업팀 관리자
+POST http://localhost:8001/api/v1/login
+Content-Type: application/json
+
+{
+  "employeeNo" : "EMP001",
+  "password": "12345678"
+}
+
+### 로그인 : 영업팀 사원
+POST http://localhost:8001/api/v1/login
+Content-Type: application/json
+
+{
+  "employeeNo" : "EMP002",
+  "password": "12345678"
+}
+
+### 로그인 : 생산팀 관리자
+POST http://localhost:8001/api/v1/login
+Content-Type: application/json
+
+{
+  "employeeNo" : "EMP003",
+  "password": "12345678"
+}
+
+### 로그인 : 물류팀 관리자
+POST http://localhost:8001/api/v1/login
+Content-Type: application/json
+
+{
+  "employeeNo" : "EMP004",
+  "password": "12345678"
+}
+
+
+### 로그아웃
+POST http://localhost:8001/api/v1/logout
+Access-Token: Bearer eyJkYXRlIjoxNzE3NDg1NDgzNDYxLCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJBY2Nlc3NUb2tlbiIsImVtcGxveWVlTm8iOiJFTVAwMDIiLCJhdXRob3JpdGllcyI6IlNBTEVTU1RBRkYiLCJleHAiOjE3MTc0ODkwODN9.9d386iDLwpZXR8hijWOSYNdD5l8zu9942rTY2P3p9P5M8aMRL85sfnG8rjyIS-rVVsM65dhmHdFewrXDP6_LpA
+
+<> 2024-06-04T155948.404.json

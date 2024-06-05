@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.inventory.domian.repository.material.Stock;
+package com.hmdandelion.project_1410002.inventory.domian.repository.material.stock;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialStock;

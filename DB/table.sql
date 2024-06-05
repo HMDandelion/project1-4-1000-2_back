@@ -305,7 +305,6 @@ CREATE TABLE `tbl_production_detail` (
     `production_detail_code` BIGINT NOT NULL AUTO_INCREMENT COMMENT '생산 상세 코드',
     `work_order_code` INT NOT NULL COMMENT '작업 지시서 코드',
     `production_status_code` BIGINT NOT NULL COMMENT '생산 현황 코드',
-    `employee_code` INT NOT NULL COMMENT '사원 코드',
     `inspection_date` DATETIME NOT NULL COMMENT '품질 검수 일자',
     `production_quantity` INT COMMENT '현재 생산량',
     `defect_quantity` INT COMMENT '불량 수량',

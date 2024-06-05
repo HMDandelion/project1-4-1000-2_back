@@ -16,7 +16,7 @@ public class ProductionReportResponse {
     private LocalDateTime startAt;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime completedAt;
-    private int totalProductionQuantity;
+    private Integer totalProductionQuantity;
     private String productionFile;
     private String productionStatus;
 

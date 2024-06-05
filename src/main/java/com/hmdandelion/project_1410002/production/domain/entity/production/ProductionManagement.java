@@ -35,10 +35,9 @@ public class ProductionManagement {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime completedAt;
 
-    private int totalProductionQuantity;
+    private Integer totalProductionQuantity;
 
     private String productionFile;
-
 
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
