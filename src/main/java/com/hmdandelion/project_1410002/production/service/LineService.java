@@ -19,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class LineService {
-
     private final LineRepo lineRepo;
 
     @Transactional(readOnly = true)
