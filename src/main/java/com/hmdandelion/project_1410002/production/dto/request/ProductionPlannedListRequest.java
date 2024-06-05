@@ -6,6 +6,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ProductionPlannedListRequest {
 
+    private final Long planListCode;
+
     private final String requiredQuantity;
 
     private final String plannedQuantity;
