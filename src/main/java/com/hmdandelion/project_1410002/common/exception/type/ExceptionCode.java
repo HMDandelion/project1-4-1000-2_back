@@ -20,6 +20,10 @@ public enum ExceptionCode {
     NOT_FOUND_SPEC_CODE(3404,"스펙 코드에 맞는 스펙이 존재하지 않습니다." ),
     NOT_FOUND_BOM_CODE(3501,"BOM 코드에 맞는 BOM이 존재하지 않습니다."),
     NOT_FOUND_STORAGE_CODE(3502,"저장 이력 코드가 존재하지 않습니다."),
+    NOT_FOUND_PRODUCTION_CODE(3600, "상품 코드에 해당하는 생산 보고서가 존재하지 않습니다."),
+    NOT_FOUND_PRODUCTION_DETAIL(3601 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
+
+
     NOT_FOUND_PLAN_CODE(3700,"계획코드에 맞는 계획이 존재하지 않습니다." ),
     NOT_FOUND_EMPLOYEE_CODE(3800, "사번에 해당하는 사원이 존재하지 않습니다." ),
 
@@ -35,12 +39,18 @@ public enum ExceptionCode {
     BAD_REQUEST_DELETED_STOCK(6501,"삭제 된 재고 정보입니다."),
     BAD_REQUEST_DESTROY_QUANTITY(6502,"파손 수량은 초기 수량보다 클 수 없습니다."),
 
-    NOT_FOUND_PRODUCTION_CODE(3000, "상품 코드에 해당하는 생산 보고서가 존재하지 않습니다."),
 
-    NOT_FOUND_PRODUCTION_DETAIL(30000 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
+    ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
 
-    ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다.");
+    ALREADY_EXIST_WORK_ORDER(7701,"이미 해당 날짜에 작업이 등록 되어 있습니다."),
 
+    NOT_FOUND_PLAN_CODE(3700,"해당 생산 계획이 존재하지 않습니다."),
+
+    NOT_FOUND_WORK_ORDER( 3701, "해당 작업 지시서를 찾을 수 없습니다."),
+
+    NOT_FOUND_PRODUCTION_PLANNED_LIST_CODE(3702,"지정된 코드의 생산 예정 리스트를 해당 생산 계획에서 찾을 수 없습니다."),
+
+    BAD_REQUEST_WORK_ORDER_DONE(6700, "이미 완료된 작업지시서는 수정할 수 없습니다." );
 
 
 

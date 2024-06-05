@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.production.domain.repository;
+package com.hmdandelion.project_1410002.production.domain.repository.productionPlan;
 
 
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;

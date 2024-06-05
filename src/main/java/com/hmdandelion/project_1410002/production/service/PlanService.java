@@ -5,6 +5,8 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.production.domain.entity.PlannedOrderList;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlannedList;
+import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.ProductionPlanRepo;
+import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlannedList;
 import com.hmdandelion.project_1410002.production.domain.repository.ProductionPlanRepo;
 import com.hmdandelion.project_1410002.production.dto.request.PlannedOrderListRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
@@ -20,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
-import java.util.List;
 
 import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCode.ALREADY_EXIST_PRODUCTION_PLAN;
 
@@ -30,7 +31,7 @@ import static com.hmdandelion.project_1410002.common.exception.type.ExceptionCod
 @Transactional
 public class PlanService {
 
-    private final ProductionPlanRepo productionPlanRepo;
+    private final ProductionPlanRepo productionRepository;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("planCode").descending());
@@ -67,6 +68,7 @@ public class PlanService {
                             productionPlannedListRequest.getPlannedQuantity(),
                             productionPlannedListRequest.getDescription(),
                             productionPlannedListRequest.getRequiredQuantity()
+//                            ,newPlan
 
                     );
                 }).toList();
@@ -75,16 +77,20 @@ public class PlanService {
                 .map(plannedOrderListRequest -> {
                     return PlannedOrderList.of(
                             plannedOrderListRequest.getOrderCode()
+//                            ,
+//                            newPlan
+
                     );
                 }).toList();
 
-        final ProductionPlan
-                newPlan = ProductionPlan.of(
+        final ProductionPlan newPlan = ProductionPlan.of(
                 productionPlanCreateRequest.getStartAt(),
                 productionPlanCreateRequest.getEndAt(),
                 productionPlanList,
                 plannedOrderList
         );
+
+//        newPlan.createPlan(productionPlanList, plannedOrderList);
 
         final ProductionPlan plan = productionPlanRepo.save(newPlan);
 
@@ -94,13 +100,24 @@ public class PlanService {
 
     public void planModify(Long planCode, ProductionPlanUpdateRequest productionPlanUpdateRequest) {
         ProductionPlan productionPlan = productionPlanRepo.findByPlanCode(planCode)
-                .orElseThrow(() -> new RuntimeException());
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
 
+        productionPlanUpdateRequest.getProductionPlannedLists().forEach(
+                productionPlannedListRequest -> {
+                    ProductionPlannedList productionPlannedList = productionPlan.getProductionPlannedList().stream()
+                           .filter(productionPlannedList1 -> productionPlannedList1.getPlanListCode().equals(productionPlannedListRequest.getPlanListCode()))
+                           .findFirst()
+                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_PLANNED_LIST_CODE));
+
+                    productionPlannedList.planModify(
+                            productionPlannedListRequest.getPlannedQuantity(),
+                            productionPlannedListRequest.getDescription()
+                    );
+                }
+        );
         productionPlan.planModify(
                 productionPlanUpdateRequest.getStartAt(),
-                productionPlanUpdateRequest.getEndAt(),
-                productionPlanUpdateRequest.getDescription(),
-                productionPlanUpdateRequest.getRequiredQuantity()
+                productionPlanUpdateRequest.getEndAt()
         );
     }
 

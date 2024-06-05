@@ -48,22 +48,21 @@ public class ProductionPlan {
     @JoinColumn(name = "plan_code" )
     private List<ProductionPlannedList> productionPlannedList;
 
-    public ProductionPlan(LocalDate startAt, LocalDate endAt, List<PlannedOrderList> plannedOrderList, List<ProductionPlannedList> productionPlanList) {
+    public ProductionPlan(LocalDate startAt, LocalDate endAt, List<ProductionPlannedList> productionPlanList, List<PlannedOrderList> plannedOrderList) {
         this.startAt = startAt;
         this.endAt = endAt;
-        this.plannedOrderList = plannedOrderList;
         this.productionPlannedList = productionPlanList;
+        this.plannedOrderList = plannedOrderList;
     }
+
 
     public static ProductionPlan of(LocalDate startAt, LocalDate endAt, List<ProductionPlannedList> productionPlanList, List<PlannedOrderList> plannedOrderList) {
-        return new ProductionPlan(startAt, endAt, plannedOrderList, productionPlanList);
+        return new ProductionPlan(startAt, endAt, productionPlanList, plannedOrderList);
     }
 
-
-    public void planModify(LocalDate startAt, LocalDate endAt, String description, String plannedQuantity) {
+    public void planModify(LocalDate startAt, LocalDate endAt) {
         this.startAt = startAt;
-//        this.productionPlannedList = description;
-//        this.endAt = endAt;
-//        this.plannedQuantity = plannedQuantity;
+        this.endAt = endAt;
     }
+
 }

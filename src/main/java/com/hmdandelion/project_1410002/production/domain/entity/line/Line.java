@@ -27,10 +27,5 @@ public class Line {
     @Enumerated(value = EnumType.STRING)
     private LineStatusType lineStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_code")
-    private Employee employeeCode;
-
-
 }
 
