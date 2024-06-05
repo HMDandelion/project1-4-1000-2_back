@@ -3,7 +3,11 @@ package com.hmdandelion.project_1410002.inventory.domian.repository.material.spe
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialStock;
+import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.AssignedMaterial;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.QAssignedMaterial;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -11,7 +15,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
@@ -58,5 +66,29 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
                 .where(materialStock.materialSpec.specCode.in(specCodes))
                 .fetchOne();
     }
+
+    @Override
+    public Map<Long, List<MaterialSpecDTO>> getSpecByClientCodes(List<Long> clientCodes) {
+        QAssignedMaterial assignedMaterial = QAssignedMaterial.assignedMaterial;
+        QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
+
+        List<Tuple> results = queryFactory
+                .select(assignedMaterial.clientCode, materialSpec)
+                .from(assignedMaterial)
+                .join(materialSpec).on(assignedMaterial.specCode.eq(materialSpec.specCode))
+                .where(assignedMaterial.clientCode.in(clientCodes))
+                .fetch();
+
+        Map<Long, List<MaterialSpecDTO>> resultMap = new HashMap<>();
+        for (Tuple tuple : results) {
+            Long clientCode = tuple.get(assignedMaterial.clientCode);
+            MaterialSpecDTO specDTO = MaterialSpecDTO.from(tuple.get(materialSpec));
+            resultMap.computeIfAbsent(clientCode, k -> new ArrayList<>()).add(specDTO);
+        }
+
+        return resultMap;
+    }
+
+
 
 }

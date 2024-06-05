@@ -19,7 +19,7 @@ public class MaterialOrderDTO {
     private Long orderCode;
     private String orderDate;
     private String deliveryDueDate;
-    private Long clientCode;
+    private String clientName;
     private MaterialOrderStatus status;
     private Long employeeCode;
     private String arrivalDatetime;
@@ -32,7 +32,7 @@ public class MaterialOrderDTO {
         orderDTO.setOrderCode(order.getOrderCode());
         orderDTO.setOrderDate(order.getOrderDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         orderDTO.setDeliveryDueDate(order.getDeliveryDueDate().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-        orderDTO.setClientCode(order.getClientCode());
+        orderDTO.setClientName(order.getClient().getClientName());
         orderDTO.setStatus(order.getStatus());
         orderDTO.setEmployeeCode(order.getEmployeeCode());
         if (order.getArrivalDatetime() != null) {

@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "tbl_production_plan")
@@ -30,9 +33,6 @@ public class ProductionPlan {
     @Column(name = "start_at", nullable = false)
     private LocalDate startAt;
 
-    @Column(name = "description", nullable = false)
-    private String description;
-
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
@@ -40,26 +40,29 @@ public class ProductionPlan {
     @Column(name = "end_at", nullable = false)
     private LocalDate endAt;
 
-    //    @OneToMany(mappedBy = "productionPlan")
-    //    private List<PlannedOrderList> plannedOrderList;
-    //
-    //    @OneToMany(mappedBy = "productionPlan")
-    //    private List<ProductionPlannedList> productionPlannedList;
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "plan_code" )
+    private List<PlannedOrderList> plannedOrderList;
 
-    public ProductionPlan(LocalDate startAt, String description, LocalDate endAt) {
+    @OneToMany(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "plan_code" )
+    private List<ProductionPlannedList> productionPlannedList;
+
+    public ProductionPlan(LocalDate startAt, LocalDate endAt, List<ProductionPlannedList> productionPlanList, List<PlannedOrderList> plannedOrderList) {
         this.startAt = startAt;
-        this.description = description;
+        this.endAt = endAt;
+        this.productionPlannedList = productionPlanList;
+        this.plannedOrderList = plannedOrderList;
+    }
+
+
+    public static ProductionPlan of(LocalDate startAt, LocalDate endAt, List<ProductionPlannedList> productionPlanList, List<PlannedOrderList> plannedOrderList) {
+        return new ProductionPlan(startAt, endAt, productionPlanList, plannedOrderList);
+    }
+
+    public void planModify(LocalDate startAt, LocalDate endAt) {
+        this.startAt = startAt;
         this.endAt = endAt;
     }
 
-    public static ProductionPlan of(LocalDate startAt, String description, LocalDate endAt) {
-        return new ProductionPlan(startAt, description, endAt);
-
-    }
-
-    public void planModify(LocalDate startAt, LocalDate endAt, String description) {
-        this.startAt = startAt;
-        this.description = description;
-        this.endAt = endAt;
-    }
 }

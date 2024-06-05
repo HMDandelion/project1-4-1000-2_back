@@ -55,7 +55,7 @@ public class ClientController {
             @PathVariable final Long clientCode,
             @RequestBody final ClientUpdateRequest clientRequest
     ) {
-        clientService.modify(clientCode, clientRequest);
+        clientService.modify(clientCode, clientRequest, ClientType.PRODUCTS);
         return ResponseEntity.created(URI.create("/api/v1/clients/" + clientCode)).build();
     }
 

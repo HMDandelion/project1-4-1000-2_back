@@ -33,9 +33,10 @@ public class MaterialStockController {
             @RequestParam(defaultValue = "1") final int page,
             @RequestParam(required = false) final String materialName,
             @RequestParam(required = false) final Long warehouseCode,
-            @RequestParam(required = false) final Long specCategoryCode
+            @RequestParam(required = false) final Long specCategoryCode,
+            @RequestParam(defaultValue = "10") final int size
     ) {
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, size);
         final List<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
 
         final Page<MaterialStockSimpleDTO> toPage = new PageImpl<>(list, pageable, list.size());
