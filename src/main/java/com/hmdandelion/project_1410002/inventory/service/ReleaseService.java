@@ -401,7 +401,7 @@ public class ReleaseService {
         releaseChangeRepo.save(releaseChange);
 
         Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-        order.modifyStatus(COMPLETED);
+        order.orderCompleteWork(COMPLETED,LocalDateTime.now());
 
     }
 

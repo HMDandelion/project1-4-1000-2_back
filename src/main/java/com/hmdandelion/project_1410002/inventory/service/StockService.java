@@ -90,6 +90,7 @@ public class StockService {
         for(Product product : products){
             Long sum = stockRepo.getAccumulateStockByProductCode(product.getProductCode());
             System.out.println("product.getProductCode() = " + product.getProductCode());
+            System.out.println("totalSum = " + totalSum);
             System.out.println("sum = " + sum);
             if(sum==null){
                 sum = 0L;
