@@ -65,7 +65,7 @@ public class WorkOrderController {
             @RequestBody final WorkOrderCreateRequest workOrderCreateRequest)
     {
 
-        final Long workOrderCode = workOrderService.workOrderSave(workOrderCreateRequest, WorkOrderStatusType.IN_PROGRESS);
+        final Long workOrderCode = workOrderService.workOrderSave(workOrderCreateRequest);
 
         return ResponseEntity.created(URI.create("/api/v1/production/work-order/" + workOrderCode)).build();
     }

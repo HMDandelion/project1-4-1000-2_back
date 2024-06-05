@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class WorkOrderResponse {
 
     private final Long workOrderCode;

@@ -55,21 +55,7 @@ public class WorkOrderService {
         return workOrder;
     }
 
-
-    public void workOrderRemove(Long workOrderCode) {
-
-        workOrderRepo.deleteById(workOrderCode);
-    }
-
-
-    public void end(Long workOrderCode) {
-        WorkOrder workOrder = workOrderRepo.findById(workOrderCode)
-               .orElseThrow(() -> new NotFoundException(NOT_FOUND_WORK_ORDER));
-
-        workOrder.end();
-    }
-
-    public Long workOrderSave(WorkOrderCreateRequest workOrderCreateRequest, WorkOrderStatusType workOrderStatusType) {
+    public Long workOrderSave(WorkOrderCreateRequest workOrderCreateRequest) {
         LocalDate workOrderDate = workOrderCreateRequest.getWorkOrderDate();
 
         // 이미 등록된 작업인지 확인
@@ -83,7 +69,7 @@ public class WorkOrderService {
                 workOrderCreateRequest.getProductCode(),
                 workOrderCreateRequest.getEmployeeCode(),
                 workOrderCreateRequest.getOrderedQuantity(),
-                workOrderStatusType
+                workOrderCreateRequest.getCompletionStatus()
         );
 
         final WorkOrder workOrder = workOrderRepo.save(newWorkOrder);
@@ -127,5 +113,18 @@ public class WorkOrderService {
             // 작업이 없는 경우 수정할 수 없음을 알림
             throw new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER);
         }
+    }
+
+    public void workOrderRemove(Long workOrderCode) {
+
+        workOrderRepo.deleteById(workOrderCode);
+    }
+
+
+    public void end(Long workOrderCode) {
+        WorkOrder workOrder = workOrderRepo.findById(workOrderCode)
+                .orElseThrow(() -> new NotFoundException(NOT_FOUND_WORK_ORDER));
+
+        workOrder.end();
     }
 }
