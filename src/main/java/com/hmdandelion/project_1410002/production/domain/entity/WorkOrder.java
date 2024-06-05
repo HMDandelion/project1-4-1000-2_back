@@ -5,14 +5,17 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Entity
 @Table(name = "tbl_work_order")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
 public class WorkOrder {
 
@@ -21,29 +24,68 @@ public class WorkOrder {
     @Column(name = "work_order_code")
     private Long workOrderCode;
 
+    @CreatedDate
     @Column(name = "work_written_date", nullable = false)
-    private LocalDateTime workWrittenDate;
+    private LocalDate workWrittenDate;
 
     @Column(name = "ordered_quantity", nullable = false)
-    private String orderedQuantity;
+    private int orderedQuantity;
 
-    @Column(name = "completion_status", nullable = false)
-    private LocalDateTime completionStatus;
     @Enumerated(value = EnumType.STRING)
     private WorkOrderStatusType
-            status = WorkOrderStatusType.IN_PROGRESS;
+            completionStatus = WorkOrderStatusType.IN_PROGRESS;
 
+    @LastModifiedDate
     @Column(name = "work_modified_date", nullable = false)
     private LocalDateTime workModifiedDate;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @JoinColumn(name = "line_code", nullable = false)
-    //    private Line line; <- line 엔티티 필요
-
     @Column(name = "work_order_date", nullable = false)
-    private LocalDateTime workOrderDate;
+    private LocalDate workOrderDate;
 
-    //    @ManyToOne(fetch = FetchType.LAZY)
-    //    @JoinColumn(name = "product_code", nullable = false)
-    //    private Product product; <- Product 엔티티 필요
+    @Column(name = "product_code")
+    private Long productCode;
+
+    @Column(name = "line_code", nullable = false)
+    private Long lineCode;
+
+    @Column(name = "employee_code", nullable = false)
+    private Long employeeCode;
+
+    public WorkOrder(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType completionStatus) {
+        this.workWrittenDate = workWrittenDate;
+        this.workOrderDate = workOrderDate;
+        this.lineCode = lineCode;
+        this.productCode = productCode;
+        this.employeeCode = employeeCode;
+        this.orderedQuantity = orderedQuantity;
+        this.completionStatus = completionStatus;
+    }
+
+
+    public static WorkOrder of(LocalDate workWrittenDate, LocalDate workOrderDate, Long lineCode, Long productCode, Long employeeCode, Integer orderedQuantity, WorkOrderStatusType completionStatus) {
+        return new WorkOrder(
+                workWrittenDate,
+                workOrderDate,
+                lineCode,
+                productCode,
+                employeeCode,
+                orderedQuantity,
+                completionStatus
+
+        );
+    }
+
+
+    public void end() {
+        if (this.completionStatus == WorkOrderStatusType.IN_PROGRESS) {
+            this.completionStatus = WorkOrderStatusType.DONE;
+        }
+    }
+
+    public void workOrderModify(LocalDate workOrderDate, Integer orderedQuantity, Long lineCode, Long employeeCode) {
+        this.workOrderDate = workOrderDate;
+        this.orderedQuantity = orderedQuantity;
+        this.lineCode = lineCode;
+        this.employeeCode = employeeCode;
+    }
 }

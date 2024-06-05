@@ -48,7 +48,7 @@ public class Employee {
     private LocalDateTime createdAt;
     @LastModifiedDate
     private LocalDateTime updatedAt;
-    // @Column(length = 300)
+    @Column(length = 300)
     private String refreshToken;
 
 

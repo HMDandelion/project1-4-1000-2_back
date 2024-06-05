@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.production.domain.type.MaterialUsageStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
