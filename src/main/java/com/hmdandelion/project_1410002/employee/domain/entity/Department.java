@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.sales.domain.entity.employee;
+package com.hmdandelion.project_1410002.employee.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -9,18 +9,17 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_position")
+@Table(name = "tbl_department")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EntityListeners(AuditingEntityListener.class)
-public class Position {
+public class Department {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long positionCode;
-    private String positionName;
-    private int rank;
-    private String status; //TODO 수정할 것
+    private Long departmentCode;
+    private String departmentName;
+    private String status; //TODO 저는 사용안할꺼라 스트링으로 해뒀습니다 by한결
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

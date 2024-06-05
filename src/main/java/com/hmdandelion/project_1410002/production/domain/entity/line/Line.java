@@ -1,8 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity.line;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.type.LineStatusType;
-import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;

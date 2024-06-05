@@ -1,7 +1,7 @@
-package com.hmdandelion.project_1410002.sales.domain.repository.employee;
+package com.hmdandelion.project_1410002.employee.domain.repository;
 
-import com.hmdandelion.project_1410002.sales.domain.entity.employee.QDepartment;
-import com.hmdandelion.project_1410002.sales.domain.entity.employee.QPosition;
+import com.hmdandelion.project_1410002.employee.domain.entity.QDepartment;
+import com.hmdandelion.project_1410002.employee.domain.entity.QPosition;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 

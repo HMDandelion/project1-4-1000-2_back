@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.sales.domain.entity.employee;
+package com.hmdandelion.project_1410002.employee.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -36,7 +36,7 @@ public class Employee {
     private String ssn;
     @Column(nullable = false)
     private Long positionCode;
-    private Long departmentCode; //integer로 되어있어서 수정함
+    private Long departmentCode;
     private String profileImage;
     private LocalDate hireDate;
     private LocalDate resignDate;
@@ -50,4 +50,9 @@ public class Employee {
     private LocalDateTime updatedAt;
     @Column(length = 300)
     private String refreshToken;
+
+
+    public void updateRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
+    }
 }

@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.sales.domain.repository.employee;
+package com.hmdandelion.project_1410002.employee.domain.repository;
 
 public interface EmployeeRepoCustom {
 
