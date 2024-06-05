@@ -82,7 +82,7 @@ public class ProductionService {
         List<DefectDetail> defectDetails = defectDetailRepo.findByDefectCode(defectCode);
 
         if (defectDetails.isEmpty()) {
-            throw new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_DETAIL);
+            throw new NotFoundException(ExceptionCode.NOT_FOUND_DEFECT_DATA);
         }
 
         return defectDetails.stream()

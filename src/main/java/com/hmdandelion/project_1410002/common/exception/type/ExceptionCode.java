@@ -21,11 +21,16 @@ public enum ExceptionCode {
     NOT_FOUND_BOM_CODE(3501,"BOM 코드에 맞는 BOM이 존재하지 않습니다."),
     NOT_FOUND_STORAGE_CODE(3502,"저장 이력 코드가 존재하지 않습니다."),
     NOT_FOUND_PRODUCTION_CODE(3600, "상품 코드에 해당하는 생산 보고서가 존재하지 않습니다."),
-    NOT_FOUND_PRODUCTION_DETAIL(3601 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
+    NOT_FOUND_DEFECT_DATA(3601 ,"상품의 불량 처리에 대한 정보가 존재하지 않습니다."),
+    NOT_FOUND_LINE_CODE(3602, "라인의 코드를 찾을 수 없습니다."),
     NOT_FOUND_PLAN_CODE(3700,"계획코드에 맞는 계획이 존재하지 않습니다."),
     NOT_FOUND_WORK_ORDER(3701, "해당 작업 지시서를 찾을 수 없습니다."),
     NOT_FOUND_PRODUCTION_PLANNED_LIST_CODE(3702,"지정된 코드의 생산 예정 리스트를 해당 생산 계획에서 찾을 수 없습니다."),
     NOT_FOUND_EMPLOYEE_CODE(3800, "사번에 해당하는 사원이 존재하지 않습니다." ),
+
+
+
+
 
     NO_CONTENTS_MATERIAL_STOCK(4400, "요구하신 조건에 맞는 원자재 재고가 없습니다."),
     NO_CONTENTS_M_ORDERS(4401,"찾으시는 원자재 주문이 존재하지 않습니다." ),

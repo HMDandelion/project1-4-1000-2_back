@@ -1,7 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity.line;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.type.LineStatusType;
-import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,5 +26,26 @@ public class Line {
     @Enumerated(value = EnumType.STRING)
     private LineStatusType lineStatus;
 
+
+    private Line(String lineName, Integer lineProduction, LineStatusType lineStatusType
+    ) {
+        this.lineName = lineName;
+        this.lineProduction = lineProduction;
+        this.lineStatus = lineStatusType;
+    }
+    public static Line of(String lineName, Integer lineProduction, LineStatusType lineStatusType) {
+        return new Line(
+                lineName,
+                lineProduction,
+                lineStatusType
+        );
+    }
+
+    public void modify(String lineName, Integer lineProduction, LineStatusType lineStatusType) {
+
+        this.lineName = lineName;
+        this.lineProduction = lineProduction;
+        this.lineStatus = lineStatusType;
+    }
 }
 

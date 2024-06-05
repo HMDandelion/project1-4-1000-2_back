@@ -18,7 +18,7 @@ public class ProductionReportUpdateRequest {
     // ProductionManagement fields
     private final LocalDateTime startAt;
     private final LocalDateTime completedAt;
-    private final int totalProductionQuantity;
+    private final Integer totalProductionQuantity;
     private final String productionFile;
     private final ProductionStatusType productionStatus;
     private final InspectionStatusType inspectionStatus;
@@ -27,9 +27,9 @@ public class ProductionReportUpdateRequest {
     // ProductionDetail fields
     private final Long productionDetailCode;
     private final LocalDateTime inspectionDate;
-    private final int productionQuantity;
-    private final int defectQuantity;
-    private final int completelyQuantity;
+    private final Integer productionQuantity;
+    private final Integer defectQuantity;
+    private final Integer completelyQuantity;
     private final String productionMemo;
     private final ProductionStatusType productionStatusType;
 
