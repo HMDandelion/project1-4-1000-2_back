@@ -3,6 +3,8 @@ package com.hmdandelion.project_1410002.purchase.service;
 import com.hmdandelion.project_1410002.common.exception.NoContentsException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
+import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.production.domain.entity.ProductionPlan;
@@ -17,9 +19,9 @@ import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrd
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderResponse;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOrderWeeklyResponse;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
-import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
+
 import com.hmdandelion.project_1410002.sales.service.ClientService;
-import com.hmdandelion.project_1410002.sales.service.EmployeeService;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

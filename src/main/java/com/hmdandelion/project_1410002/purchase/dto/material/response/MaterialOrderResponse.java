@@ -6,7 +6,7 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialO
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecDTO;
 import com.hmdandelion.project_1410002.purchase.model.MaterialOrderStatus;
-import com.hmdandelion.project_1410002.sales.domain.entity.employee.Employee;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Getter;

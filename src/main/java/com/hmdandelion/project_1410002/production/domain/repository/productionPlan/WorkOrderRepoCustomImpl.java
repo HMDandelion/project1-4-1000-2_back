@@ -14,7 +14,7 @@ import java.util.Optional;
 import static com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct.product;
 import static com.hmdandelion.project_1410002.production.domain.entity.QWorkOrder.workOrder;
 import static com.hmdandelion.project_1410002.production.domain.entity.line.QLine.line;
-import static com.hmdandelion.project_1410002.sales.domain.entity.employee.QEmployee.employee;
+import static com.hmdandelion.project_1410002.employee.domain.entity.QEmployee.employee;
 
 @RequiredArgsConstructor
 public class WorkOrderRepoCustomImpl implements WorkOrderRepoCustom{

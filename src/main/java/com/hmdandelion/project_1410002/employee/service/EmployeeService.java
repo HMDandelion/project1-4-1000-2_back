@@ -23,6 +23,23 @@ public class EmployeeService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
+    public Employee findById(Long employeeCode) {
+        return employeeRepo.findById(employeeCode).orElseThrow(
+                ()-> new NotFoundException(ExceptionCode.NOT_FOUND_EMPLOYEE_CODE)
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public String findDepartmentNameById(Long departmentCode) {
+        return employeeRepo.getDepartmentName(departmentCode);
+    }
+
+    @Transactional(readOnly = true)
+    public String findPositionNameById(Long positionCode) {
+        return employeeRepo.getPositonName(positionCode);
+    }
+
+    @Transactional(readOnly = true)
     public LoginDTO findByEmployeeNo(String employeeNo) {
         Employee employee = employeeRepo.findByEmployeeNo(employeeNo)
                 .orElseThrow(() -> new UsernameNotFoundException("해당 사번을 가진 사원이 존재하지 않습니다."));

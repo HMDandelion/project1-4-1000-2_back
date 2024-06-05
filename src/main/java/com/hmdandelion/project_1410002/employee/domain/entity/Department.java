@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.sales.domain.entity.employee;
+package com.hmdandelion.project_1410002.employee.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;

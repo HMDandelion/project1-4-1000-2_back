@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
-public interface EmployeeRepo extends JpaRepository<Employee, Long> {
+public interface EmployeeRepo extends JpaRepository<Employee, Long>, EmployeeRepoCustom {
     Optional<Employee> findByEmployeeNo(String employeeNo);
 
     @Query(
