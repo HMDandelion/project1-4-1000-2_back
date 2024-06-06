@@ -10,7 +10,7 @@ Content-Type: application/json
 {
   "lineName": "Z라인",
   "lineProduction": 6000,
-  "lineStatusType": "START_PRODUCTION"
+  "lineStatusType": "ACTIVE"
 }
 
 ### 라인 수정
@@ -22,7 +22,7 @@ Content-Type: application/json
 {
  "lineName": "Z라인",
   "lineProduction": 6000,
-  "lineStatusType": "START_PRODUCTION"
+  "lineStatusType": "ACTIVE"
 }
 
 
