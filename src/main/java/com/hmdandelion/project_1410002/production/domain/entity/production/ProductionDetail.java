@@ -26,21 +26,21 @@ public class ProductionDetail {
     private Long productionDetailCode;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "production_status_code")
+    private ProductionManagement productionManagement;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "work_order_code")
     private WorkOrder workOrder;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "production_status_code", insertable = false, updatable = false)
-    private ProductionManagement productionManagement;
-
-    private int productionQuantity;
+    @Column(name = "production_quantity")
+    private Integer productionQuantity;
 
     @Column(name = "defect_quantity")
     private Integer defectQuantity;
 
     @Column(name = "completely_quantity")
     private Integer completelyQuantity;
-    private String productionMemo;
 
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     @Column(name = "inspection_date")
@@ -49,44 +49,48 @@ public class ProductionDetail {
     @Enumerated(value = EnumType.STRING)
     private InspectionStatusType inspectionStatus = InspectionStatusType.BEFORE;
 
+    private String productionMemo;
+
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
-    @OneToMany(mappedBy = "productionManagement")
+    @OneToMany(mappedBy = "productionDetail")
     private List<DefectDetail> defectDetails;
 
-    public ProductionDetail(ProductionManagement newProductionManagement, LocalDateTime inspectionDate, int productionQuantity, int defectQuantity, int completelyQuantity, String productionMemo, InspectionStatusType inspectionStatus, ProductionStatusType productionStatus) {
+    public ProductionDetail(ProductionManagement newProductionManagement, WorkOrder workOrder, Integer productionQuantity, Integer defectQuantity, Integer completelyQuantity, LocalDateTime inspectionDate, InspectionStatusType inspectionStatusType, String productionMemo, ProductionStatusType productionStatus) {
 
         this.productionManagement = newProductionManagement;
+        this.workOrder = workOrder;
         this.productionQuantity = productionQuantity;
         this.defectQuantity = defectQuantity;
         this.completelyQuantity = completelyQuantity;
         this.inspectionDate = inspectionDate;
-        this.inspectionStatus = inspectionStatus;
+        this.inspectionStatus = inspectionStatusType;
         this.productionMemo = productionMemo;
         this.productionStatus = productionStatus;
+
     }
 
-    @OneToMany(mappedBy = "productionDetail")
-    private List<DefectDetail> defectDetails;
+
+    public static ProductionDetail of(ProductionManagement newProductionManagement, WorkOrder workOrder, Integer productionQuantity, Integer defectQuantity,
+                                      Integer completelyQuantity, LocalDateTime inspectionDate, InspectionStatusType inspectionStatusType,
+                                      String productionMemo, ProductionStatusType productionStatus) {
+
+        return new ProductionDetail(
+                newProductionManagement,
+                workOrder,
+                productionQuantity,
+                defectQuantity,
+                completelyQuantity,
+                inspectionDate,
+                inspectionStatusType,
+                productionMemo,
+                productionStatus
+        );
+    }
 }
-//
-//    public static ProductionDetail of(ProductionManagement newProductionManagement,
-//                                      int productionQuantity, int defectQuantity, int completelyQuantity,
-//                                      LocalDateTime inspectionDate,InspectionStatusType inspectionStatus,String productionMemo, ProductionStatusType productionStatus)
-//    {
-//        return new ProductionDetail(
-//                newProductionManagement,
-//                productionQuantity,
-//                defectQuantity,
-//                completelyQuantity,
-//                inspectionDate,
-//                inspectionStatus,
-//                productionMemo,
-//                productionStatus
-//        );
-//    }
-//
+
+
 //    public void modifyDetail(LocalDateTime inspectionDate, int productionQuantity, int defectQuantity,
 //                             int completelyQuantity, String productionMemo, ProductionStatusType productionStatus
 //    ) {

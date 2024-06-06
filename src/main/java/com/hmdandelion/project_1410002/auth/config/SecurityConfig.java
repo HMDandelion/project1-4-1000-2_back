@@ -44,18 +44,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").permitAll();
-                    auth.requestMatchers("/api/v1/clients/**").permitAll();
-                    auth.requestMatchers("/api/v1/estimates/**").permitAll();
-                    auth.requestMatchers("/api/v1/orders/**").permitAll();
-                    auth.requestMatchers("/api/v1/returns/**").permitAll();
-                    auth.requestMatchers("/api/v1/production/**").permitAll();
-                    auth.requestMatchers("api/v1/lines/**").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/production/reports/**").permitAll();
-                    auth.anyRequest().permitAll();           //authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
+                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
+                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
+                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
+                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
+                    auth.anyRequest().permitAll();
+//                authenticated();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)

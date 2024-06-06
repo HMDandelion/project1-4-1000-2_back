@@ -45,26 +45,28 @@ public class ProductionManagement {
     @OneToMany(mappedBy = "productionManagement")
     private List<ProductionDetail> productionDetails;
 
-    public ProductionManagement(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus) {
+    public ProductionManagement(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus) {
+
         this.startAt = startAt;
         this.completedAt = completedAt;
         this.totalProductionQuantity = totalProductionQuantity;
         this.productionFile = productionFile;
+        this.productionStatus = productionStatus;
     }
 
 
-    public static ProductionManagement of(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus) {
+    public static ProductionManagement of(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus) {
         return new ProductionManagement(
+
                 startAt,
                 completedAt,
                 totalProductionQuantity,
                 productionFile,
-                productionStatus,
-                inspectionStatus
+                productionStatus
         );
     }
 
-    public void modifyReport(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity,
+    public void modifyReport(Long productionStatusCode,LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity,
                              String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus
     ) {
         this.startAt = startAt;

@@ -13,32 +13,70 @@ GET http://localhost:8001/api/v1/production/reports/1/detail
 ### 불량 상세 조회
 GET http://localhost:8001/api/v1/production/reports/1/defects
 
-
 ### 보고서 등록
-POST http://localhost:8001/api/production/reports
+POST http://localhost:8001/api/v1/production/reports
 Content-Type: application/json
 
 {
-  "startAt": "2024-06-02T19:44:36",
-  "completedAt": "2024-06-02T21:44:36",
-  "totalProductionQuantity": 1,
-  "productionStatus": "PRODUCTION_COMPLETED",
-  "inspectionStatus": "PASSED",
-  "productionDetailCode": 12345,
-  "workOrderCode": 3,
-  "productionStatusCode": 3,
-  "inspectionDate": "2024-06-02T20:44:36",
-  "productionQuantity": 500,
-  "defectQuantity": 10,
-  "completelyQuantity": 490,
-  "productionMemo": "First batch production completed.",
-  "productionStatusType": "REGISTER_PRODUCTION",
-  "defectCode": 67890,
-  "defectReason": "Minor scratches",
-  "defectStatus": "PROCESSING_START",
-  "defectFile": "path/to/defect/file.jpg",
-  "productionFile": "path/to/production/file.jpg"
+  "productionManagementCreateRequest": {
+    "startAt": "2024-06-06T00:00:00",
+    "completedAt": "2024-06-06T00:00:00",
+    "totalProductionQuantity": 6000,
+    "productionFile": "path/to/production/file.jpg",
+    "productionStatus": "PRODUCTION_COMPLETED"
+  },
+  "productionDetailCreateRequest": [
+    {
+      "productionStatusCode": 6,
+      "workOrderCode": 8,
+      "productionQuantity": 500,
+      "defectQuantity": 10,
+      "completelyQuantity": 490,
+      "inspectionDate": "2024-06-02T20:44:36",
+      "inspectionStatusType": "PASSED",
+      "productionMemo": "First batch production completed.",
+      "productionStatusType": "PRODUCTION_COMPLETED",
+
+      "defectDetailCreateRequest": [
+        {
+          "defectReason": "Minor scratches",
+          "defectStatus": "PROCESSING_END",
+          "defectFile": "path/to/defect/file.jpg"
+        },
+        {
+          "defectReason": "Misalignment",
+          "defectStatus": "PROCESSING_END",
+          "defectFile": "path/to/defect/file2.jpg"
+        }
+      ]
+    },
+    {
+      "productionStatusCode": 6,
+      "workOrderCode": 9,
+      "productionQuantity": 700,
+      "defectQuantity": 20,
+      "completelyQuantity": 680,
+      "inspectionDate": "2024-06-03T10:22:18",
+      "inspectionStatusType": "PASSED",
+      "productionMemo": "Second batch production completed.",
+      "productionStatusType": "PRODUCTION_COMPLETED",
+      "defectDetailCreateRequest": [
+        {
+          "defectReason": "Cracks",
+          "defectStatus": "PROCESSING_END",
+          "defectFile": "path/to/defect/file3.jpg"
+        },
+        {
+          "defectReason": "Color inconsistency",
+          "defectStatus": "PROCESSING_END",
+          "defectFile": "path/to/defect/file4.jpg"
+        }
+      ]
+    }
+  ]
 }
+
+
 ### 보고서 수정
 PUT http://localhost:8001/api/production/reports/19/modify
 

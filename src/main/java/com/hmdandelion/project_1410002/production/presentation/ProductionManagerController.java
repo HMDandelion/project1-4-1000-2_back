@@ -1,30 +1,27 @@
 package com.hmdandelion.project_1410002.production.presentation;
 
-import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
-import com.hmdandelion.project_1410002.production.dto.request.ProductionReportCreateRequest;
-import com.hmdandelion.project_1410002.production.dto.request.ProductionReportUpdateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.DefectDetailCreateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.ProductionDetailCreateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.ReportCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.production.DefectDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionReportResponse;
 import com.hmdandelion.project_1410002.production.service.ProductionService;
-import com.hmdandelion.project_1410002.sales.dto.request.ClientUpdateRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.DomainEvents;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
@@ -61,22 +58,20 @@ public class ProductionManagerController {
     /* 불량상세 조회 */
     @GetMapping("/production/reports/{productionDetailCode}/defects")
     public ResponseEntity<List<DefectDetailResponse>> getDefectDetails(@PathVariable Long productionDetailCode) {
-     List<DefectDetailResponse> defectDetailResponses = productionService.getDefectDetails(productionDetailCode);
-     return ResponseEntity.ok(defectDetailResponses);
+        List<DefectDetailResponse> defectDetailResponses = productionService.getDefectDetails(productionDetailCode);
+        return ResponseEntity.ok(defectDetailResponses);
+    }
+
+    @PostMapping("/production/reports")
+    public ResponseEntity<Long> createReport(@RequestBody ReportCreateRequest reportCreateRequest) {
+        Long id = productionService.reportSave(reportCreateRequest);
+        return ResponseEntity.ok(id);
     }
 }
-//
-//    /*보고서 등록*/
-//    @PostMapping("/production/reports")
-//    public ResponseEntity<Void> reportSaved(@RequestBody final ProductionReportCreateRequest productionReportCreateRequest
-//            //  @RequestPart final MultipartFile attachFile
-//    ) {
-//        final Long productionStatusCode = productionService.reportSave(productionReportCreateRequest, ProductionStatusType.REGISTER_PRODUCTION);
-////        // 총 생산량 계산
-////        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
-//        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
-//
-//    }
+
+//        // 총 생산량 계산
+//        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
+
 //
 //    /* 보고서 수정 */
 //    @PutMapping("production/reports/{productionStatusCode}/modify")
