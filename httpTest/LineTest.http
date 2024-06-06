@@ -1,8 +1,10 @@
 ### 목록 전체 조회
 GET http://localhost:8001/api/v1/lines
+Authorization: Bearer eyJkYXRlIjoxNzE3NTcwMDU1MjE3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE3MTgxNzQ4NTV9.SvHFzUZk6dBOZBnlRpfEMchU98AW-VSdoxDaGn5I5umkSBnLwlYeZXFzaApzHSAjrk89kHmPSp5FXaYZ6FBH-w
 
 ### 라인 등록
 POST http://localhost:8001/api/v1/lines
+Authorization: Bearer eyJkYXRlIjoxNzE3NTcwMDU1MjE3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE3MTgxNzQ4NTV9.SvHFzUZk6dBOZBnlRpfEMchU98AW-VSdoxDaGn5I5umkSBnLwlYeZXFzaApzHSAjrk89kHmPSp5FXaYZ6FBH-w
 Content-Type: application/json
 
 {
@@ -10,8 +12,11 @@ Content-Type: application/json
   "lineProduction": 6000,
   "lineStatusType": "START_PRODUCTION"
 }
+
 ### 라인 수정
 PUT http://localhost:8001/api/v1/lines/3
+Authorization: Bearer eyJkYXRlIjoxNzE3NTcwMDU1MjE3LCJ0eXBlIjoiand0IiwiYWxnIjoiSFM1MTIifQ.eyJzdWIiOiJSZWZyZXNoVG9rZW4iLCJleHAiOjE3MTgxNzQ4NTV9.SvHFzUZk6dBOZBnlRpfEMchU98AW-VSdoxDaGn5I5umkSBnLwlYeZXFzaApzHSAjrk89kHmPSp5FXaYZ6FBH-w
+Content-Type: application/json
 Content-Type: application/json
 
 {
