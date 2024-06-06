@@ -3,6 +3,8 @@ package com.hmdandelion.project_1410002.inventory.service;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
+import com.hmdandelion.project_1410002.employee.domain.repository.EmployeeRepo;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.request.WarehouseCreateRequest;
@@ -27,6 +29,7 @@ import java.util.List;
 public class WarehouseService {
 
     private final WarehouseRepo warehouseRepository;
+    private final EmployeeRepo employeeRepo;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("warehouseCode"));
@@ -48,25 +51,38 @@ public class WarehouseService {
         List<WarehouseResponse> resultList = new ArrayList<>();
 
         List<Warehouse> warehouses  = warehouseRepository.findAll();
+
         for(Warehouse warehouse : warehouses) {
+            Employee employee = employeeRepo.findById(warehouse.getEmployeeCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_EMPLOYEE_CODE));
             WarehouseResponse warehouseResponse = WarehouseResponse.from(
-                    warehouse
+                    warehouse,
+                    employee
             );
             resultList.add(warehouseResponse);
         }
         return resultList;
     }
     @Transactional(readOnly = true)
-    public Warehouse getWarehouse(Long warehouseCode) {
+    public WarehouseResponse getWarehouse(Long warehouseCode) {
         Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
             new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE)
         );
-
-        return warehouse;
+        System.out.println("employee"+warehouse.getEmployeeCode());
+        Employee employee = employeeRepo.findById(warehouse.getEmployeeCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_EMPLOYEE_CODE));
+        WarehouseResponse warehouseResponse = WarehouseResponse.of(
+                warehouse.getWarehouseCode(),
+                warehouse.getName(),
+                warehouse.getLocation(),
+                warehouse.getVolume(),
+                employee.getEmployeeName()
+        );
+        return warehouseResponse;
     }
 
     public void modify(Long warehouseCode, WarehouseUpdateRequest warehouseUpdateRequest) {
-        Warehouse warehouse = getWarehouse(warehouseCode);
+        Warehouse warehouse = warehouseRepository.findById(warehouseCode).orElseThrow(() ->
+                new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE)
+        );
         warehouse.modify(
                 warehouseUpdateRequest.getName(),
                 warehouseUpdateRequest.getLocation(),

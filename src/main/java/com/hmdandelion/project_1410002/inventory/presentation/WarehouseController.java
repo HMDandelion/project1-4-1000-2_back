@@ -3,12 +3,14 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.request.WarehouseCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.request.WarehouseUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.warehouse.response.WarehouseResponse;
 import com.hmdandelion.project_1410002.inventory.service.WarehouseService;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.metamodel.internal.EmbeddableInstantiatorPojoIndirecting;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,14 +47,8 @@ public class WarehouseController {
     public ResponseEntity<WarehouseResponse> getWarehouse(
             @PathVariable final Long warehouseCode
     ) {
-        Warehouse warehouse = warehouseService.getWarehouse(warehouseCode);
-        WarehouseResponse warehouseResponse = WarehouseResponse.of(
-                warehouse.getWarehouseCode(),
-                warehouse.getName(),
-                warehouse.getLocation(),
-                warehouse.getVolume(),
-                warehouse.getEmployeeCode()
-        );
+        WarehouseResponse warehouseResponse = warehouseService.getWarehouse(warehouseCode);
+
         return ResponseEntity.ok(warehouseResponse);
     }
 

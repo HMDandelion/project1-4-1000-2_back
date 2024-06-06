@@ -236,6 +236,9 @@ public class ProductionService {
 
         stockRepo.save(newStock);
 
+        /*나윤*/
+
+
         return productionDetailCode;
     }
 }

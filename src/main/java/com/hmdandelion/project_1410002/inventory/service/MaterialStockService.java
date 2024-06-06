@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
+import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
@@ -8,6 +9,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehou
 
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.stock.MaterialStockRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
@@ -27,8 +29,9 @@ public class MaterialStockService {
 
     private static final Logger log = LoggerFactory.getLogger(MaterialStockService.class);
     private final MaterialStockRepo materialStockRepo;
-    private final WarehouseService warehouseService;
+    private final WarehouseRepo warehouseRepo;
     private final MaterialSpecRepo materialSpecRepo;
+    private final WarehouseService warehouseService;
 
 
     public List<MaterialStockSimpleDTO> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
@@ -49,7 +52,7 @@ public class MaterialStockService {
 
     @Transactional
     public Long save(MaterialStockCreateRequest request) {
-        Warehouse warehouse = warehouseService.getWarehouse(request.getWarehouseCode());
+        Warehouse warehouse = warehouseRepo.findById(request.getWarehouseCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
         if (warehouse == null) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE);
         }
@@ -76,7 +79,7 @@ public class MaterialStockService {
         //만약 웨어하우스가 비어있지 않다면
         if (request.getWarehouseCode() != null) {
             //찾아서
-            warehouse = warehouseService.getWarehouse(request.getWarehouseCode());
+            warehouse = warehouseRepo.findById(request.getWarehouseCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
             if (warehouse == null) {
                 //잘못된 요청인가 확인하고
                 throw new NotFoundException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE);
