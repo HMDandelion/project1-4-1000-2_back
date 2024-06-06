@@ -1,7 +1,5 @@
-package com.hmdandelion.project_1410002.production.dto.request;
+package com.hmdandelion.project_1410002.production.dto.request.createProductionRequest;
 
-import com.hmdandelion.project_1410002.production.domain.type.DefectStatusType;
-import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

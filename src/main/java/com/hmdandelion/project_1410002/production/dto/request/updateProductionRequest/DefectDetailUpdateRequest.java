@@ -1,16 +1,12 @@
-package com.hmdandelion.project_1410002.production.dto.request;
+package com.hmdandelion.project_1410002.production.dto.request.updateProductionRequest;
 
 import com.hmdandelion.project_1410002.production.domain.type.DefectStatusType;
-import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
-import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Getter
 @RequiredArgsConstructor
-public class DefectDetailCreateRequest {
+public class DefectDetailUpdateRequest {
 
     private final Long productionDetailCode;
     private final String defectReason;

@@ -66,8 +66,8 @@ public class ProductionManagement {
         );
     }
 
-    public void modifyReport(Long productionStatusCode,LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity,
-                             String productionFile, ProductionStatusType productionStatus, InspectionStatusType inspectionStatus
+    public void modifyReport(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity,
+                             String productionFile, ProductionStatusType productionStatus
     ) {
         this.startAt = startAt;
         this.completedAt = completedAt;

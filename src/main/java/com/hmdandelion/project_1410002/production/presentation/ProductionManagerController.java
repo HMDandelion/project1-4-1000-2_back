@@ -4,21 +4,22 @@ import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
-import com.hmdandelion.project_1410002.production.dto.request.DefectDetailCreateRequest;
-import com.hmdandelion.project_1410002.production.dto.request.ProductionDetailCreateRequest;
-import com.hmdandelion.project_1410002.production.dto.request.ReportCreateRequest;
+
+import com.hmdandelion.project_1410002.production.dto.request.createProductionRequest.ReportCreateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.updateProductionRequest.ReportUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.production.DefectDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionReportResponse;
 import com.hmdandelion.project_1410002.production.service.ProductionService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -67,24 +68,21 @@ public class ProductionManagerController {
         Long id = productionService.reportSave(reportCreateRequest);
         return ResponseEntity.ok(id);
     }
-}
 
-//        // 총 생산량 계산
+//        총 생산량 계산
 //        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
 
-//
-//    /* 보고서 수정 */
-//    @PutMapping("production/reports/{productionStatusCode}/modify")
-//    public ResponseEntity<Void> modify(@PathVariable final Long productionStatusCode, @RequestBody final ProductionReportUpdateRequest productionReportUpdateRequest) {
-//        productionService.modifyReport(productionStatusCode, productionReportUpdateRequest);
-//
-//        return ResponseEntity.created(URI.create("/api/v1/production/reports/" + productionStatusCode)).build();
-//
-//    }
-//
-//    @DeleteMapping("production/reports/{productionStatusCode}/delete")
-//    public ResponseEntity<Void> response(@PathVariable final Long productionStatusCode) {
-//        productionService.removeReport(productionStatusCode);
-//        return ResponseEntity.noContent().build();
-//    }
-//}
+    /* 보고서 수정 */
+
+    @PutMapping("production/reports/{productionStatusCode}/modify")
+    public ResponseEntity<Void> modify(@PathVariable final Long productionStatusCode, @RequestBody final ReportUpdateRequest reportUpdateRequest) {
+        productionService.modifyReport(productionStatusCode, reportUpdateRequest);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("production/reports/{productionStatusCode}/delete")
+    public ResponseEntity<Void> response(@PathVariable final Long productionStatusCode) {
+        productionService.removeReport(productionStatusCode);
+        return ResponseEntity.noContent().build();
+    }
+}

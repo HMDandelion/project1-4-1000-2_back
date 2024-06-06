@@ -10,4 +10,5 @@ import java.util.Optional;
 
 public interface DefectDetailRepo extends JpaRepository<DefectDetail, Long> {
 
+    List<DefectDetail> findByProductionDetail(ProductionDetail productionDetail);
 }

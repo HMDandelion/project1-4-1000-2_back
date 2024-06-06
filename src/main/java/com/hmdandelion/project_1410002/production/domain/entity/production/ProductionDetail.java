@@ -88,20 +88,21 @@ public class ProductionDetail {
                 productionStatus
         );
     }
+
+
+
+    public void modifyDetail( int productionQuantity, int defectQuantity,
+                             int completelyQuantity,LocalDateTime inspectionDate,InspectionStatusType inspectionStatusType,
+                              String productionMemo, ProductionStatusType productionStatus
+    ) {
+
+        this.productionQuantity = productionQuantity;
+        this.defectQuantity = defectQuantity;
+        this.completelyQuantity = completelyQuantity;
+        this.inspectionDate = inspectionDate;
+        this.inspectionStatus = inspectionStatusType;
+        this.productionMemo = productionMemo;
+        this.productionStatus = productionStatus;
+    }
 }
-
-
-//    public void modifyDetail(LocalDateTime inspectionDate, int productionQuantity, int defectQuantity,
-//                             int completelyQuantity, String productionMemo, ProductionStatusType productionStatus
-//    ) {
-//
-//        this.productionQuantity = productionQuantity;
-//        this.defectQuantity = defectQuantity;
-//        this.completelyQuantity = completelyQuantity;
-//        this.inspectionDate = inspectionDate;
-//        this.inspectionStatus = inspectionStatus;
-//        this.productionMemo = productionMemo;
-//        this.productionStatus = productionStatus;
-//    }
-//}
 

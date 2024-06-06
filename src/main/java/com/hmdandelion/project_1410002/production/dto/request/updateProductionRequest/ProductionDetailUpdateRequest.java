@@ -1,6 +1,5 @@
-package com.hmdandelion.project_1410002.production.dto.request;
+package com.hmdandelion.project_1410002.production.dto.request.updateProductionRequest;
 
-import com.hmdandelion.project_1410002.production.domain.type.DefectStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.InspectionStatusType;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class ProductionDetailCreateRequest {
+public class ProductionDetailUpdateRequest {
 
     private final Long productionStatusCode;
     private final Long workOrderCode;

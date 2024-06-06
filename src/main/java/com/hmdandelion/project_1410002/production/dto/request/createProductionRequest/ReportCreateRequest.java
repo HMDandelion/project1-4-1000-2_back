@@ -1,4 +1,4 @@
-package com.hmdandelion.project_1410002.production.dto.request;
+package com.hmdandelion.project_1410002.production.dto.request.createProductionRequest;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
