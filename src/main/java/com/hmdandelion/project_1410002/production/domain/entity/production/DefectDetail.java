@@ -15,6 +15,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DefectDetail {
 
+
+    public static DefectDetail[] getProductionDetailCode;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long defectCode;

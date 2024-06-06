@@ -42,8 +42,6 @@ public class ProductionManagement {
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
-
-
     @OneToMany(mappedBy = "productionManagement")
     private List<ProductionDetail> productionDetails;
 

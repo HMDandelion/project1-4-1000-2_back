@@ -52,6 +52,9 @@ public class ProductionDetail {
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
+    @OneToMany(mappedBy = "productionManagement")
+    private List<DefectDetail> defectDetails;
+
     public ProductionDetail(ProductionManagement newProductionManagement, LocalDateTime inspectionDate, int productionQuantity, int defectQuantity, int completelyQuantity, String productionMemo, InspectionStatusType inspectionStatus, ProductionStatusType productionStatus) {
 
         this.productionManagement = newProductionManagement;
