@@ -24,14 +24,13 @@ public class LineService {
     @Transactional(readOnly = true)
     public Page<LineResponse> getLineInfo(final Long lineCode, final LineStatusType lineStatusType) {
         Pageable pageable = PageRequest.of(0, 10);
-
         Page<Line> lines = null;
+
         if (lineCode != null && lineCode > 0) {
             lines = lineRepo.findByLineStatusNot(LineStatusType.INACTIVE, pageable);
         } else {
             lines = lineRepo.findAll(pageable);
         }
-
         return lines.map(LineResponse::form);
     }
 

@@ -31,7 +31,6 @@ public class ProductionManagerController {
 
     private final ProductionService productionService;
 
-
     /*조회*/
     @GetMapping("/production/reports")
     public ResponseEntity<PagingResponse> getProductionReports(
@@ -70,8 +69,6 @@ public class ProductionManagerController {
         Long id = productionService.reportSave(reportCreateRequest);
         return ResponseEntity.ok(id);
     }
-//        총 생산량 계산
-//        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
 
     /* 보고서 수정 */
     @PutMapping("production/reports/{productionStatusCode}/modify")
@@ -87,3 +84,6 @@ public class ProductionManagerController {
         return ResponseEntity.noContent().build();
     }
 }
+
+//        총 생산량 계산
+//        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();

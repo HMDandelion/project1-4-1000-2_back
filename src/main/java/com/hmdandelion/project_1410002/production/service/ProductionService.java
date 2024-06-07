@@ -106,7 +106,6 @@ public class ProductionService {
             defectDetails.add(DefectDetailResponse.from(defectDetail));
         }
         return defectDetails;
-
     }
 
     /* 보고서 등록 */
@@ -119,9 +118,7 @@ public class ProductionService {
         // ProductionDetail 생성 및 저장
         for (ProductionDetailCreateRequest productionDetailRequest : reportCreateRequest.getProductionDetailCreateRequest()) {
             WorkOrder workOrder = workOrderRepo.findByWorkOrderCode(productionDetailRequest.getWorkOrderCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER));
-
             ProductionDetail newProductionDetail = ProductionDetail.of(newProductionManagement, workOrder, productionDetailRequest.getProductionQuantity(), productionDetailRequest.getDefectQuantity(), productionDetailRequest.getCompletelyQuantity(), productionDetailRequest.getInspectionDate(), productionDetailRequest.getInspectionStatusType(), productionDetailRequest.getProductionMemo(), productionDetailRequest.getProductionStatusType()
-
             );
             productionDetailRepo.save(newProductionDetail);
 
@@ -130,7 +127,7 @@ public class ProductionService {
                 DefectDetail newDefectDetail = DefectDetail.of(newProductionDetail, defectDetailRequest.getDefectReason(), defectDetailRequest.getDefectStatus(), defectDetailRequest.getDefectFile());
                 defectDetailRepo.save(newDefectDetail);
             }
-                // ProductionDetail의 상태가 PRODUCTION_COMPLETED이면 WorkOrder의 completionStatus를 DONE으로 변경
+            // ProductionDetail의 상태가 PRODUCTION_COMPLETED이면 WorkOrder의 completionStatus를 DONE으로 변경
             if (productionDetailRequest.getProductionStatusType() == ProductionStatusType.PRODUCTION_COMPLETED) {
                 workOrder.setCompletionStatus(WorkOrderStatusType.DONE);
                 workOrderRepo.save(workOrder);
@@ -146,11 +143,9 @@ public class ProductionService {
                 );
                 stockRepo.save(newStock);
             }
-
         }
         return newProductionManagement.getProductionStatusCode();
     }
-
 
     /* 보고서 수정 */
     @Transactional
@@ -170,7 +165,6 @@ public class ProductionService {
             productionDetail.modifyDetail(productionDetailRequest.getProductionQuantity(), productionDetailRequest.getDefectQuantity(), productionDetailRequest.getCompletelyQuantity(), productionDetailRequest.getInspectionDate(), productionDetailRequest.getInspectionStatusType(), productionDetailRequest.getProductionMemo(), productionDetailRequest.getProductionStatusType());
 
             // 연관된 불량 상세 정보 수정
-
             /* 타겟 엔티티 조회 */
             List<DefectDetail> defectDetails = defectDetailRepo.findByProductionDetail(productionDetail);
             Map<Long, DefectDetail> defectDetailMap = defectDetails.stream().collect(Collectors.toMap(DefectDetail::getId, Function.identity()));
@@ -204,22 +198,14 @@ public class ProductionService {
                     );
                     stockRepo.save(newStock);
                 }
-
-
             }
 
             for (DefectDetail defectDetailToDelete : defectDetailMap.values()) {
                 defectDetailRepo.delete(defectDetailToDelete);
             }
-
-
         }
         productionRepo.save(productionManagement);
     }
-
-
-
-
 
     /* 보고서 삭제 */
     @Transactional
