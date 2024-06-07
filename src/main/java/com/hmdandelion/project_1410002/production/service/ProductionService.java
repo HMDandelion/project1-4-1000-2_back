@@ -135,6 +135,18 @@ public class ProductionService {
                 workOrder.setCompletionStatus(WorkOrderStatusType.DONE);
                 workOrderRepo.save(workOrder);
             }
+            // ProductionDetail의 상태가 PRODUCTION_COMPLETED이면 Stock에 저장
+            if (productionDetailRequest.getProductionStatusType() == ProductionStatusType.PRODUCTION_COMPLETED) {
+                Product product = productRepo.findById(workOrder.getProductCode())
+                        .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+                Stock newStock = Stock.of(
+                        Long.valueOf(newProductionDetail.getCompletelyQuantity()),
+                        RE_INSPECTION,
+                        product
+                );
+                stockRepo.save(newStock);
+            }
+
         }
         return newProductionManagement.getProductionStatusCode();
     }
@@ -176,36 +188,37 @@ public class ProductionService {
                     DefectDetail newDefectDetail = new DefectDetail(productionDetail, defectDetailUpdateRequest.getDefectReason(), defectDetailUpdateRequest.getDefectStatus(), defectDetailUpdateRequest.getDefectFile());
                     defectDetailRepo.save(newDefectDetail);
                 }
+                /* 나윤님 작업지시서 상태 자동 변화 */
                 if (productionDetailRequest.getProductionStatusType() == ProductionStatusType.PRODUCTION_COMPLETED) {
                     workOrder.setCompletionStatus(WorkOrderStatusType.DONE);
                     workOrderRepo.save(workOrder);
                 }
+                // ProductionDetail의 상태가 PRODUCTION_COMPLETED이면 Stock에 저장
+                if (productionDetailRequest.getProductionStatusType() == ProductionStatusType.PRODUCTION_COMPLETED) {
+                    Product product = productRepo.findById(workOrder.getProductCode())
+                            .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+                    Stock newStock = Stock.of(
+                            Long.valueOf(productionDetail.getCompletelyQuantity()),
+                            RE_INSPECTION,
+                            product
+                    );
+                    stockRepo.save(newStock);
+                }
+
+
             }
+
             for (DefectDetail defectDetailToDelete : defectDetailMap.values()) {
                 defectDetailRepo.delete(defectDetailToDelete);
             }
+
 
         }
         productionRepo.save(productionManagement);
     }
 
-    public Long modifyProductionStatus(Long productionDetailCode) {
-        ProductionDetail productionDetail = productionDetailRepo.findById(productionDetailCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
 
-        productionDetail.modify();
 
-        System.out.println("전");
-        WorkOrder workOrder = workOrderRepo.findById(productionDetail.getWorkOrder().getWorkOrderCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-        System.out.println("후");
-
-        Product product = productRepo.findById(workOrder.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-        /*동환 : 재고 추가*/
-        Stock newStock = Stock.of(Long.valueOf(productionDetail.getCompletelyQuantity()), RE_INSPECTION, product);
-
-        stockRepo.save(newStock);
-
-        return productionDetailCode;
-    }
 
 
     /* 보고서 삭제 */
