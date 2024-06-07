@@ -1,5 +1,8 @@
 package com.hmdandelion.project_1410002.production.dto.material.response;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
+import com.hmdandelion.project_1410002.inventory.dto.product.dto.BomDTO;
+import com.hmdandelion.project_1410002.production.domain.entity.line.Line;
 import com.hmdandelion.project_1410002.production.domain.entity.material.MaterialUsage;
 import com.hmdandelion.project_1410002.production.domain.type.MaterialUsageStatus;
 import lombok.AccessLevel;
@@ -7,40 +10,46 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class MaterialUsageResponse {
-    //사용
-    //사용코드
-    //사용일자
-    //사용상태
+
+
     private final Long usageCode;
     private final LocalDateTime usageDatetime;
-    private MaterialUsageStatus status;
+    private final MaterialUsageStatus status;
 
-    //사원 - 사용의 employeeCode
-    //이름
-    //부서명
-    //직책명
-    //연락처
+
     private final String employeeName;
     private final String positionName;
     private final String departmentName;
     private final String phone;
 
-    //라인 - 사용의 workOrder.lineCode -> 라인의 name
-    //라인코드
-    //라인명
+
     private final String lineName;
 
-    //BOM : List - 사용의 workOrder.product.productCode -> BOM정보
-    //스펙코드
-    //자재명
-    //분류명
-    private final Long specCode;
-    private final String materialName;
-    private final String categoryName;
-    private final long quantity;
+    private final List<BomDTO> boms;
+
+    public static MaterialUsageResponse of(MaterialUsage usage,
+                                           String employeeName,
+                                           String positionName,
+                                           String departmentName,
+                                           String phone,
+                                           Line line,
+                                           List<Bom> boms) {
+        return new MaterialUsageResponse(
+                usage.getUsageCode(),
+                usage.getUsageDatetime(),
+                usage.getStatus(),
+                employeeName,
+                positionName,
+                departmentName,
+                phone,
+                line.getLineName(),
+                boms.stream().map(BomDTO::from).toList()
+        );
+    }
 
 }

@@ -18,6 +18,7 @@ public enum ExceptionCode {
     NOT_FOUND_MATERIAL_NAME(3402, "자재 이름에 해당하는 스톡이 존재하지 않습니다." ),
     NOT_FOUND_WAREHOUSE_CODE(3403,"창고 코드에 맞는 창고가 존재하지 않습니다" ),
     NOT_FOUND_SPEC_CODE(3404,"스펙 코드에 맞는 스펙이 존재하지 않습니다." ),
+    NOT_FOUND_USAGE_CODE(3405,"사용코드에 맞는 사용이 존재하지 않습니다." ),
     NOT_FOUND_BOM_CODE(3501,"BOM 코드에 맞는 BOM이 존재하지 않습니다."),
     NOT_FOUND_STORAGE_CODE(3502,"저장 이력 코드가 존재하지 않습니다."),
     NOT_FOUND_PRODUCTION_CODE(3600, "상품 코드에 해당하는 생산 보고서가 존재하지 않습니다."),
@@ -55,6 +56,7 @@ public enum ExceptionCode {
     NOT_FOUND_REFRESH_TOKEN(9901, "리프레시 토큰이 유효하지 않습니다."),
     UNAUTHORIZED(9902, "인증되지 않은 요청입니다."),
     ACCESS_DENIED(9903, "인가되지 않은 요청입니다.");
+
 
 
     private final int code;

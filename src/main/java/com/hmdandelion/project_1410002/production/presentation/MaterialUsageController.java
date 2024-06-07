@@ -46,6 +46,8 @@ public class MaterialUsageController {
     public ResponseEntity<MaterialUsageResponse> getUse(
             @PathVariable final Long usageCode
     ) {
+        final MaterialUsageResponse res = materialUsageService.findOne(usageCode);
 
+        return ResponseEntity.ok(res);
     }
 }
