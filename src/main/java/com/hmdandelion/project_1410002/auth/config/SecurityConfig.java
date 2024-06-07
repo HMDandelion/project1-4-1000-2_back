@@ -44,15 +44,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> {
                     auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
-//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
-//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
-//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
-//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
-//                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
-//                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
-//                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
-//                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
-                    auth.anyRequest().permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
+                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
+                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
+                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
+                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
+                    auth.anyRequest().authenticated();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
