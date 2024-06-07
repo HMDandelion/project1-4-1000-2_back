@@ -69,7 +69,7 @@ public class MaterialStockController {
     @PutMapping("/inventory")
     public ResponseEntity<Void> modifyStock(
             @RequestBody final MaterialStockModifyRequest request
-            ) {
+    ) {
 
         final Long stockCode = materialStockService.modify(request);
 

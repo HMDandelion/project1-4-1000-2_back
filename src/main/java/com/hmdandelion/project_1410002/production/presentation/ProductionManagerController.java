@@ -56,6 +56,17 @@ public class ProductionManagerController {
         return ResponseEntity.ok(productionDetails);
     }
 
+    /*동환 : 생산 완료로 상태 변화*/
+    @PutMapping("/production/{productionDetailCode}")
+    public ResponseEntity<Void> modifyProductionStatus(
+            @PathVariable final Long productionDetailCode
+    ){
+
+      Long resultCode = productionService.modifyProductionStatus(productionDetailCode);
+
+      return ResponseEntity.created(URI.create("/api/v1/production/reports/"+resultCode+"/detail")).build();
+    }
+
 
     /* 불량상세 조회 */
     @GetMapping("/production/reports/{productionDetailCode}/defects")

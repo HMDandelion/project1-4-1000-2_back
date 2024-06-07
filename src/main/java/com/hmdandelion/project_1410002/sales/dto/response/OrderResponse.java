@@ -22,5 +22,4 @@ public class OrderResponse {
     private final OrderStatus status;
     private final OrderClientDTO client;
     private final List<OrderProductResponse> orderProducts;
-
 }

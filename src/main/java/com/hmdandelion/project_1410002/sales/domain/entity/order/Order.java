@@ -58,4 +58,10 @@ public class Order {
     public void modifyStatus(OrderStatus orderStatus) {
         this.status = orderStatus;
     }
+
+    /*동환 : 메소드 추가*/
+    public void orderCompleteWork(OrderStatus orderStatus, LocalDateTime now) {
+        this.status = orderStatus;
+        this.completedAt = now;
+    }
 }

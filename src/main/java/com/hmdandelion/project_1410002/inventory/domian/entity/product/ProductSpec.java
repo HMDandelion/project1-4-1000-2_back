@@ -17,7 +17,7 @@ public class ProductSpec {
     private String size;
     private Long productCode;
 
-    public ProductSpec(String color, String type, String size, Long productCode) {
+    private ProductSpec(String color, String type, String size, Long productCode) {
         this.color = color;
         this.type = type;
         this.size = size;

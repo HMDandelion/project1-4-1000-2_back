@@ -1,13 +1,20 @@
 package com.hmdandelion.project_1410002.production.service;
 
+import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
+import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
+import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.entity.production.DefectDetail;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionDetail;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionManagement;
 import com.hmdandelion.project_1410002.production.domain.repository.production.DefectDetailRepo;
 import com.hmdandelion.project_1410002.production.domain.repository.production.ProductionDetailRepo;
 import com.hmdandelion.project_1410002.production.domain.repository.production.ProductionRepo;
+import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.WorkOrderRepo;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionReportCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionReportUpdateRequest;
@@ -28,6 +35,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static com.hmdandelion.project_1410002.inventory.domian.type.StockType.RE_INSPECTION;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -36,6 +45,9 @@ public class ProductionService {
     private final ProductionRepo productionRepo;
     private final DefectDetailRepo defectDetailRepo;
     private final ProductionDetailRepo productionDetailRepo;
+    private final WorkOrderRepo workOrderRepo;
+    private final StockRepo stockRepo;
+    private final ProductRepo productRepo;
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 20, Sort.by("productionStatusCode").descending());
@@ -66,11 +78,14 @@ public class ProductionService {
 
     @Transactional(readOnly = true)
     public List<ProductionDetailResponse> getProductionDetails(Long productionStatusCode) {
+        System.out.println("1");
         Optional<ProductionManagement> optionalProductionManagement = productionRepo.findByProductionStatusCode(productionStatusCode);
+        System.out.println("2");
         ProductionManagement productionManagement = optionalProductionManagement.orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
-
+        System.out.println("productionManagement = " + productionManagement);
         List<ProductionDetailResponse> productionDetails = new ArrayList<>();
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
+            System.out.println("productionDetail = " + productionDetail);
             productionDetails.add(ProductionDetailResponse.from(productionDetail));
         }
         return productionDetails;
@@ -100,8 +115,7 @@ public class ProductionService {
                 productionReportCreateRequest.getCompletedAt(),
                 productionReportCreateRequest.getTotalProductionQuantity(),
                 productionReportCreateRequest.getProductionFile(),
-                productionReportCreateRequest.getProductionStatus(),
-                productionReportCreateRequest.getInspectionStatus()
+                productionReportCreateRequest.getProductionStatus()
 //                productionDetail,
 //                defectDetail
         );
@@ -143,8 +157,7 @@ public class ProductionService {
                 productionReportUpdateRequest.getCompletedAt(),
                 productionReportUpdateRequest.getTotalProductionQuantity(),
                 productionReportUpdateRequest.getProductionFile(),
-                productionReportUpdateRequest.getProductionStatus(),
-                productionReportUpdateRequest.getInspectionStatus()
+                productionReportUpdateRequest.getProductionStatus()
         );
         // ProductionDetail 엔터티 수정
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
@@ -204,4 +217,28 @@ public class ProductionService {
         return totalProductionQuantity;
     }
 
+    public Long modifyProductionStatus(Long productionDetailCode) {
+        ProductionDetail productionDetail = productionDetailRepo.findById(productionDetailCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+
+        productionDetail.modify();
+
+        System.out.println("전");
+        WorkOrder workOrder = workOrderRepo.findById(productionDetail.getWorkOrder().getWorkOrderCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        System.out.println("후");
+
+        Product product = productRepo.findById(workOrder.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        /*동환 : 재고 추가*/
+        Stock newStock = Stock.of(
+                Long.valueOf(productionDetail.getCompletelyQuantity()),
+                RE_INSPECTION,
+                product
+        );
+
+        stockRepo.save(newStock);
+
+        /*나윤*/
+
+
+        return productionDetailCode;
+    }
 }
