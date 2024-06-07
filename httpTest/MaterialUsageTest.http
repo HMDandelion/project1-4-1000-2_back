@@ -15,5 +15,18 @@ Content-Type: application/json
 ### 전체조회 테스트
 GET http://localhost:8001/api/v1/material/use
 
-### 상세조회 테스ㅡ
+### 상세조회 테스트
 GET http://localhost:8001/api/v1/material/use/1
+
+### 재고-사용 추가 테스트(전달목록으로 이동)
+POST http://localhost:8001/api/v1/material/stock-usage
+Content-Type: application/json
+
+{
+  "stockCode": 20,
+  "usageCode": 1,
+  "usedQuantity": 10
+}
+
+### 재고-사용목록 조회(usage코드로)
+GET http://localhost:8001/api/v1/material/stock-usage/1

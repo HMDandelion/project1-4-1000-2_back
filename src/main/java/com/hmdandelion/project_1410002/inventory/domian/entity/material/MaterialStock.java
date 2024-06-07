@@ -65,7 +65,11 @@ public class MaterialStock {
     }
 
     public void modifyFrom(MaterialStockModifyRequest request, Warehouse warehouse) {
-        this.actualQuantity = request.getActualQuantity();
+        if (request.getActualQuantity() < 0) {
+            this.actualQuantity = actualQuantity - request.getActualQuantity();
+        } else {
+            this.actualQuantity = request.getActualQuantity();
+        }
         this.modificationReason = request.getModificationReason();
         this.warehouse = warehouse;
     }

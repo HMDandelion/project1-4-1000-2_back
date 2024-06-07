@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.domain.entity.material;
 
+import com.hmdandelion.project_1410002.production.dto.material.request.StockUsageCreateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -16,8 +17,23 @@ public class StockUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long stockUsageCode;
-    private int usedQuantity;
+    private long usedQuantity;
     private Long stockCode;
     private Long usageCode;
     private boolean transmissionStatus;
+
+    public StockUsage(long usedQuantity, Long stockCode, Long usageCode) {
+        this.usedQuantity = usedQuantity;
+        this.stockCode = stockCode;
+        this.usageCode = usageCode;
+        this.transmissionStatus = false;
+    }
+
+    public static StockUsage from(StockUsageCreateRequest request) {
+        return new StockUsage(
+                request.getUsedQuantity(),
+                request.getStockCode(),
+                request.getUsageCode()
+        );
+    }
 }

@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 public class StockUsageDTO {
     private final Long stockUsageCode;
     private final boolean transmissionStatus;
-    private final int usedQuantity;
+    private final long usedQuantity;
     private final String materialName;
 
     public static StockUsageDTO from(StockUsage stockUsage,String materialName) {
