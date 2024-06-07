@@ -7,6 +7,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehou
 import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
+import com.hmdandelion.project_1410002.production.domain.entity.material.StockUsage;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -67,16 +68,20 @@ public class MaterialStock {
     }
 
     public void modifyFrom(MaterialStockModifyRequest request, Warehouse warehouse) {
-        if (request.getActualQuantity() < 0) {
-            this.actualQuantity = actualQuantity - request.getActualQuantity();
-            if (this.actualQuantity < 0) {
-                throw new BadRequestException(ExceptionCode.BAD_REQUEST_INSUFFICIENT_QUANTITY);
-            }
-        } else {
-            this.actualQuantity = request.getActualQuantity();
-        }
+
+        this.actualQuantity = request.getActualQuantity();
+
         this.modificationReason = request.getModificationReason();
         this.warehouse = warehouse;
+    }
+
+    public void modifyWithStockUsage(int usedQuantity, String reson) {
+
+        this.actualQuantity = (int)(actualQuantity - usedQuantity);
+        if (this.actualQuantity < 0) {
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_INSUFFICIENT_QUANTITY);
+        }
+        this.modificationReason = reson;
     }
 }
 

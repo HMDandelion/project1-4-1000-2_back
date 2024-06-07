@@ -42,11 +42,18 @@ public class StockUsageController {
     }
 
     //전달취소
-    @DeleteMapping("/stok-usage")
+    @DeleteMapping("/stock-usage")
     public ResponseEntity<Void> deleteStockUsage(
             @RequestParam final Long stockUsageCode
     ) {
         stockUsageService.deleteById(stockUsageCode);
         return ResponseEntity.noContent().build();
     }
+
+    //전달여부 변경
+    @PutMapping("/stock-usage")
+    public ResponseEntity<Void> changeTransmission() {
+
+    }
+
 }

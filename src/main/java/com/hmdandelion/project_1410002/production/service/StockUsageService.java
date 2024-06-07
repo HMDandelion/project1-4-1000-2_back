@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.production.service;
 
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
@@ -37,18 +39,18 @@ public class StockUsageService {
     public void createStockUsage(StockUsageCreateRequest request) {
         StockUsage newStockUsage = StockUsage.from(request);
         stockUsageRepo.save(newStockUsage);
-        MaterialStockModifyRequest stockRequest = new MaterialStockModifyRequest(
-                request.getStockCode(),
-                null,
-                -request.getUsedQuantity().intValue(),
-                LocalDateTime.now(),
-                "자재 사용으로 수정됨.(System)"
-        );
-        materialStockService.modify(stockRequest);
+        materialStockService.modifyWithStockUsage(newStockUsage.getStockCode(),(int) newStockUsage.getUsedQuantity(),
+                                                  "자재 사용 취소로 수정됨.(System)");
     }
 
     @Transactional
     public void deleteById(Long stockUsageCode) {
+        StockUsage stockUsage = stockUsageRepo.findById(stockUsageCode).orElseThrow(
+                () -> new NotFoundException(ExceptionCode.NOT_FOUND_USAGE_CODE)
+        );
+        materialStockService.modifyWithStockUsage(stockUsage.getStockCode(),(int) -stockUsage.getUsedQuantity(),
+                                                  "자재 사용 취소로 수정됨.(System)");
+
         stockUsageRepo.deleteById(stockUsageCode);
     }
 }
