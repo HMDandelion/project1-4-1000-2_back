@@ -38,7 +38,7 @@ import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DEL
 @Transactional
 public class ProductService {
 
-    private final ProductRepo productRepository;
+    private final ProductRepo productRepo;
     private final OrderProductRepo orderProductRepo;
     private final OrderRepo orderRepo;
     private final ClientRepo clientRepo;
@@ -49,13 +49,13 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductsResponse> getProducts(Integer page) {
-        Page<Product> products = productRepository.findAll(getPageable(page));
+        Page<Product> products = productRepo.findAll(getPageable(page));
         return products.map(ProductsResponse::from);
     }
 
     @Transactional(readOnly = true)
     public ProductsResponse getProduct(Long productCode) {
-        Product product = productRepository.findById(productCode)
+        Product product = productRepo.findById(productCode)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         return ProductsResponse.from(product);
     }
@@ -68,13 +68,13 @@ public class ProductService {
                 productRequest.getUnit()
         );
 
-        final Product product = productRepository.save(newProduct);
+        final Product product = productRepo.save(newProduct);
 
         return product.getProductCode();
     }
 
     public void modifyProduct(Long productCode, ProductRequest productRequest) {
-        Product product = productRepository.findById(productCode)
+        Product product = productRepo.findById(productCode)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         product.modify(
                 productRequest.getProductName(),
@@ -84,13 +84,13 @@ public class ProductService {
     }
 
     public void updateStatus(Long productCode) {
-        Product product = productRepository.findById(productCode)
+        Product product = productRepo.findById(productCode)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         product.updateStatus(product);
     }
     @Transactional(readOnly = true)
     public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status,Boolean createdAtSort) {
-        return productRepository.searchProducts(pageable, productName, unit, status,createdAtSort);
+        return productRepo.searchProducts(pageable, productName, unit, status,createdAtSort);
     }
     @Transactional(readOnly = true)
     public List<String> getProductClient(Long productCode) {
@@ -104,5 +104,9 @@ public class ProductService {
         }
         return new ArrayList<>(resultSet);
     }
-
+    @Transactional(readOnly = true)
+    public List<Product> getAllProducts() {
+        List<Product> productList = productRepo.findAll();
+        return productList;
+    }
 }

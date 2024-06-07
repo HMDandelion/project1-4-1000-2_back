@@ -281,6 +281,8 @@ public class StorageService {
 
         for(Product product : products){
             List<Stock> stocks = stockRepo.findByProductProductCode(product.getProductCode());
+            Long bigSum = 0L;
+            Long bigDestroySum = 0L;
             for(Stock stock : stocks) {
                 List<Storage> storages = storageRepo.findStoragesByStockStockCode(stock.getStockCode());
                 Long productSum = 0L;
@@ -293,21 +295,22 @@ public class StorageService {
                 System.out.println("product.getProductName() = " + product.getProductName());
                 System.out.println("productSum = " + productSum);
                 System.out.println("productDestroySum = " + productDestroySum);
-
-                Double ratio;
-                if (productSum == 0) {
-                    ratio = 0.0;
-                } else {
-                    ratio = (double)productDestroySum / productSum;
-                }
-                BigDecimal ratioRounded = new BigDecimal(ratio).setScale(10, RoundingMode.HALF_UP);
-                ProductDestroyDTO productDestroy = ProductDestroyDTO.of(
-                        product.getProductName(),
-                        productSum,
-                        ratioRounded.doubleValue()
-                );
-                resultList.add(productDestroy);
+                bigSum+=productSum;
+                bigDestroySum+=productDestroySum;
             }
+            Double ratio;
+            if (bigSum == 0) {
+                ratio = 0.0;
+            } else {
+                ratio = (double)bigDestroySum / bigSum;
+            }
+            BigDecimal ratioRounded = new BigDecimal(ratio).setScale(10, RoundingMode.HALF_UP);
+            ProductDestroyDTO productDestroy = ProductDestroyDTO.of(
+                    product.getProductName(),
+                    bigDestroySum,
+                    ratioRounded.doubleValue()
+            );
+            resultList.add(productDestroy);
         }
         return resultList;
     }
