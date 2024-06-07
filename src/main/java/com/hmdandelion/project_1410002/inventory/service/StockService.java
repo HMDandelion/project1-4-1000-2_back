@@ -1,6 +1,8 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
@@ -54,11 +56,11 @@ public class StockService {
     }
 
     public void modifyStock(Long stockCode, StockUpdateRequest stockUpdateRequest) {
-        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         if(stock.getIsDelete()==true){
             throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
         }
-        Product product = productRepo.findById(stockUpdateRequest.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Product product = productRepo.findById(stockUpdateRequest.getProductCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
 
         stock.modify(
                 product,
@@ -67,9 +69,9 @@ public class StockService {
     }
 
     public void deleteStockByStockCode(Long stockCode) {
-        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         if(stock.getIsDelete()==true){
-            throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
         }
         System.out.println("stock.getAssignmentStatus() = " + stock.getAssignmentStatus());
         if(stock.getAssignmentStatus()!=AssignmentStatus.NOT_ASSIGNED){
@@ -92,7 +94,7 @@ public class StockService {
             System.out.println("product.getProductCode() = " + product.getProductCode());
             System.out.println("totalSum = " + totalSum);
             System.out.println("sum = " + sum);
-            if(sum==null){
+            if(sum == null){
                 sum = 0L;
             }
             Double ratio = (double)sum/totalSum;
@@ -110,9 +112,9 @@ public class StockService {
 
 
     public StockProductDTO getStock(Long stockCode) {
-        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_STOCK_CODE));
         if(stock.getIsDelete()==true){
-            throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
         }
         Product product = productRepo.findById(stock.getProduct().getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         Boolean isToday = stock.getCreatedAt().toLocalDate().isEqual(LocalDate.now());

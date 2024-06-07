@@ -97,8 +97,8 @@ public class ProductService {
         Set<String> resultSet = new HashSet<>();
         List<OrderProduct> orderProducts = orderProductRepo.findByProductCode(productCode);
         for(OrderProduct orderProduct : orderProducts){
-            Order order = orderRepo.findByOrderCodeAndStatus(orderProduct.getOrder().getOrderCode(), OrderStatus.ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+            Order order = orderRepo.findByOrderCodeAndStatus(orderProduct.getOrder().getOrderCode(), OrderStatus.ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
 
             resultSet.add(client.getClientName());
         }

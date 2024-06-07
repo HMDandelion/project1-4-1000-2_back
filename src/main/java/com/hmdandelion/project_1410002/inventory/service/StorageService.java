@@ -92,7 +92,7 @@ public class StorageService {
         System.out.println("afterSum = " + afterSum);
         AssignmentStatus change;
         System.out.println("stock.getQuantity() = " + stock.getQuantity());
-        if(afterSum==0){
+        if(afterSum == 0){
             change=NOT_ASSIGNED;
         }else if(afterSum.equals(stock.getQuantity())){
             change=FULLY_ASSIGNED;
@@ -130,7 +130,7 @@ public class StorageService {
 
         AssignmentStatus change;
 
-        if(afterSum==0){
+        if(afterSum == 0){
             change=NOT_ASSIGNED;
         }else if(afterSum.equals(stock.getQuantity())){
             change=FULLY_ASSIGNED;
@@ -212,12 +212,12 @@ public class StorageService {
         Long standardSum = 0L;
         for(Storage entityStorage : storages){
             standardSum+=entityStorage.getActualQuantity();
-            if(standardSum==0){
+            if(standardSum == 0){
                 entityStorage.modify();
             }
         }
 
-        if(standardSum==0){
+        if(standardSum == 0){
             stock.modifyIsDelete();
         }
     }

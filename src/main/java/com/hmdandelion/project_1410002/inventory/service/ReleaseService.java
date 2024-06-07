@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.release.Release;
@@ -110,7 +111,7 @@ public class ReleaseService {
             }
 
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
 
             LocalDate now = LocalDate.now();
             Period period = Period.between(now, order.getDeadline());
@@ -156,7 +157,7 @@ public class ReleaseService {
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
         List<ReleaseOrderProduct> resultList = new ArrayList<>();
         for(OrderProduct orderProduct:orderProducts){
-            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
             ReleaseOrderProduct releaseOrderProduct = ReleaseOrderProduct.of(
                     product.getProductName(),
                     orderProduct.getQuantity()
@@ -171,14 +172,14 @@ public class ReleaseService {
         List<ReleaseOrderLackDTO> releaseOrderLacks = new ArrayList<>();
 
         System.out.println("orderCode = " + orderCode);
-        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(order.getOrderCode());
 
         for(OrderProduct orderProduct : orderProducts){
             Long lackQuantity = 0L;
             Boolean isLack = false;
             Long sum = 0L;
-            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
             for(Stock stock : stocks){
                 List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
@@ -205,7 +206,7 @@ public class ReleaseService {
     }
 
     public Long saveRelease(Long orderCode) {
-        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         Release newRelease = Release.of(
                 order
         );
@@ -238,12 +239,12 @@ public class ReleaseService {
             Long standardSum = 0L;
             for(Storage entityStorage : resultList){
                 standardSum+=entityStorage.getActualQuantity();
-                if(standardSum==0){
+                if(standardSum == 0){
                     entityStorage.modify();
                 }
             }
 
-            if(standardSum==0){
+            if(standardSum == 0){
                 stocks.get(0).modifyIsDelete();
             }
 
@@ -263,7 +264,7 @@ public class ReleaseService {
         System.out.println("orderProducts.get(0).getProductCode() = " + orderProducts.get(0).getProductCode());
         for(OrderProduct orderProduct : orderProducts){
             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
-            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+            Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
             System.out.println("stocks = " + stocks);
             for(Stock stock : stocks) {
                 List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
@@ -311,9 +312,9 @@ public class ReleaseService {
         List<Release> releases = releaseRepo.findByStatus(WAIT);
         for(Release release : releases){
             Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
             ReleaseWaitDTO releaseWait = ReleaseWaitDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
@@ -356,12 +357,12 @@ public class ReleaseService {
         List<Release> releases = releaseRepo.findByStatus(SHIPPING);
         for(Release release : releases){
             Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             System.out.println("release.getReleaseCode() = " + release.getReleaseCode());
             ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),SHIPPING);
             System.out.println("releaseChange = " + releaseChange);
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
             ReleaseShippingDTO releaseShipping = ReleaseShippingDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
@@ -396,7 +397,7 @@ public class ReleaseService {
 
         releaseChangeRepo.save(releaseChange);
 
-        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         order.orderCompleteWork(COMPLETED,LocalDateTime.now());
 
     }
@@ -411,11 +412,11 @@ public class ReleaseService {
         List<Release> releases = releaseRepo.findByStatus(DELIVERY_COMPLETED);
         for(Release release : releases){
             Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), COMPLETED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
 
             ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),DELIVERY_COMPLETED);
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
             Boolean isDeadline = true;
             if(order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())){
                 isDeadline=false;
