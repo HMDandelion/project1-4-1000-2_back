@@ -28,10 +28,11 @@ public class ProductController {
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final String productName,
             @RequestParam(required = false) final String unit,
-            @RequestParam(required = false) final ProductStatus status
+            @RequestParam(required = false) final ProductStatus status,
+            @RequestParam(defaultValue = "true") final Boolean createdAtSort
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<Product> products = productService.searchProducts(pageable, productName, unit, status);
+        Page<Product> products = productService.searchProducts(pageable, productName, unit, status,createdAtSort);
         return ResponseEntity.ok(products);
     }
 
@@ -69,5 +70,13 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    /*상품을 거래하는 거래처 리스트*/
+    @GetMapping("/product/client/{productCode}")
+    public ResponseEntity<List<String>> getProductClient(
+            @PathVariable final Long productCode
+    ){
+        List<String> productClient = productService.getProductClient(productCode);
+        return ResponseEntity.ok(productClient);
+    }
 
 }

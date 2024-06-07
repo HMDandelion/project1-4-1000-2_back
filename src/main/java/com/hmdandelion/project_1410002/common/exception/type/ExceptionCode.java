@@ -43,13 +43,14 @@ public enum ExceptionCode {
     BAD_REQUEST_DEADLINE_PASSED(6201, "마감일자가 지난 견적은 주문으로 전환할 수 없습니다."),
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
     BAD_REQUEST_MORE_QUANTITY(6500,"보관 중인 재고가 재고 수량보다 큽니다."),
+    BAD_REQUEST_MIN_QUANTITY(6500,"최소 수량이 최대 수량보다 큽니다."),
     BAD_REQUEST_DELETED_STOCK(6501,"삭제 된 재고 정보입니다."),
     BAD_REQUEST_DESTROY_QUANTITY(6502,"파손 수량은 초기 수량보다 클 수 없습니다."),
     BAD_REQUEST_WORK_ORDER_DONE(6700, "이미 완료된 작업지시서는 수정할 수 없습니다."),
 
     ALREADY_EXIST_PRODUCTION_PLAN(7700, "해당 생산 계획의 기간이 현재 생산 계획과 겹칩니다."),
     ALREADY_EXIST_WORK_ORDER(7701,"이미 해당 날짜에 작업이 등록 되어 있습니다."),
-
+    ALREADY_ASSIGNED_STOCK(7501,"이미 창고에 보관 된 재고는 삭제할 수 없습니다."),
 
     FAIL_LOGIN(9900, "로그인에 실패하였습니다."),
     NOT_FOUND_REFRESH_TOKEN(9901, "리프레시 토큰이 유효하지 않습니다."),
