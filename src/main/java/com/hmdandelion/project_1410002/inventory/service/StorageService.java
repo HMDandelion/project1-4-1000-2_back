@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
@@ -76,7 +77,7 @@ public class StorageService {
 
         List<Storage> afterStorages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
 
-        if(afterStorages==null && afterStorages.isEmpty()){
+        if(afterStorages==null || afterStorages.isEmpty()){
             throw new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE);
         }
 
@@ -248,6 +249,9 @@ public class StorageService {
     }
 
     public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity,Long startDate,Long endDate,Boolean quantitySort, Boolean dateSort) {
+        if(minQuantity>maxQuantity){
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_MIN_QUANTITY);
+        }
         return storageRepo.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort);
     }
 
