@@ -36,4 +36,8 @@ public class StockUsage {
                 request.getUsageCode()
         );
     }
+
+    public void changeTransmission() {
+        this.transmissionStatus = !this.transmissionStatus;
+    }
 }

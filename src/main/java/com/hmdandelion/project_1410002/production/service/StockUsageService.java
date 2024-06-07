@@ -53,4 +53,14 @@ public class StockUsageService {
 
         stockUsageRepo.deleteById(stockUsageCode);
     }
+
+    @Transactional
+    public Long changeTransmission(Long stockUsageCode) {
+        StockUsage stockUsage =  stockUsageRepo.findById(stockUsageCode).orElseThrow(
+                () -> new NotFoundException(ExceptionCode.NOT_FOUND_USAGE_CODE)
+        );
+        stockUsage.changeTransmission();
+
+        return stockUsage.getUsageCode();
+    }
 }

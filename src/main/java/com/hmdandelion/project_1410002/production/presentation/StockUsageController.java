@@ -52,8 +52,12 @@ public class StockUsageController {
 
     //전달여부 변경
     @PutMapping("/stock-usage")
-    public ResponseEntity<Void> changeTransmission() {
+    public ResponseEntity<Void> changeTransmission(
+            @RequestParam final Long stockUsageCode
+    ) {
+        final Long usageCode = stockUsageService.changeTransmission(stockUsageCode);
 
+        return ResponseEntity.created(URI.create("/api/v1/material/use/" + usageCode)).build();
     }
 
 }
