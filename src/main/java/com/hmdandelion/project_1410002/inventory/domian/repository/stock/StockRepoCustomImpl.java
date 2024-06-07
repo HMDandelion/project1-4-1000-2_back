@@ -66,9 +66,9 @@ public class StockRepoCustomImpl implements StockRepoCustom {
                 .where(builder);
 
         // 정렬 조건 추가
-        if (Boolean.TRUE.equals(sort)) {
+        if (sort) {
             query.orderBy(stock.createdAt.asc());
-        } else if (Boolean.FALSE.equals(sort)) {
+        } else if (!sort) {
             query.orderBy(stock.createdAt.desc());
         }
 

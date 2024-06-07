@@ -79,9 +79,9 @@ public class ReleaseController {
     /*출고 대기 중인 재고 조회*/
     @GetMapping("/release/wait")
     public ResponseEntity<List<ReleaseWaitDTO>> getReleaseWait(
-            @RequestParam(defaultValue = "true") final Boolean deadLineSort
+            @RequestParam(defaultValue = "true") final Boolean deadlineSort
     ){
-        List<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(deadLineSort);
+        List<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(deadlineSort);
         return ResponseEntity.ok(releaseWaits);
     }
 
@@ -97,9 +97,9 @@ public class ReleaseController {
     /*배송 중인 재고 조회*/
     @GetMapping("/release/shipping")
     public ResponseEntity<List<ReleaseShippingDTO>> getReleaseShipping(
-            @RequestParam(defaultValue = "true") final Boolean deadLineSort
+            @RequestParam(defaultValue = "true") final Boolean deadlineSort
     ){
-        List<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(deadLineSort);
+        List<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(deadlineSort);
         return ResponseEntity.ok(releaseShipping);
     }
 

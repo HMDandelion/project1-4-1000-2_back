@@ -17,7 +17,7 @@ public class ReleaseShippingDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime shippingStartAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate deadLine;
+    private LocalDate deadline;
 
     public static ReleaseShippingDTO of(Long orderCode, String clientName, LocalDateTime changeAt, LocalDate deadline) {
         return new ReleaseShippingDTO(

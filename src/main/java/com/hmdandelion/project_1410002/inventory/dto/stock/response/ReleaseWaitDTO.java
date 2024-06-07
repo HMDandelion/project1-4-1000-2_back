@@ -17,7 +17,7 @@ public class ReleaseWaitDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime releaseCreatedAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate deadLine;
+    private LocalDate deadline;
 
     public static ReleaseWaitDTO of(Long orderCode, String clientName, LocalDateTime createdAt, LocalDate deadline) {
         return new ReleaseWaitDTO(

@@ -16,7 +16,7 @@ public class ReleasePossible {
     private Long orderCode;
     private String clientName;
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate deadLine;
+    private LocalDate deadline;
     private Long dDay;
     private Boolean isReleasePossible;
 

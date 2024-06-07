@@ -15,14 +15,14 @@ public class ReleaseCompleteDTO {
     private String clientName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime completedAt;
-    private Boolean isDeadLine;
+    private Boolean isDeadline;
 
-    public static ReleaseCompleteDTO of(Long orderCode, String clientName, LocalDateTime changeAt, Boolean isDeadLine) {
+    public static ReleaseCompleteDTO of(Long orderCode, String clientName, LocalDateTime changeAt, Boolean isDeadline) {
         return new ReleaseCompleteDTO(
                 orderCode,
                 clientName,
                 changeAt,
-                isDeadLine
+                isDeadline
         );
     }
 }

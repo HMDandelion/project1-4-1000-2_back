@@ -305,7 +305,7 @@ public class ReleaseService {
         return returnList;
     }
 
-    public List<ReleaseWaitDTO> getReleaseWait(Boolean deadLineSort) {
+    public List<ReleaseWaitDTO> getReleaseWait(Boolean deadlineSort) {
         List<ReleaseWaitDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(WAIT);
@@ -324,12 +324,12 @@ public class ReleaseService {
         }
 
         // deadLineSort 값에 따라 resultList를 정렬
-        if (deadLineSort) {
+        if (deadlineSort) {
             // deadLineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadLine).reversed());
+            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline).reversed());
         } else {
             // deadLineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadLine));
+            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline));
         }
 
         return resultList;
@@ -350,7 +350,7 @@ public class ReleaseService {
         releaseChangeRepo.save(releaseChange);
     }
 
-    public List<ReleaseShippingDTO> getReleaseShipping(Boolean deadLineSort) {
+    public List<ReleaseShippingDTO> getReleaseShipping(Boolean deadlineSort) {
         List<ReleaseShippingDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(SHIPPING);
@@ -372,12 +372,12 @@ public class ReleaseService {
         }
 
         // deadLineSort 값에 따라 resultList를 정렬
-        if (deadLineSort) {
+        if (deadlineSort) {
             // deadLineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadLine).reversed());
+            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline).reversed());
         } else {
             // deadLineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadLine));
+            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline));
         }
 
         return resultList;
@@ -416,15 +416,15 @@ public class ReleaseService {
             ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),DELIVERY_COMPLETED);
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
-            Boolean isDeadLine = true;
+            Boolean isDeadline = true;
             if(order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())){
-                isDeadLine=false;
+                isDeadline=false;
             }
             ReleaseCompleteDTO releaseComplete = ReleaseCompleteDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     releaseChange.getChangeAt(),
-                    isDeadLine
+                    isDeadline
             );
             resultList.add(releaseComplete);
         }

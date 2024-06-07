@@ -49,12 +49,6 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
 
 
 
-
-//        if (assignmentStatus != null) {
-//            builder.and(stock.assignmentStatus.eq(assignmentStatus));
-//        }
-
-
         builder.and(storage.isDelete.eq(false));
 
         JPAQuery<Storage> query = queryFactory
@@ -62,11 +56,10 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
                 .join(storage.stock,stock)
                 .join(storage.stock.product, product)
                 .where(builder);
-//
-        // 정렬 조건 추가
-        if (Boolean.TRUE.equals(quantitySort)) {
+
+        if (quantitySort) {
             query.orderBy(storage.actualQuantity.asc());
-        } else if (Boolean.FALSE.equals(quantitySort)) {
+        } else if (!quantitySort) {
             query.orderBy(storage.actualQuantity.desc());
         }
 
