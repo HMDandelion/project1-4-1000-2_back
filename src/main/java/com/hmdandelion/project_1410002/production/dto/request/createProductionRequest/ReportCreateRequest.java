@@ -12,5 +12,5 @@ import java.util.List;
 public class ReportCreateRequest {
     private ProductionManagementCreateRequest productionManagementCreateRequest;
     private List<ProductionDetailCreateRequest> productionDetailCreateRequest = new ArrayList<>();
-    private List<DefectDetailCreateRequest> defectDetailCreateRequest = new ArrayList<>();
+//    private List<DefectDetailCreateRequest> defectDetailCreateRequest = new ArrayList<>();
 }

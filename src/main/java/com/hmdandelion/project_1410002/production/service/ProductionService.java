@@ -11,10 +11,10 @@ import com.hmdandelion.project_1410002.production.domain.repository.production.P
 import com.hmdandelion.project_1410002.production.domain.repository.production.ProductionRepo;
 import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.WorkOrderRepo;
 import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
-import com.hmdandelion.project_1410002.production.dto.request.*;
 import com.hmdandelion.project_1410002.production.dto.request.createProductionRequest.DefectDetailCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.createProductionRequest.ProductionDetailCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.createProductionRequest.ReportCreateRequest;
+import com.hmdandelion.project_1410002.production.dto.request.updateProductionRequest.DefectDetailUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.updateProductionRequest.ProductionDetailUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.updateProductionRequest.ReportUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.production.DefectDetailResponse;
@@ -31,7 +31,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +55,7 @@ public class ProductionService {
     @Transactional(readOnly = true)
     public Page<ProductionReportResponse> getProductionReportRecords(final Integer page, final Long productionStatusCode, final ProductionStatusType productionStatusType,
                                                                      final LocalDateTime startAt, final LocalDateTime completedAt
-    ){
+    ) {
         Page<ProductionManagement> productionManagements = null;
 
         if (productionStatusCode != null && productionStatusCode > 0) {
@@ -103,7 +106,7 @@ public class ProductionService {
 
     }
 
-    /* 보고서 등록*/
+    /* 보고서 등록 */
     @Transactional
     public Long reportSave(ReportCreateRequest reportCreateRequest) {
         // ProductionManagement 생성 및 저장
@@ -131,29 +134,28 @@ public class ProductionService {
                     productionDetailRequest.getInspectionStatusType(),
                     productionDetailRequest.getProductionMemo(),
                     productionDetailRequest.getProductionStatusType()
+
             );
             productionDetailRepo.save(newProductionDetail);
 
-            // DefectDetail 생성 및 저장
-            for (DefectDetailCreateRequest defectDetailRequest : reportCreateRequest.getDefectDetailCreateRequest()) {
-                if (defectDetailRequest.getProductionDetailCode().equals(newProductionDetail.getProductionDetailCode())) {
-                    DefectDetail newDefectDetail = DefectDetail.of(
-                            newProductionDetail,
-                            defectDetailRequest.getDefectReason(),
-                            defectDetailRequest.getDefectStatus(),
-                            defectDetailRequest.getDefectFile()
-                    );
-                    defectDetailRepo.save(newDefectDetail);
-                }
+            // 해당 ProductionDetail 에 대한 DefectDetail 생성 및 저장
+            for (DefectDetailCreateRequest defectDetailRequest : productionDetailRequest.getDefectDetailCreateRequest()) {
+                DefectDetail newDefectDetail = DefectDetail.of(
+                        newProductionDetail,
+                        defectDetailRequest.getDefectReason(),
+                        defectDetailRequest.getDefectStatus(),
+                        defectDetailRequest.getDefectFile()
+                );
+                defectDetailRepo.save(newDefectDetail);
             }
         }
         return newProductionManagement.getProductionStatusCode();
     }
 
+
     /* 보고서 수정 */
     @Transactional
     public void modifyReport(Long productionStatusCode, ReportUpdateRequest reportUpdateRequest) {
-        // ProductionManagement 엔터티 가져오기
         ProductionManagement productionManagement = productionRepo.findByProductionStatusCode(productionStatusCode)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
 
@@ -167,6 +169,7 @@ public class ProductionService {
         );
 
         // ProductionDetail 엔터티 수정
+
         for (ProductionDetailUpdateRequest productionDetailRequest : reportUpdateRequest.getProductionDetailUpdateRequest()) {
             WorkOrder workOrder = workOrderRepo.findByWorkOrderCode(productionDetailRequest.getWorkOrderCode())
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER));
@@ -185,15 +188,40 @@ public class ProductionService {
             );
 
             // 연관된 불량 상세 정보 수정
+
+            /* 타겟 엔티티 조회 */
             List<DefectDetail> defectDetails = defectDetailRepo.findByProductionDetail(productionDetail);
-            for (DefectDetail defectDetail : defectDetails) {
-                defectDetail.modifyDetail(
-                        defectDetail.getDefectReason(),
-                        defectDetail.getDefectStatus(),
-                        defectDetail.getDefectFile()
-                );
+            Map<Long, DefectDetail> defectDetailMap = defectDetails.stream()
+                    .collect(Collectors.toMap(DefectDetail::getId, Function.identity()));
+
+            for (DefectDetailUpdateRequest defectDetailUpdateRequest : productionDetailRequest.getDefectDetailUpdateRequest()) {
+                if (defectDetailUpdateRequest.getId() != null) {
+                    DefectDetail defectDetailUpdate = defectDetailMap.get(defectDetailUpdateRequest.getId());
+                    if (defectDetailUpdate != null) {
+                        defectDetailUpdate.modifyDetail(
+                                defectDetailUpdate.getDefectReason(),
+                                defectDetailUpdate.getDefectStatus(),
+                                defectDetailUpdate.getDefectFile()
+                        );
+                        defectDetailMap.remove(defectDetailUpdateRequest.getId());
+                    } else {
+                        throw new NotFoundException(ExceptionCode.NOT_FOUND_DEFECT_DATA);
+                    }
+                } else {
+                    DefectDetail newDefectDetail = new DefectDetail(
+                            productionDetail,
+                            defectDetailUpdateRequest.getDefectReason(),
+                            defectDetailUpdateRequest.getDefectStatus(),
+                            defectDetailUpdateRequest.getDefectFile()
+                    );
+                    defectDetailRepo.save(newDefectDetail);
+                }
+            }
+            for(DefectDetail defectDetailToDelete : defectDetailMap.values()){
+                defectDetailRepo.delete(defectDetailToDelete);
             }
         }
+        productionRepo.save(productionManagement);
     }
 
     /* 보고서 삭제 */
@@ -205,7 +233,6 @@ public class ProductionService {
         optionalProductionManagement.ifPresent(productionRepo::delete);
     }
 }
-//
 //    /* -------------------------- 계산기 --------------------------------------------------*/
 //    public int calculateProductionQuantity(int defectQuantity, int completelyQuantity) {
 //        return defectQuantity + completelyQuantity;

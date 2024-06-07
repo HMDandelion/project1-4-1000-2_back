@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class DefectDetailUpdateRequest {
 
+    private final Long id;
     private final Long productionDetailCode;
     private final String defectReason;
     private final DefectStatusType defectStatus;

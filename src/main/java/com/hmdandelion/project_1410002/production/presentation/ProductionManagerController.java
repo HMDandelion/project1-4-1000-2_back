@@ -63,19 +63,19 @@ public class ProductionManagerController {
         return ResponseEntity.ok(defectDetailResponses);
     }
 
+    /* 보고서 등록 */
     @PostMapping("/production/reports")
     public ResponseEntity<Long> createReport(@RequestBody ReportCreateRequest reportCreateRequest) {
         Long id = productionService.reportSave(reportCreateRequest);
         return ResponseEntity.ok(id);
     }
-
 //        총 생산량 계산
 //        int totalProductionQuantity = productionService.calculateTotalProductionQuantity();
 
     /* 보고서 수정 */
-
     @PutMapping("production/reports/{productionStatusCode}/modify")
     public ResponseEntity<Void> modify(@PathVariable final Long productionStatusCode, @RequestBody final ReportUpdateRequest reportUpdateRequest) {
+        log.info("productionStatusCode?{}", reportUpdateRequest.getProductionDetailUpdateRequest().get(0).getProductionStatusCode());
         productionService.modifyReport(productionStatusCode, reportUpdateRequest);
         return ResponseEntity.ok().build();
     }

@@ -20,4 +20,6 @@ public class ProductionDetailCreateRequest {
     private final InspectionStatusType inspectionStatusType;
     private final String productionMemo;
     private final ProductionStatusType productionStatusType;
+    private final DefectDetailCreateRequest[] defectDetailCreateRequest;
+
 }
