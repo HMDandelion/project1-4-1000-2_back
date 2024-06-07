@@ -20,6 +20,7 @@ public class MaterialUsageResponse {
     private final Long usageCode;
     private final LocalDateTime usageDatetime;
     private final MaterialUsageStatus status;
+    private final Long orderedQuantity;
 
 
     private final String employeeName;
@@ -37,17 +38,18 @@ public class MaterialUsageResponse {
                                            String positionName,
                                            String departmentName,
                                            String phone,
-                                           Line line,
+                                           String lineName,
                                            List<Bom> boms) {
         return new MaterialUsageResponse(
                 usage.getUsageCode(),
                 usage.getUsageDatetime(),
                 usage.getStatus(),
+                (long) usage.getWorkOrder().getOrderedQuantity(),
                 employeeName,
                 positionName,
                 departmentName,
                 phone,
-                line.getLineName(),
+                lineName,
                 boms.stream().map(BomDTO::from).toList()
         );
     }

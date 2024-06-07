@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.production.service;
 import com.hmdandelion.project_1410002.common.exception.NoContentsException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import com.hmdandelion.project_1410002.inventory.service.MaterialStockService;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.entity.material.MaterialUsage;
@@ -53,9 +54,7 @@ public class MaterialUsageService {
     }
 
     public MaterialUsageResponse findOne(Long usageCode) {
-        final MaterialUsage materialUsage = materialUsageRepo.findById(usageCode).orElseThrow(
-                () -> new NotFoundException(ExceptionCode.NOT_FOUND_USAGE_CODE)
-        );
-        return null;
+
+        return materialUsageRepo.getMaterialUsage(usageCode);
     }
 }

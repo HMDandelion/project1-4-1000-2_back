@@ -14,3 +14,6 @@ Content-Type: application/json
 
 ### 전체조회 테스트
 GET http://localhost:8001/api/v1/material/use
+
+### 상세조회 테스ㅡ
+GET http://localhost:8001/api/v1/material/use/1
