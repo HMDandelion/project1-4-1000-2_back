@@ -11,7 +11,7 @@ import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.AccumulateProduct;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -49,7 +49,7 @@ public class StockService {
         return stock.getStockCode();
     }
 
-    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus,LocalDate startDate, LocalDate endDate,Boolean sort) {
+    public Page<StockProductDTO> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus, LocalDate startDate, LocalDate endDate, Boolean sort) {
         return stockRepo.searchStocks(pageable, productCode, type, minQuantity,maxQuantity,assignmentStatus,startDate,endDate,sort);
     }
 
@@ -109,7 +109,7 @@ public class StockService {
     }
 
 
-    public StockProduct getStock(Long stockCode) {
+    public StockProductDTO getStock(Long stockCode) {
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
         if(stock.getIsDelete()==true){
             throw new CustomException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
@@ -117,7 +117,7 @@ public class StockService {
         Product product = productRepo.findById(stock.getProduct().getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         Boolean isToday = stock.getCreatedAt().toLocalDate().isEqual(LocalDate.now());
 
-        StockProduct stockProduct = StockProduct.of(
+        StockProductDTO stockProduct = StockProductDTO.of(
                 stock.getStockCode(),
                 stock.getQuantity(),
                 stock.getCreatedAt(),

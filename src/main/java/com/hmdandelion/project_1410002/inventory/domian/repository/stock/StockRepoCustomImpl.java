@@ -1,14 +1,12 @@
 package com.hmdandelion.project_1410002.inventory.domian.repository.stock;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
-
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.QStock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.QueryResults;
 import com.querydsl.jpa.impl.JPAQuery;
@@ -32,7 +30,7 @@ public class StockRepoCustomImpl implements StockRepoCustom {
     }
 
     @Override
-    public Page<StockProduct> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus, LocalDate startDate, LocalDate endDate, Boolean sort) {
+    public Page<StockProductDTO> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus, LocalDate startDate, LocalDate endDate, Boolean sort) {
         QStock stock = QStock.stock;
         QProduct product = QProduct.product;
         BooleanBuilder builder = new BooleanBuilder();
@@ -79,9 +77,9 @@ public class StockRepoCustomImpl implements StockRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetchResults();
 
-        List<StockProduct> results = queryResults.getResults().stream()
+        List<StockProductDTO> results = queryResults.getResults().stream()
                 .map(stockEntity -> {
-                    StockProduct stockProduct = new StockProduct(stockEntity);
+                    StockProductDTO stockProduct = new StockProductDTO(stockEntity);
                     stockProduct.setToday(stockEntity.getCreatedAt().toLocalDate().isEqual(LocalDate.now()));
                     return stockProduct;
                 })

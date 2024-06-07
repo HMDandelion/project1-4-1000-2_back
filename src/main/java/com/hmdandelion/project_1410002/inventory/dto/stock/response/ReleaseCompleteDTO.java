@@ -5,21 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReleaseComplete {
+public class ReleaseCompleteDTO {
     private Long orderCode;
     private String clientName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime completedAt;
     private Boolean isDeadLine;
 
-    public static ReleaseComplete of(Long orderCode, String clientName, LocalDateTime changeAt, Boolean isDeadLine) {
-        return new ReleaseComplete(
+    public static ReleaseCompleteDTO of(Long orderCode, String clientName, LocalDateTime changeAt, Boolean isDeadLine) {
+        return new ReleaseCompleteDTO(
                 orderCode,
                 clientName,
                 changeAt,

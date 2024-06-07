@@ -45,9 +45,9 @@ public class ProductRepoCustomImpl implements ProductRepoCustom {
                 .where(builder);
 
         // createdAtSort 값에 따라 정렬 방향 결정
-        if (Boolean.TRUE.equals(createdAtSort)) {
+        if (createdAtSort) {
             query.orderBy(product.launchDate.desc()); // true일 경우 내림차순
-        } else if (Boolean.FALSE.equals(createdAtSort)) {
+        } else if (!createdAtSort) {
             query.orderBy(product.launchDate.asc()); // false일 경우 오름차순
         }
 

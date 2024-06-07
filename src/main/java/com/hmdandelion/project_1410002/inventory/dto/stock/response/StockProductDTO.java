@@ -1,13 +1,10 @@
 package com.hmdandelion.project_1410002.inventory.dto.stock.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +12,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus.IN_PRODUCTION;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class StockProduct {
+public class StockProductDTO {
 
     private Long stockCode;
     private Long quantity;
@@ -48,7 +44,7 @@ public class StockProduct {
     private Boolean isToday;
 
 
-    public StockProduct(Stock stock) {
+    public StockProductDTO(Stock stock) {
         this.stockCode = stock.getStockCode();
         this.quantity = stock.getQuantity();
         this.createdAt = stock.getCreatedAt();
@@ -66,8 +62,8 @@ public class StockProduct {
     }
 
 
-    public static StockProduct of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete,AssignmentStatus assignmentStatus, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status,Boolean isToday) {
-        return new StockProduct(
+    public static StockProductDTO of(Long stockCode, Long quantity, LocalDateTime createdAt, Boolean isDelete, AssignmentStatus assignmentStatus, StockType type, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status, Boolean isToday) {
+        return new StockProductDTO(
                 stockCode,
                 quantity,
                 createdAt,

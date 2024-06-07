@@ -11,19 +11,19 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReleaseShipping {
+public class ReleaseWaitDTO {
     private Long orderCode;
     private String clientName;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime shippingStartAt;
+    private LocalDateTime releaseCreatedAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate deadLine;
 
-    public static ReleaseShipping of(Long orderCode, String clientName, LocalDateTime changeAt, LocalDate deadline) {
-        return new ReleaseShipping(
+    public static ReleaseWaitDTO of(Long orderCode, String clientName, LocalDateTime createdAt, LocalDate deadline) {
+        return new ReleaseWaitDTO(
                 orderCode,
                 clientName,
-                changeAt,
+                createdAt,
                 deadline
         );
     }

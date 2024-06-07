@@ -12,14 +12,13 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.release.Relea
 import com.hmdandelion.project_1410002.inventory.domian.repository.release.ReleaseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
-import com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus;
-import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLack;
+import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLackDTO;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseComplete;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShipping;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWait;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseCompleteDTO;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShippingDTO;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWaitDTO;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.OrderProduct;
@@ -30,9 +29,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
@@ -43,7 +40,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.*;
-import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.ACTIVE;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
 import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.COMPLETED;
 import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.ORDER_RECEIVED;
@@ -170,9 +166,9 @@ public class ReleaseService {
         return resultList;
     }
 
-    public List<ReleaseOrderLack> getReleaseOrderLack(Long orderCode) {
+    public List<ReleaseOrderLackDTO> getReleaseOrderLack(Long orderCode) {
 
-        List<ReleaseOrderLack> releaseOrderLacks = new ArrayList<>();
+        List<ReleaseOrderLackDTO> releaseOrderLacks = new ArrayList<>();
 
         System.out.println("orderCode = " + orderCode);
         Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
@@ -196,7 +192,7 @@ public class ReleaseService {
             }else{
                 lackQuantity = 0L;
             }
-            ReleaseOrderLack releaseOrderLack = ReleaseOrderLack.of(
+            ReleaseOrderLackDTO releaseOrderLack = ReleaseOrderLackDTO.of(
                     product.getProductName(),
                     lackQuantity,
                     isLack
@@ -309,8 +305,8 @@ public class ReleaseService {
         return returnList;
     }
 
-    public List<ReleaseWait> getReleaseWait(Boolean deadLineSort) {
-        List<ReleaseWait> resultList = new ArrayList<>();
+    public List<ReleaseWaitDTO> getReleaseWait(Boolean deadLineSort) {
+        List<ReleaseWaitDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(WAIT);
         for(Release release : releases){
@@ -318,7 +314,7 @@ public class ReleaseService {
                     .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
-            ReleaseWait releaseWait = ReleaseWait.of(
+            ReleaseWaitDTO releaseWait = ReleaseWaitDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     release.getCreatedAt(),
@@ -330,10 +326,10 @@ public class ReleaseService {
         // deadLineSort 값에 따라 resultList를 정렬
         if (deadLineSort) {
             // deadLineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseWait::getDeadLine).reversed());
+            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadLine).reversed());
         } else {
             // deadLineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseWait::getDeadLine));
+            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadLine));
         }
 
         return resultList;
@@ -354,8 +350,8 @@ public class ReleaseService {
         releaseChangeRepo.save(releaseChange);
     }
 
-    public List<ReleaseShipping> getReleaseShipping(Boolean deadLineSort) {
-        List<ReleaseShipping> resultList = new ArrayList<>();
+    public List<ReleaseShippingDTO> getReleaseShipping(Boolean deadLineSort) {
+        List<ReleaseShippingDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(SHIPPING);
         for(Release release : releases){
@@ -366,7 +362,7 @@ public class ReleaseService {
             System.out.println("releaseChange = " + releaseChange);
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
-            ReleaseShipping releaseShipping = ReleaseShipping.of(
+            ReleaseShippingDTO releaseShipping = ReleaseShippingDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     releaseChange.getChangeAt(),
@@ -378,10 +374,10 @@ public class ReleaseService {
         // deadLineSort 값에 따라 resultList를 정렬
         if (deadLineSort) {
             // deadLineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseShipping::getDeadLine).reversed());
+            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadLine).reversed());
         } else {
             // deadLineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseShipping::getDeadLine));
+            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadLine));
         }
 
         return resultList;
@@ -405,12 +401,12 @@ public class ReleaseService {
 
     }
 
-    public List<ReleaseComplete> getReleaseComplete(
+    public List<ReleaseCompleteDTO> getReleaseComplete(
             Boolean completeAt
     ) {
 
 
-        List<ReleaseComplete> resultList = new ArrayList<>();
+        List<ReleaseCompleteDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(DELIVERY_COMPLETED);
         for(Release release : releases){
@@ -424,7 +420,7 @@ public class ReleaseService {
             if(order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())){
                 isDeadLine=false;
             }
-            ReleaseComplete releaseComplete = ReleaseComplete.of(
+            ReleaseCompleteDTO releaseComplete = ReleaseCompleteDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     releaseChange.getChangeAt(),
@@ -436,10 +432,10 @@ public class ReleaseService {
         // deadLineSort 값에 따라 resultList를 정렬
         if (completeAt) {
             // deadLineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseComplete::getCompletedAt).reversed());
+            resultList.sort(Comparator.comparing(ReleaseCompleteDTO::getCompletedAt).reversed());
         } else {
             // deadLineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseComplete::getCompletedAt));
+            resultList.sort(Comparator.comparing(ReleaseCompleteDTO::getCompletedAt));
         }
 
         return resultList;

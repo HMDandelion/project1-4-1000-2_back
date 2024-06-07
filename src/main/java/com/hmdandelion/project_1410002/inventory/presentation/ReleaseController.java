@@ -3,20 +3,16 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
-import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
-import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLack;
+import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderLackDTO;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseOrderProduct;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleasePossible;
 import com.hmdandelion.project_1410002.inventory.dto.release.response.ReleaseStorage;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseComplete;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShipping;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWait;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseCompleteDTO;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseShippingDTO;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.ReleaseWaitDTO;
 import com.hmdandelion.project_1410002.inventory.service.ReleaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,10 +51,10 @@ public class ReleaseController {
 
     /*주문 코드 입력하여 상품 별 부족 갯수 출력*/
     @GetMapping("/release/order/lack/{orderCode}")
-    public ResponseEntity<List<ReleaseOrderLack>> getReleaseOrderLack(
+    public ResponseEntity<List<ReleaseOrderLackDTO>> getReleaseOrderLack(
             @PathVariable final Long orderCode
     ){
-        List<ReleaseOrderLack> releaseOrderLacks = releaseService.getReleaseOrderLack(orderCode);
+        List<ReleaseOrderLackDTO> releaseOrderLacks = releaseService.getReleaseOrderLack(orderCode);
         return ResponseEntity.ok(releaseOrderLacks);
     }
 
@@ -82,10 +78,10 @@ public class ReleaseController {
 
     /*출고 대기 중인 재고 조회*/
     @GetMapping("/release/wait")
-    public ResponseEntity<List<ReleaseWait>> getReleaseWait(
+    public ResponseEntity<List<ReleaseWaitDTO>> getReleaseWait(
             @RequestParam(defaultValue = "true") final Boolean deadLineSort
     ){
-        List<ReleaseWait> releaseWaits = releaseService.getReleaseWait(deadLineSort);
+        List<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(deadLineSort);
         return ResponseEntity.ok(releaseWaits);
     }
 
@@ -100,10 +96,10 @@ public class ReleaseController {
 
     /*배송 중인 재고 조회*/
     @GetMapping("/release/shipping")
-    public ResponseEntity<List<ReleaseShipping>> getReleaseShipping(
+    public ResponseEntity<List<ReleaseShippingDTO>> getReleaseShipping(
             @RequestParam(defaultValue = "true") final Boolean deadLineSort
     ){
-        List<ReleaseShipping> releaseShipping = releaseService.getReleaseShipping(deadLineSort);
+        List<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(deadLineSort);
         return ResponseEntity.ok(releaseShipping);
     }
 
@@ -118,10 +114,10 @@ public class ReleaseController {
 
     /*배송 완료 재고 조회*/
     @GetMapping("/release/complete")
-    public ResponseEntity<List<ReleaseComplete>> getReleaseComplete(
+    public ResponseEntity<List<ReleaseCompleteDTO>> getReleaseComplete(
         @RequestParam(defaultValue = "true") final  Boolean completeAt
     ){
-        List<ReleaseComplete> releaseComplete = releaseService.getReleaseComplete(completeAt);
+        List<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(completeAt);
         return ResponseEntity.ok(releaseComplete);
     }
 

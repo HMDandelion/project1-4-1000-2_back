@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductDestroy {
+public class ProductDestroyDTO {
     private String productName;
     private Long destroyQuantity;
     private Double ratio;
 
-    public static ProductDestroy of(String productName, Long productSum, double ratio) {
-        return new ProductDestroy(
+    public static ProductDestroyDTO of(String productName, Long productSum, double ratio) {
+        return new ProductDestroyDTO(
                 productName,
                 productSum,
                 ratio

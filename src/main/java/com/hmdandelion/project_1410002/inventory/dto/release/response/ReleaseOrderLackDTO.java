@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReleaseOrderLack {
+public class ReleaseOrderLackDTO {
     private String productName;
     /*부족 수량*/
     private Long lackQuantity;
     /*부족 한 수량이 있는지 여부*/
     private Boolean isLack;
 
-    public static ReleaseOrderLack of(String productName, Long lackQuantity, Boolean isLack) {
-        return new ReleaseOrderLack(productName,
+    public static ReleaseOrderLackDTO of(String productName, Long lackQuantity, Boolean isLack) {
+        return new ReleaseOrderLackDTO(productName,
         lackQuantity,
         isLack
         );

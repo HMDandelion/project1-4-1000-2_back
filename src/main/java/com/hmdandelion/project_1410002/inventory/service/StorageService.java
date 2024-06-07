@@ -11,7 +11,6 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRe
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
-import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
@@ -23,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,8 +139,8 @@ public class StorageService {
         stock.modifyStatus(change);
     }
 
-    public List<StorageStock> getStorageStockByStockCode(Long stockCode) {
-        List<StorageStock> resultList = new ArrayList<>();
+    public List<StorageStockDTO> getStorageStockByStockCode(Long stockCode) {
+        List<StorageStockDTO> resultList = new ArrayList<>();
         List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
         Product product = productRepo.findById(stock.getProduct().getProductCode()).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
@@ -160,7 +158,7 @@ public class StorageService {
 
             System.out.println("product.getProductName() = " + product.getProductName());
 
-            StorageStock storageStock = StorageStock.of(
+            StorageStockDTO storageStock = StorageStockDTO.of(
                     warehouse.getName(),
                     storage.getInitialQuantity(),
                     product.getProductName(),
@@ -176,15 +174,15 @@ public class StorageService {
         return resultList;
     }
 
-    public List<StorageWarehouse> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
-        List<StorageWarehouse> storageWarehouses = new ArrayList<>();
+    public List<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
+        List<StorageWarehouseDTO> storageWarehouses = new ArrayList<>();
         List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode,false);
         if(storages.isEmpty()&&storages==null){
             throw new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE);
         }
         Warehouse warehouse = warehouseRepo.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
         for(Storage storage:storages){
-            StorageWarehouse storageWarehouse = StorageWarehouse.of(
+            StorageWarehouseDTO storageWarehouse = StorageWarehouseDTO.of(
                     "입고",
                     storage.getStock().getProduct().getProductName(),
                     storage.getInitialQuantity(),
@@ -223,14 +221,14 @@ public class StorageService {
         }
     }
 
-    public StorageStockWarehouse getStorageByStorageCode(Long storageCode) {
+    public StorageStockWarehouseDTO getStorageByStorageCode(Long storageCode) {
         Storage storage = storageRepo.findStorageByStorageCodeAndIsDelete(storageCode,false);
         System.out.println("storage = " + storage);
         Stock stock = stockRepo.findById(storage.getStock().getStockCode()).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_STOCK_CODE));
         System.out.println("2");
         Warehouse warehouse = warehouseRepo.findById(storage.getWarehouse().getWarehouseCode()).orElseThrow(()-> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
         System.out.println("3");
-        StorageStockWarehouse storageWarehouse = StorageStockWarehouse.of(
+        StorageStockWarehouseDTO storageWarehouse = StorageStockWarehouseDTO.of(
                 storage.getInitialQuantity(),
                 storage.getDestroyQuantity(),
                 stock.getStockCode(),
@@ -272,8 +270,8 @@ public class StorageService {
         return ratioRounded.doubleValue();
     }
 
-    public List<ProductDestroy> getProductDestroyRatio() {
-        List<ProductDestroy> resultList = new ArrayList<>();
+    public List<ProductDestroyDTO> getProductDestroyRatio() {
+        List<ProductDestroyDTO> resultList = new ArrayList<>();
 
         List<Product> products = productRepo.findAll();
 
@@ -299,7 +297,7 @@ public class StorageService {
                     ratio = (double)productDestroySum / productSum;
                 }
                 BigDecimal ratioRounded = new BigDecimal(ratio).setScale(10, RoundingMode.HALF_UP);
-                ProductDestroy productDestroy = ProductDestroy.of(
+                ProductDestroyDTO productDestroy = ProductDestroyDTO.of(
                         product.getProductName(),
                         productSum,
                         ratioRounded.doubleValue()

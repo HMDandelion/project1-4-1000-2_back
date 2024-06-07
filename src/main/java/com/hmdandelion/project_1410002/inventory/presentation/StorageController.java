@@ -1,8 +1,5 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
-import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
-import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
@@ -11,12 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -65,20 +60,20 @@ public class StorageController {
 
     /*배정 된 재고의 창고와 수량과 재고의 초기 수량과 배정이 남은 갯수를 조회*/
     @GetMapping("/storage/stock/{stockCode}")
-    public ResponseEntity<List<StorageStock>> getStorageStockByStockCode(
+    public ResponseEntity<List<StorageStockDTO>> getStorageStockByStockCode(
             @PathVariable final Long stockCode
     ){
-        List<StorageStock> storageStocks = storageService.getStorageStockByStockCode(stockCode);
+        List<StorageStockDTO> storageStocks = storageService.getStorageStockByStockCode(stockCode);
 
         return ResponseEntity.ok(storageStocks);
     }
 
     /*창고 별 이동 종류,상품명,수량,창고이름,등록 날짜*/
     @GetMapping("/storage/warehouse/{warehouseCode}")
-    public ResponseEntity<List<StorageWarehouse>> getStorageWarehouseByWarehouseCode(
+    public ResponseEntity<List<StorageWarehouseDTO>> getStorageWarehouseByWarehouseCode(
             @PathVariable final Long warehouseCode
     ){
-        List<StorageWarehouse> storageWarehouses = storageService.getStorageWarehouseByWarehouseCode(warehouseCode);
+        List<StorageWarehouseDTO> storageWarehouses = storageService.getStorageWarehouseByWarehouseCode(warehouseCode);
         return ResponseEntity.ok(storageWarehouses);
     }
 
@@ -103,17 +98,17 @@ public class StorageController {
 
     /*상품별 파손률 계산*/
     @GetMapping("/storage/product/destroy")
-    public ResponseEntity<List<ProductDestroy>> getProductDestroyRatio(){
-        List<ProductDestroy> productDestroys = storageService.getProductDestroyRatio();
+    public ResponseEntity<List<ProductDestroyDTO>> getProductDestroyRatio(){
+        List<ProductDestroyDTO> productDestroys = storageService.getProductDestroyRatio();
         return ResponseEntity.ok(productDestroys);
     }
 
     /*창고 보관코드로 보관 이력 조회*/
     @GetMapping("/storage/{storageCode}")
-    public ResponseEntity<StorageStockWarehouse> getStorageByStorageCode(
+    public ResponseEntity<StorageStockWarehouseDTO> getStorageByStorageCode(
             @PathVariable final Long storageCode
     ){
-        StorageStockWarehouse storageWarehouse = storageService.getStorageByStorageCode(storageCode);
+        StorageStockWarehouseDTO storageWarehouse = storageService.getStorageByStorageCode(storageCode);
         return ResponseEntity.ok(storageWarehouse);
     }
 

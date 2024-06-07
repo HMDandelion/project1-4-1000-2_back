@@ -1,12 +1,11 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.AccumulateProduct;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
-import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProduct;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
 import com.hmdandelion.project_1410002.inventory.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -39,7 +38,7 @@ public class StockController {
 
     /*재고 조회(필터링)*/
     @GetMapping("/stock")
-    public ResponseEntity<Page<StockProduct>> getStocks(
+    public ResponseEntity<Page<StockProductDTO>> getStocks(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final Long productCode,
             @RequestParam(required = false) final StockType type,
@@ -51,16 +50,16 @@ public class StockController {
             @RequestParam(defaultValue = "true") final Boolean sort
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<StockProduct> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,assignmentStatus,startDate,endDate,sort);
+        Page<StockProductDTO> stocks = stockService.searchStocks(pageable,productCode,type,minQuantity,maxQuantity,assignmentStatus,startDate,endDate,sort);
         return ResponseEntity.ok(stocks);
     }
 
     /*재고 상세 조회(재고 코드로 조회)*/
     @GetMapping("/stock/{stockCode}")
-    public ResponseEntity<StockProduct> getStock(
+    public ResponseEntity<StockProductDTO> getStock(
             @PathVariable final Long stockCode
     ){
-        StockProduct stock = stockService.getStock(stockCode);
+        StockProductDTO stock = stockService.getStock(stockCode);
         return ResponseEntity.ok(stock);
     }
 
