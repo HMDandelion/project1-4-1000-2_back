@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.ProductSpec;
@@ -25,7 +26,7 @@ public class ProductSpecService {
 
 
     public void saveProductSpec(Long productCode, ProductSpecRequest productSpecRequest) {
-        productRepo.findById(productCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        productRepo.findById(productCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         ProductSpec productSpec = ProductSpec.of(
                 productSpecRequest.getColor(),
                 productSpecRequest.getType(),
@@ -41,7 +42,7 @@ public class ProductSpecService {
 
         return products.stream().map(productSpec -> {
             Product product = productRepo.findById(productSpec.getProductCode())
-                    .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
 
             return  ProductSpecResponse.of(
                     productSpec.getColor(),
@@ -61,9 +62,9 @@ public class ProductSpecService {
     @Transactional(readOnly = true)
     public List<ProductSpecResponse> getProductSpec(final Long productCode) {
         Product product = productRepo.findById(productCode)
-                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         List<ProductSpec> productSpecs = productSpecRepo.findProductSpecsByProductCode(productCode)
-                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
 
         return productSpecs.stream().map(productSpec -> ProductSpecResponse.of(
                 productSpec.getColor(),
@@ -81,7 +82,7 @@ public class ProductSpecService {
 
 
     public void modifyProductSpecByProductSpecCode(Long code,ProductSpecRequest productSpecRequest) {
-        ProductSpec productSpec = productSpecRepo.findById(code).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        ProductSpec productSpec = productSpecRepo.findById(code).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         System.out.println("productSpecRequest"+productSpecRequest);
         System.out.println("productSpec = " + productSpec);
         productSpec.modify(

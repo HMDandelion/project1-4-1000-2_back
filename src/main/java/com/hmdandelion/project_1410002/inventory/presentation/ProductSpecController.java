@@ -24,7 +24,7 @@ public class ProductSpecController {
             @RequestBody final ProductSpecRequest productSpecRequest
     ){
         productSpecService.saveProductSpec(productCode,productSpecRequest);
-        return ResponseEntity.created(URI.create(null)).build();
+        return ResponseEntity.created(URI.create("/api/v1/productSpec")).build();
     }
 
     /*상품 스펙 전체 조회*/

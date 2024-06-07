@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
@@ -34,26 +35,25 @@ public class BomService {
     }
     @Transactional(readOnly = true)
     public Bom getBomByBomCode(Long BomCode){
-        Bom bom = bomRepository.findBomByBomCode(BomCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_BOM_CODE));
+        Bom bom = bomRepository.findBomByBomCode(BomCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_BOM_CODE));
         return bom;
     }
     @Transactional(readOnly = true)
     public List<Bom> getBomByProductCode(Long productCode) {
-        Product product = productRepository.findById(productCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Product product = productRepository.findById(productCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         List<Bom> boms = bomRepository.findBomByProduct(product);
         return boms;
     }
 
     public Long saveBomByProductCode(Long productCode, BomCreateRequest bomRequest) {
-        Product product = productRepository.findById(productCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-        MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new CustomException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
+        Product product = productRepository.findById(productCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
 
         Bom newBom = Bom.of(
                 bomRequest.getQuantity(),
                 bomRequest.getSequence(),
                 product,
                 materialSpec
-
         );
 
         Bom bom =  bomRepository.save(newBom);
@@ -65,7 +65,7 @@ public class BomService {
     public void modifyBomByBomCode(Long bomCode, BomUpdateRequest bomRequest) {
         Bom bom = getBomByBomCode(bomCode);
         System.out.println("bom = " + bom);
-        MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new CustomException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
+        MaterialSpec materialSpec = materialSpecRepo.findById(bomRequest.getSpecCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NO_CONTENTS_MATERIAL_STOCK));
         bom.modify(
                 materialSpec,
                 bomRequest.getQuantity(),
