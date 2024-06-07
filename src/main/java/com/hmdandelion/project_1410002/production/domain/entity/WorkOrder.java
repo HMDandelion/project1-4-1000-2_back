@@ -90,4 +90,7 @@ public class WorkOrder {
         this.lineCode = lineCode;
         this.employeeCode = employeeCode;
     }
+    public void setCompletionStatus(WorkOrderStatusType completionStatus) {
+        this.completionStatus = completionStatus;
+    }
 }

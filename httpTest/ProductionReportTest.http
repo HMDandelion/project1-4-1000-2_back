@@ -28,7 +28,7 @@ Content-Type: application/json
   "productionDetailCreateRequest": [
     {
       "productionStatusCode": 6,
-      "workOrderCode": 8,
+      "workOrderCode": 10,
       "productionQuantity": 51100,
       "defectQuantity": 10,
       "completelyQuantity": 490,
