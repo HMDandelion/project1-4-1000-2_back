@@ -115,9 +115,9 @@ public class ReleaseController {
     /*배송 완료 재고 조회*/
     @GetMapping("/release/complete")
     public ResponseEntity<List<ReleaseCompleteDTO>> getReleaseComplete(
-        @RequestParam(defaultValue = "true") final  Boolean completeAt
+        @RequestParam(defaultValue = "true") final  Boolean isCompleted
     ){
-        List<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(completeAt);
+        List<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(isCompleted);
         return ResponseEntity.ok(releaseComplete);
     }
 

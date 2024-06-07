@@ -402,7 +402,7 @@ public class ReleaseService {
     }
 
     public List<ReleaseCompleteDTO> getReleaseComplete(
-            Boolean completeAt
+            Boolean isCompleted
     ) {
 
 
@@ -430,7 +430,7 @@ public class ReleaseService {
         }
 
         // deadLineSort 값에 따라 resultList를 정렬
-        if (completeAt) {
+        if (isCompleted) {
             // deadLineSort가 참이면 내림차순 정렬
             resultList.sort(Comparator.comparing(ReleaseCompleteDTO::getCompletedAt).reversed());
         } else {
