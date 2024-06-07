@@ -88,11 +88,11 @@ public class ProductService {
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         product.updateStatus(product);
     }
-
+    @Transactional(readOnly = true)
     public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status,Boolean createdAtSort) {
         return productRepository.searchProducts(pageable, productName, unit, status,createdAtSort);
     }
-
+    @Transactional(readOnly = true)
     public List<String> getProductClient(Long productCode) {
         Set<String> resultSet = new HashSet<>();
         List<OrderProduct> orderProducts = orderProductRepo.findByProductCode(productCode);

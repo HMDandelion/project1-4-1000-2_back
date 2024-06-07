@@ -50,7 +50,7 @@ public class StockService {
         Stock stock = stockRepo.save(newStock);
         return stock.getStockCode();
     }
-
+    @Transactional(readOnly = true)
     public Page<StockProductDTO> searchStocks(Pageable pageable, Long productCode, StockType type, Long minQuantity, Long maxQuantity, AssignmentStatus assignmentStatus, LocalDate startDate, LocalDate endDate, Boolean sort) {
         return stockRepo.searchStocks(pageable, productCode, type, minQuantity,maxQuantity,assignmentStatus,startDate,endDate,sort);
     }
@@ -79,12 +79,12 @@ public class StockService {
         }
         stockRepo.deleteById(stockCode);
     }
-
+    @Transactional(readOnly = true)
     public Integer getAccumulateStock() {
         Integer sum = stockRepo.getAccumulateStock();
         return sum;
     }
-
+    @Transactional(readOnly = true)
     public List<AccumulateProduct> getAccumulateStockByProductCode() {
         List<AccumulateProduct> resultList = new ArrayList<>();
         List<Product> products = productRepo.findAll();
@@ -110,7 +110,7 @@ public class StockService {
         return resultList;
     }
 
-
+    @Transactional(readOnly = true)
     public StockProductDTO getStock(Long stockCode) {
         Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_STOCK_CODE));
         if(stock.getIsDelete()==true){

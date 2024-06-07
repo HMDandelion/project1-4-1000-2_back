@@ -139,7 +139,7 @@ public class StorageService {
         }
         stock.modifyStatus(change);
     }
-
+    @Transactional(readOnly = true)
     public List<StorageStockDTO> getStorageStockByStockCode(Long stockCode) {
         List<StorageStockDTO> resultList = new ArrayList<>();
         List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
@@ -174,7 +174,7 @@ public class StorageService {
         System.out.println("resultList = " + resultList);
         return resultList;
     }
-
+    @Transactional(readOnly = true)
     public List<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
         List<StorageWarehouseDTO> storageWarehouses = new ArrayList<>();
         List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode,false);

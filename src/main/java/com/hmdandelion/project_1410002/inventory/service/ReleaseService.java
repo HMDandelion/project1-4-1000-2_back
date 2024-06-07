@@ -63,7 +63,7 @@ public class ReleaseService {
         Sort sort = createdSort ? Sort.by("dDay").ascending() : Sort.by("dDay").descending();
         return PageRequest.of(page - 1, 10, sort);
     }
-
+    @Transactional(readOnly = true)
     public Page<ReleasePossible> getReleasePossibles(Integer page, Boolean isReleasePossible, Boolean createdSort) {
         List<Order> orders = orderRepo.findAllByStatus(ORDER_RECEIVED);
         List<Order> filterOrders = new ArrayList<>();
@@ -152,7 +152,7 @@ public class ReleaseService {
 
         return new PageImpl<>(sublist, pageable, releasePossibleList.size());
     }
-
+    @Transactional(readOnly = true)
     public List<ReleaseOrderProduct> getReleaseOrderProduct(Long orderCode) {
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
         List<ReleaseOrderProduct> resultList = new ArrayList<>();
@@ -166,7 +166,7 @@ public class ReleaseService {
         }
         return resultList;
     }
-
+    @Transactional(readOnly = true)
     public List<ReleaseOrderLackDTO> getReleaseOrderLack(Long orderCode) {
 
         List<ReleaseOrderLackDTO> releaseOrderLacks = new ArrayList<>();
@@ -254,7 +254,7 @@ public class ReleaseService {
         Long releaseCode = releaseRepo.save(newRelease).getReleaseCode();
         return releaseCode;
     }
-
+    @Transactional(readOnly = true)
     public List<ReleaseStorage> getStorageByOrderCode(Long orderCode) {
         List<Storage> resultList = new ArrayList<>();
         List<ReleaseStorage> returnList = new ArrayList<>();
@@ -305,7 +305,7 @@ public class ReleaseService {
 
         return returnList;
     }
-
+    @Transactional(readOnly = true)
     public List<ReleaseWaitDTO> getReleaseWait(Boolean deadlineSort) {
         List<ReleaseWaitDTO> resultList = new ArrayList<>();
 
@@ -350,7 +350,7 @@ public class ReleaseService {
         );
         releaseChangeRepo.save(releaseChange);
     }
-
+    @Transactional(readOnly = true)
     public List<ReleaseShippingDTO> getReleaseShipping(Boolean deadlineSort) {
         List<ReleaseShippingDTO> resultList = new ArrayList<>();
 
@@ -401,7 +401,7 @@ public class ReleaseService {
         order.orderCompleteWork(COMPLETED,LocalDateTime.now());
 
     }
-
+    @Transactional(readOnly = true)
     public List<ReleaseCompleteDTO> getReleaseComplete(
             Boolean isCompleted
     ) {
