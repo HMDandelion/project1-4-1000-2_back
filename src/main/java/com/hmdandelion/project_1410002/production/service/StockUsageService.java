@@ -46,4 +46,9 @@ public class StockUsageService {
         );
         materialStockService.modify(stockRequest);
     }
+
+    @Transactional
+    public void deleteById(Long stockUsageCode) {
+        stockUsageRepo.deleteById(stockUsageCode);
+    }
 }

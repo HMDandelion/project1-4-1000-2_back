@@ -1,6 +1,8 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
@@ -67,6 +69,9 @@ public class MaterialStock {
     public void modifyFrom(MaterialStockModifyRequest request, Warehouse warehouse) {
         if (request.getActualQuantity() < 0) {
             this.actualQuantity = actualQuantity - request.getActualQuantity();
+            if (this.actualQuantity < 0) {
+                throw new BadRequestException(ExceptionCode.BAD_REQUEST_INSUFFICIENT_QUANTITY);
+            }
         } else {
             this.actualQuantity = request.getActualQuantity();
         }

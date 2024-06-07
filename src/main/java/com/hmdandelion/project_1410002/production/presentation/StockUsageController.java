@@ -40,4 +40,13 @@ public class StockUsageController {
         stockUsageService.createStockUsage(request);
         return ResponseEntity.created(URI.create("api/v1/material/use/" + request.getUsageCode())).build();
     }
+
+    //전달취소
+    @DeleteMapping("/stok-usage")
+    public ResponseEntity<Void> deleteStockUsage(
+            @RequestParam final Long stockUsageCode
+    ) {
+        stockUsageService.deleteById(stockUsageCode);
+        return ResponseEntity.noContent().build();
+    }
 }
