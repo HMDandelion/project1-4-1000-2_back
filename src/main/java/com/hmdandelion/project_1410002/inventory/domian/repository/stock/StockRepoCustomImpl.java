@@ -67,9 +67,9 @@ public class StockRepoCustomImpl implements StockRepoCustom {
 
         // 정렬 조건 추가
         if (sort) {
-            query.orderBy(stock.createdAt.asc());
-        } else if (!sort) {
             query.orderBy(stock.createdAt.desc());
+        } else if (!sort) {
+            query.orderBy(stock.createdAt.asc());
         }
 
         QueryResults<Stock> queryResults = query
