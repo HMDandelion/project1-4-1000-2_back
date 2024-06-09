@@ -14,6 +14,7 @@ import com.hmdandelion.project_1410002.inventory.dto.product.response.Accumulate
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.TodayStockDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -139,4 +140,20 @@ public class StockService {
     }
 
 
+    public TodayStockDTO getTodayStockInformation() {
+
+        List<Stock> stocks = stockRepo.findTodayStock();
+
+        Long todayQuantity = 0L;
+        for(Stock stock : stocks){
+            todayQuantity += stock.getQuantity();
+        }
+
+        TodayStockDTO todayStockDTO = TodayStockDTO.of(
+                LocalDate.now(),
+                stocks.size(),
+                todayQuantity
+        );
+        return todayStockDTO;
+    }
 }

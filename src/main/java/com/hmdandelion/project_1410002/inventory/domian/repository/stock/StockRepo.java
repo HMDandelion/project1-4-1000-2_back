@@ -24,4 +24,6 @@ public interface StockRepo extends JpaRepository<Stock,Long>, StockRepoCustom {
     List<Stock> findByProductProductCodeAndIsDelete(Long productCode,Boolean isDelete);
 
     List<Stock> findByProductProductCode(Long productCode);
+    @Query("SELECT s FROM Stock s WHERE FUNCTION('DATE', s.createdAt) = CURRENT_DATE AND s.isDelete = false")
+    List<Stock> findTodayStock();
 }

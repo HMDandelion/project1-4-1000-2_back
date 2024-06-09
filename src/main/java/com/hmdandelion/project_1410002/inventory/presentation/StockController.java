@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.inventory.dto.product.response.Accumulate
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.TodayStockDTO;
 import com.hmdandelion.project_1410002.inventory.service.StockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -96,6 +97,13 @@ public class StockController {
     ){
         List<AccumulateProduct> accumulateProducts = stockService.getAccumulateStockByProductCode();
         return ResponseEntity.ok(accumulateProducts);
+    }
+
+    /*오늘 등록 된 재고 갯수와 재고 수량 조회*/
+    @GetMapping("/stock/today")
+    public ResponseEntity<TodayStockDTO> getTodayStockInformation(){
+        TodayStockDTO todayStockDTO = stockService.getTodayStockInformation();
+        return ResponseEntity.ok(todayStockDTO);
     }
 
 }

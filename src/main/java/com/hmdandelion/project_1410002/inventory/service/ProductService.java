@@ -25,10 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.ACTIVE;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
@@ -96,14 +93,19 @@ public class ProductService {
     public List<String> getProductClient(Long productCode) {
         Set<String> resultSet = new HashSet<>();
         List<OrderProduct> orderProducts = orderProductRepo.findByProductCode(productCode);
-        for(OrderProduct orderProduct : orderProducts){
-            Order order = orderRepo.findByOrderCodeAndStatus(orderProduct.getOrder().getOrderCode(), OrderStatus.ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+        for(OrderProduct orderProduct : orderProducts) {
+            try {
+                Order order = orderRepo.findByOrderCodeAndStatus(orderProduct.getOrder().getOrderCode(), OrderStatus.ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+                Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
 
-            resultSet.add(client.getClientName());
+                resultSet.add(client.getClientName());
+            } catch (NotFoundException e) {
+                return Collections.emptyList();
+            }
         }
         return new ArrayList<>(resultSet);
     }
+
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         List<Product> productList = productRepo.findAll();
