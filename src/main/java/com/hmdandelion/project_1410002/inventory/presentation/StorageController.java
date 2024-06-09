@@ -26,8 +26,8 @@ public class StorageController {
     public ResponseEntity<Page<StorageFilterResponse>> getStocks(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final Long productCode,
-            @RequestParam(required = false) final Long minQuantity,
-            @RequestParam(required = false) final Long maxQuantity,
+            @RequestParam(defaultValue = "1") final Long minQuantity,
+            @RequestParam(defaultValue = "200") final Long maxQuantity,
             @RequestParam(defaultValue = "0") final Long startDate,
             @RequestParam(defaultValue = "100") final Long endDate,
             @RequestParam(defaultValue = "true") final Boolean quantitySort,

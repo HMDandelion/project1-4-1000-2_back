@@ -3,11 +3,13 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecCategoryService;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,20 @@ public class MaterialSpecController {
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
         PagingResponse res = PagingResponse.of(toPage.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/spec/list")
+    public ResponseEntity<List<MaterialSpec>> findAllSpecList(){
+        List<MaterialSpec> materialSpecs = materialSpecService.findAllSpecList();
+        return ResponseEntity.ok(materialSpecs);
+    }
+
+    @GetMapping("/spec/{specCode}")
+    public ResponseEntity<MaterialSpec> findSpec(
+            @PathVariable final Long specCode
+    ){
+        MaterialSpec materialSpec = materialSpecService.findSpec(specCode);
+        return ResponseEntity.ok(materialSpec);
     }
 
     //스펙 등록

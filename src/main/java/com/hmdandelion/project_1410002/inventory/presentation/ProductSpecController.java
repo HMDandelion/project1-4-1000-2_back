@@ -1,9 +1,13 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.common.paging.Pagination;
+import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
+import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductSpecRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductSpecResponse;
 import com.hmdandelion.project_1410002.inventory.service.ProductSpecService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,11 +40,15 @@ public class ProductSpecController {
 
     /*상품 스펙 상품 코드로 조회*/
     @GetMapping("/productSpec/product/{productCode}")
-    public ResponseEntity<List<ProductSpecResponse>> getProductSpecByProductCode(
-            @PathVariable final Long productCode
+    public ResponseEntity<PagingResponse> getProductSpecByProductCode(
+            @PathVariable final Long productCode,
+            @RequestParam(defaultValue = "1") final Integer page
     ){
-        List<ProductSpecResponse> productSpecResponse = productSpecService.getProductSpec(productCode);
-        return ResponseEntity.ok(productSpecResponse);
+        Page<ProductSpecResponse> productSpecResponse = productSpecService.getProductSpec(productCode,page);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(productSpecResponse);
+        final PagingResponse pagingResponse = PagingResponse.of(productSpecResponse.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 
     /*상품 스펙 수정*/
