@@ -35,7 +35,6 @@ import java.util.Arrays;
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
-    private final EmployeeService employeeService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -102,7 +101,7 @@ public class SecurityConfig {
     /* 로그인 성공 핸들러 */
     @Bean
     LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(authService, employeeService);
+        return new LoginSuccessHandler(authService);
     }
 
     @Bean

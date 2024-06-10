@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.employee.presentation;
 
+import com.hmdandelion.project_1410002.employee.dto.EmployeeInfoDTO;
 import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class EmployeeController {
     private final EmployeeService employeeService;
+
+    @GetMapping("/employee/${employeeNo}")
+    public ResponseEntity<EmployeeInfoDTO> getEmployeeInfo(@PathVariable String employeeNo) {
+        EmployeeInfoDTO employeeInfo = employeeService.getInfoByEmployeeNo(employeeNo);
+        return ResponseEntity.ok(employeeInfo);
+    }
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {

@@ -53,21 +53,14 @@ public class AuthService implements UserDetailsService {
     }
 
     private Map<String, Object> getMemberInfo(LoginDTO loginDTO) {
-        EmployeeInfoDTO employeeInfo = employeeService.getInfoByEmployeeNo(loginDTO.getEmployeeNo());
-
         return Map.of(
                 "employeeNo", loginDTO.getEmployeeNo(),
-                "authorities", loginDTO.getAuthorities(),
-                "employeeName", employeeInfo.getEmployeeName(),
-                "email", employeeInfo.getEmail(),
-                "departmentName", employeeInfo.getDepartmentName(),
-                "positionName", employeeInfo.getPositionName()
+                "authorities", loginDTO.getAuthorities()
         );
     }
 
     public void saveAuthentication(String employeeNo) {
         LoginDTO loginDTO = employeeService.findByEmployeeNo(employeeNo);
-        EmployeeInfoDTO employeeInfo = employeeService.getInfoByEmployeeNo(employeeNo);
 
         UserDetails user = User.builder()
                 .username(loginDTO.getEmployeeNo())
@@ -77,7 +70,6 @@ public class AuthService implements UserDetailsService {
 
         CustomUser customUser = new CustomUser(
                 loginDTO.getEmployeeCode(),
-                employeeInfo,
                 user
         );
 
