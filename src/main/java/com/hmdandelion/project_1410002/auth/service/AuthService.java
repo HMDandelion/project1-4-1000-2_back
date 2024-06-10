@@ -4,6 +4,7 @@ import com.hmdandelion.project_1410002.auth.dto.LoginDTO;
 import com.hmdandelion.project_1410002.auth.dto.TokenDTO;
 import com.hmdandelion.project_1410002.auth.type.CustomUser;
 import com.hmdandelion.project_1410002.auth.util.TokenUtils;
+import com.hmdandelion.project_1410002.employee.dto.EmployeeInfoDTO;
 import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,14 +53,21 @@ public class AuthService implements UserDetailsService {
     }
 
     private Map<String, Object> getMemberInfo(LoginDTO loginDTO) {
+        EmployeeInfoDTO employeeInfo = employeeService.getInfoByEmployeeNo(loginDTO.getEmployeeNo());
+
         return Map.of(
                 "employeeNo", loginDTO.getEmployeeNo(),
-                "authorities", loginDTO.getAuthorities()
+                "authorities", loginDTO.getAuthorities(),
+                "employeeName", employeeInfo.getEmployeeName(),
+                "email", employeeInfo.getEmail(),
+                "departmentName", employeeInfo.getDepartmentName(),
+                "positionName", employeeInfo.getPositionName()
         );
     }
 
     public void saveAuthentication(String employeeNo) {
         LoginDTO loginDTO = employeeService.findByEmployeeNo(employeeNo);
+        EmployeeInfoDTO employeeInfo = employeeService.getInfoByEmployeeNo(employeeNo);
 
         UserDetails user = User.builder()
                 .username(loginDTO.getEmployeeNo())
@@ -67,7 +75,11 @@ public class AuthService implements UserDetailsService {
                 .authorities(loginDTO.getGrantedAuthorities())
                 .build();
 
-        CustomUser customUser = new CustomUser(loginDTO.getEmployeeCode(), user);
+        CustomUser customUser = new CustomUser(
+                loginDTO.getEmployeeCode(),
+                employeeInfo,
+                user
+        );
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);

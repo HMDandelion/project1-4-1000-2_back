@@ -2,6 +2,8 @@ package com.hmdandelion.project_1410002.auth.handler;
 
 import com.hmdandelion.project_1410002.auth.service.AuthService;
 import com.hmdandelion.project_1410002.auth.util.TokenUtils;
+import com.hmdandelion.project_1410002.employee.dto.EmployeeInfoDTO;
+import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final AuthService authService;
+    private final EmployeeService employeeService;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
@@ -41,6 +44,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private Map<String, Object> getMemberInfo(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        EmployeeInfoDTO employeeInfo = employeeService.getInfoByEmployeeNo(userDetails.getUsername());
 
         String authorities = userDetails.getAuthorities()
                 .stream()
@@ -48,7 +52,11 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
         return Map.of(
                 "employeeNo", userDetails.getUsername(),
-                "authorities", authorities
+                "authorities", authorities,
+                "employeeName", employeeInfo.getEmployeeName(),
+                "email", employeeInfo.getEmail(),
+                "departmentName", employeeInfo.getDepartmentName(),
+                "positionName", employeeInfo.getPositionName()
         );
     }
 }
