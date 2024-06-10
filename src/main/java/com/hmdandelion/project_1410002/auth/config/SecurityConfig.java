@@ -7,6 +7,7 @@ import com.hmdandelion.project_1410002.auth.handler.JwtAuthenticationEntryPoint;
 import com.hmdandelion.project_1410002.auth.handler.LoginFailureHandler;
 import com.hmdandelion.project_1410002.auth.handler.LoginSuccessHandler;
 import com.hmdandelion.project_1410002.auth.service.AuthService;
+import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,6 +35,7 @@ import java.util.Arrays;
 public class SecurityConfig {
     private final PasswordEncoder passwordEncoder;
     private final AuthService authService;
+    private final EmployeeService employeeService;
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -100,7 +102,7 @@ public class SecurityConfig {
     /* 로그인 성공 핸들러 */
     @Bean
     LoginSuccessHandler loginSuccessHandler() {
-        return new LoginSuccessHandler(authService);
+        return new LoginSuccessHandler(authService, employeeService);
     }
 
     @Bean
