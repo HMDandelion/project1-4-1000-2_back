@@ -109,7 +109,6 @@ public class ProductionService {
     }
 
     /* 보고서 등록 */
-    @Transactional
     public Long reportSave(ReportCreateRequest reportCreateRequest) {
         // ProductionManagement 생성 및 저장
         final ProductionManagement newProductionManagement = ProductionManagement.of(reportCreateRequest.getProductionManagementCreateRequest().getStartAt(), reportCreateRequest.getProductionManagementCreateRequest().getCompletedAt(), reportCreateRequest.getProductionManagementCreateRequest().getTotalProductionQuantity(), reportCreateRequest.getProductionManagementCreateRequest().getProductionFile(), reportCreateRequest.getProductionManagementCreateRequest().getProductionStatus());
@@ -148,7 +147,6 @@ public class ProductionService {
     }
 
     /* 보고서 수정 */
-    @Transactional
     public void modifyReport(Long productionStatusCode, ReportUpdateRequest reportUpdateRequest) {
         ProductionManagement productionManagement = productionRepo.findByProductionStatusCode(productionStatusCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_CODE));
 
@@ -161,8 +159,11 @@ public class ProductionService {
             WorkOrder workOrder = workOrderRepo.findByWorkOrderCode(productionDetailRequest.getWorkOrderCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER));
 
             ProductionDetail productionDetail = productionDetailRepo.findByProductionDetailCode(productionDetailRequest.getProductionStatusCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCTION_DETAIL));
-
-            productionDetail.modifyDetail(productionDetailRequest.getProductionQuantity(), productionDetailRequest.getDefectQuantity(), productionDetailRequest.getCompletelyQuantity(), productionDetailRequest.getInspectionDate(), productionDetailRequest.getInspectionStatusType(), productionDetailRequest.getProductionMemo(), productionDetailRequest.getProductionStatusType());
+            productionDetail.modifyDetail(
+                    productionDetailRequest.getProductionQuantity(), productionDetailRequest.
+                            getDefectQuantity(), productionDetailRequest.getCompletelyQuantity(),
+                    productionDetailRequest.getInspectionDate(), productionDetailRequest.getInspectionStatusType(),
+                    productionDetailRequest.getProductionMemo(), productionDetailRequest.getProductionStatusType());
 
             // 연관된 불량 상세 정보 수정
             /* 타겟 엔티티 조회 */
@@ -199,7 +200,6 @@ public class ProductionService {
                     stockRepo.save(newStock);
                 }
             }
-
             for (DefectDetail defectDetailToDelete : defectDetailMap.values()) {
                 defectDetailRepo.delete(defectDetailToDelete);
             }
@@ -208,7 +208,6 @@ public class ProductionService {
     }
 
     /* 보고서 삭제 */
-    @Transactional
     public void removeReport(Long productionStatusCode) {
         // 보고서 찾는 로직
         Optional<ProductionManagement> optionalProductionManagement = productionRepo.findByProductionStatusCode(productionStatusCode);

@@ -101,7 +101,7 @@ Content-Type: application/json
   },
   "productionDetailUpdateRequest": [
     {
-      "productionStatusCode": 45,
+      "productionStatusCode": 35,
       "workOrderCode": 10,
       "productionQuantity": 500,
       "defectQuantity": 10,

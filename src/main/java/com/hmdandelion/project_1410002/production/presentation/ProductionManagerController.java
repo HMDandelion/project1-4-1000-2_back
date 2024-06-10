@@ -79,7 +79,7 @@ public class ProductionManagerController {
     }
 
     @DeleteMapping("production/reports/{productionStatusCode}/delete")
-    public ResponseEntity<Void> response(@PathVariable final Long productionStatusCode) {
+    public ResponseEntity<Void> delete(@PathVariable final Long productionStatusCode) {
         productionService.removeReport(productionStatusCode);
         return ResponseEntity.noContent().build();
     }
