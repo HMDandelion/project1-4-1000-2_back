@@ -20,4 +20,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long>, EmployeeRep
     List<AuthorityType> findAuthNamesByEmployeeNo(Long employeeCode);
 
     Optional<Employee> findByRefreshToken(String refreshToken);
+
+    List<Employee> findByStatus(String status);
 }

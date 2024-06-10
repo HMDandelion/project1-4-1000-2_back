@@ -68,4 +68,8 @@ public class EmployeeService {
         List<AuthorityType> authorities = getEmployeeAuthorities(employee.getEmployeeCode());
         return LoginDTO.from(employee, authorities);
     }
+
+    public List<Employee> getEmployee() {
+        return employeeRepo.findByStatus("ACTIVE");
+    }
 }
