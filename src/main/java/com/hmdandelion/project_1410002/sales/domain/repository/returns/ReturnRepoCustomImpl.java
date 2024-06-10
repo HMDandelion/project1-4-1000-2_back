@@ -69,6 +69,8 @@ public class ReturnRepoCustomImpl implements ReturnRepoCustom{
                         containProductName(productName)
                 )
                 .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory

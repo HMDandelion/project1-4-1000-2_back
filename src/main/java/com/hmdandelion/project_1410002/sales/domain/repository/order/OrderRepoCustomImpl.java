@@ -71,6 +71,8 @@ public class OrderRepoCustomImpl implements OrderRepoCustom{
                 )
                 .groupBy(order.orderCode)
                 .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory

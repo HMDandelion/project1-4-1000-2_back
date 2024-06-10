@@ -62,6 +62,8 @@ public class EstimateRepoCustomImpl implements EstimateRepoCustom {
                 )
                 .groupBy(estimate.estimateCode)
                 .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
