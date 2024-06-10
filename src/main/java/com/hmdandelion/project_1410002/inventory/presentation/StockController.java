@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.AccumulateProduct;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.LeftStockDTO;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.TodayStockDTO;
 import com.hmdandelion.project_1410002.inventory.service.StockService;
@@ -104,6 +105,15 @@ public class StockController {
     public ResponseEntity<TodayStockDTO> getTodayStockInformation(){
         TodayStockDTO todayStockDTO = stockService.getTodayStockInformation();
         return ResponseEntity.ok(todayStockDTO);
+    }
+
+    /*해당 재고가 창고에 얼마나 배정 되었는지 확인*/
+    @GetMapping("/stock/left/{stockCode}")
+    public ResponseEntity<LeftStockDTO> getLeftStock(
+            @PathVariable final Long stockCode
+    ){
+        LeftStockDTO leftStock = stockService.getLeftStock(stockCode);
+        return ResponseEntity.ok(leftStock);
     }
 
 }

@@ -6,13 +6,16 @@ import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
+import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StorageRepo;
 import com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockType;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.AccumulateProduct;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StockUpdateRequest;
+import com.hmdandelion.project_1410002.inventory.dto.stock.response.LeftStockDTO;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.StockProductDTO;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.TodayStockDTO;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +38,7 @@ import java.util.List;
 public class StockService {
     private final StockRepo stockRepo;
     private final ProductRepo productRepo;
+    private final StorageRepo storageRepo;
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("productCode"));
     }
@@ -155,5 +159,26 @@ public class StockService {
                 todayQuantity
         );
         return todayStockDTO;
+    }
+
+    public LeftStockDTO getLeftStock(Long stockCode) {
+        List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stockCode,false);
+        Stock stock = stockRepo.findById(stockCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_STOCK_CODE));
+        if(stock.getIsDelete()==true){
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_DELETED_STOCK);
+        }
+        Long initialQuantity = stock.getQuantity();
+        Long assignmentQuantity = 0L;
+        Long leftQuantity = 0L;
+        for(Storage storage : storages){
+            assignmentQuantity += storage.getInitialQuantity();
+        }
+        leftQuantity = initialQuantity - assignmentQuantity;
+        LeftStockDTO leftStockDTO = LeftStockDTO.of(
+          initialQuantity,
+          assignmentQuantity,
+          leftQuantity
+        );
+        return leftStockDTO;
     }
 }
