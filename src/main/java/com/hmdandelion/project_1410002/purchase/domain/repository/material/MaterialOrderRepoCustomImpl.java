@@ -5,13 +5,16 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.*;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -101,7 +104,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
     }
 
     @Override
-    public List<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable) {
+    public Page<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (planCode != null && planCode > 0) {
@@ -120,7 +123,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
                 .orderBy(materialOrder.orderDate.desc())
                 .fetch();
 
-        return getMaterialOrderDTOS(orders);
+        return getMaterialOrderDTOS(orders,pageable);
     }
 
     @Override
@@ -171,12 +174,12 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
     }
 
     @Override
-    public List<MaterialOrderDTO> getOrderToday(Pageable pageable, LocalDate today) {
+    public Page<MaterialOrderDTO> getOrderToday(Pageable pageable, LocalDate today) {
         List<MaterialOrder> orders = queryFactory
                 .selectFrom(materialOrder)
                 .where(materialOrder.deliveryDueDate.eq(today))
                 .fetch();
-        return getMaterialOrderDTOS(orders);
+        return getMaterialOrderDTOS(orders,pageable);
     }
 
     @Override
@@ -199,16 +202,22 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
         return orderThisWeek;
     }
 
-    private List<MaterialOrderDTO> getMaterialOrderDTOS(List<MaterialOrder> orders) {
+    private Page<MaterialOrderDTO> getMaterialOrderDTOS(List<MaterialOrder> orders,Pageable pageable) {
         List<OrderSpec> orderSpecs = queryFactory
                 .selectFrom(orderSpec)
                 .leftJoin(orderSpec.materialSpec).fetchJoin()
                 .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())))
                 .fetch();
 
+        JPAQuery<Long> count = queryFactory
+                .select(orderSpec.count())
+                .from(orderSpec)
+                .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())));
+
         Map<Long, List<OrderSpec>> specsMap = orderSpecs.stream()
                                                         .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
+        List<MaterialOrderDTO> list = orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
 
-        return orders.stream().map(order -> MaterialOrderDTO.of(order, specsMap)).toList();
+        return PageableExecutionUtils.getPage(list, pageable, count::fetchOne);
     }
 }

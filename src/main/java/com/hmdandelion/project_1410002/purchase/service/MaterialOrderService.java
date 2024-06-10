@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cglib.core.Local;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -98,9 +99,8 @@ public class MaterialOrderService {
         return materialOrderRepo.getOrderSpecsByOrderCode(orderCode);
     }
 
-    public List<MaterialOrderDTO> getOrders(Long planCode, String clientName, Pageable pageable) {
-        List<MaterialOrderDTO> orders = materialOrderRepo.gerOrders(planCode, clientName, pageable);
-        log.info("조회된 주문정보 {}건.",orders.size());
+    public Page<MaterialOrderDTO> getOrders(Long planCode, String clientName, Pageable pageable) {
+        Page<MaterialOrderDTO> orders = materialOrderRepo.gerOrders(planCode, clientName, pageable);
         if (orders == null || orders.isEmpty()) {
             throw new NoContentsException(ExceptionCode.NO_CONTENTS_M_ORDERS);
         }
@@ -162,9 +162,9 @@ public class MaterialOrderService {
     }
 
 
-    public List<MaterialOrderDTO> getOrderToday(Pageable pageable) {
+    public Page<MaterialOrderDTO> getOrderToday(Pageable pageable) {
         final LocalDate today = LocalDate.now();
-        List<MaterialOrderDTO> orders = materialOrderRepo.getOrderToday(pageable, today);
+        Page<MaterialOrderDTO> orders = materialOrderRepo.getOrderToday(pageable, today);
         if (orders.isEmpty()) {
             throw new NoContentsException(ExceptionCode.No_CONTENTS_M_ORDER_TODAY);
         }

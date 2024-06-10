@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.purchase.domain.repository.material;
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -17,7 +18,7 @@ public interface MaterialOrderRepoCustom {
 
     List<OrderSpec> getOrderSpecsByOrderCode(Long orderCode);
 
-    List<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable);
+    Page<MaterialOrderDTO> gerOrders(Long planCode, String clientName, Pageable pageable);
 
     List<Long> findClientCodeBySpecCodes(List<Long> materialCodes);
 
@@ -25,7 +26,7 @@ public interface MaterialOrderRepoCustom {
 
     void deleteAllOrderSpecByOrderCode(Long orderCode);
 
-    List<MaterialOrderDTO> getOrderToday(Pageable pageable, LocalDate today);
+    Page<MaterialOrderDTO> getOrderToday(Pageable pageable, LocalDate today);
 
     Map<String, Long> orderWeekly(LocalDate targetDate);
 }
