@@ -67,7 +67,7 @@ public class EstimateRepoCustomImpl implements EstimateRepoCustom {
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
-                .select(estimate.count())
+                .select(estimate.estimateCode.countDistinct())
                 .from(estimate)
                 .leftJoin(client).on(estimate.clientCode.eq(client.clientCode))
                 .where(

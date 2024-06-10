@@ -74,7 +74,7 @@ public class ReturnRepoCustomImpl implements ReturnRepoCustom{
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
-                .select(return$.count())
+                .select(return$.returnCode.countDistinct())
                 .from(return$)
                 .leftJoin(client).on(client.clientCode.eq(return$.clientCode))
                 .leftJoin(return$.returnProducts, returnProduct)
