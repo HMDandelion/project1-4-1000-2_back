@@ -1,9 +1,7 @@
 package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.common.exception.NoContentsException;
-import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import com.hmdandelion.project_1410002.inventory.service.MaterialStockService;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.entity.material.MaterialUsage;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +45,7 @@ public class MaterialUsageService {
         for (MaterialUsageDTO dto : list) {
             List<StockUsageDTO> stockUsages = stockUsageService.findByUsageCode(dto.getUsageCode());
             dto.addStockUsages(stockUsages);
-            dto.addLinName(lineService.findNameByCode(dto.getLineCode()));
+            dto.addLineName(lineService.findNameByCode(dto.getLineCode()));
         }
         return list;
     }

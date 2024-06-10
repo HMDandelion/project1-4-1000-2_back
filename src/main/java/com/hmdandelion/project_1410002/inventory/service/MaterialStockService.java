@@ -14,7 +14,6 @@ import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockS
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockResponse;
-import com.hmdandelion.project_1410002.production.domain.entity.material.StockUsage;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,9 +97,9 @@ public class MaterialStockService {
         return materialStockRepo.searchMaterialStockByMaterialName(materialName);
     }
 
-    public void modifyWithStockUsage(Long stockCode, int usedQuantity, String reson) {
+    public void modifyWithStockUsage(Long stockCode, int usedQuantity, String reason) {
         MaterialStock stock = materialStockRepo.getStockByCode(stockCode);
-        stock.modifyWithStockUsage(usedQuantity,reson);
+        stock.modifyWithStockUsage(usedQuantity, reason);
 
     }
 }

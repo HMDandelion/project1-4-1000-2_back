@@ -1,9 +1,6 @@
 package com.hmdandelion.project_1410002.production.dto.material;
 
-import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
-import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.production.domain.entity.material.MaterialUsage;
-import com.hmdandelion.project_1410002.production.domain.entity.material.StockUsage;
 import com.hmdandelion.project_1410002.production.domain.type.MaterialUsageStatus;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -38,7 +35,7 @@ public class MaterialUsageDTO {
         );
     }
 
-    public void addLinName(String lineName) {
+    public void addLineName(String lineName) {
         this.lineName = lineName;
     }
 

@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.dto.material.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.dto.product.dto.BomDTO;
 import com.hmdandelion.project_1410002.production.domain.entity.line.Line;
@@ -18,6 +19,7 @@ public class MaterialUsageResponse {
 
 
     private final Long usageCode;
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private final LocalDateTime usageDatetime;
     private final MaterialUsageStatus status;
     private final Long orderedQuantity;
