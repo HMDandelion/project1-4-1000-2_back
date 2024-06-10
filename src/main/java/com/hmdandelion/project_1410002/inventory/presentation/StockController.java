@@ -98,4 +98,6 @@ public class StockController {
         return ResponseEntity.ok(accumulateProducts);
     }
 
+
+
 }

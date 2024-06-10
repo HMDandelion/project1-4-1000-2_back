@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.inventory.dto.DropDownResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
@@ -82,5 +83,14 @@ public class MaterialStockController {
         materialStockService.delete(stockCode);
 
         return ResponseEntity.noContent().build();
+    }
+
+    //드롭다운 조회
+    @GetMapping("/inventory/dropdown")
+    public List<DropDownResponse> dropdown(
+            @RequestParam final String searchType
+    ) {
+        System.out.println("--------------------------------------------------------------------------------------------");
+        return materialStockService.dropdown(searchType);
     }
 }
