@@ -28,12 +28,17 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
     }
 
     @Override
-    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate, Boolean quantitySort, Boolean dateSort) {
+    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long warehouseCode, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate, Boolean quantitySort, Boolean dateSort) {
 
         QStock stock = QStock.stock;
         QStorage storage = QStorage.storage;
         QProduct product = QProduct.product;
         BooleanBuilder builder = new BooleanBuilder();
+
+        // warehouseCode 조건 추가
+        if (warehouseCode != null) {
+            builder.and(storage.warehouse.warehouseCode.eq(warehouseCode));
+        }
 
         if (productCode != null) {
             builder.and(stock.product.productCode.eq(productCode));
@@ -45,15 +50,11 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
             builder.and(storage.actualQuantity.loe(maxQuantity));
         }
 
-
-
-
-
         builder.and(storage.isDelete.eq(false));
 
         JPAQuery<Storage> query = queryFactory
                 .selectFrom(storage)
-                .join(storage.stock,stock)
+                .join(storage.stock, stock)
                 .join(storage.stock.product, product)
                 .where(builder);
 

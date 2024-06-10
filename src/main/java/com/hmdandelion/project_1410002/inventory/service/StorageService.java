@@ -248,11 +248,11 @@ public class StorageService {
         return storageWarehouse;
     }
 
-    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity,Long startDate,Long endDate,Boolean quantitySort, Boolean dateSort) {
-        if(minQuantity>maxQuantity){
+    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long warehouseCode, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate, Boolean quantitySort, Boolean dateSort) {
+        if(minQuantity > maxQuantity){
             throw new BadRequestException(ExceptionCode.BAD_REQUEST_MIN_QUANTITY);
         }
-        return storageRepo.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort);
+        return storageRepo.searchStorages(pageable, warehouseCode, productCode, minQuantity, maxQuantity, startDate, endDate, quantitySort, dateSort);
     }
 
 

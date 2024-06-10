@@ -22,8 +22,9 @@ public class StorageController {
     private final StorageService storageService;
 
     /*재고 저장 조회(필터링)*/
-    @GetMapping("/storage")
+    @GetMapping("/storage/filter/{warehouseCode}")
     public ResponseEntity<Page<StorageFilterResponse>> getStocks(
+            @PathVariable final Long warehouseCode,
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final Long productCode,
             @RequestParam(defaultValue = "1") final Long minQuantity,
@@ -32,10 +33,9 @@ public class StorageController {
             @RequestParam(defaultValue = "100") final Long endDate,
             @RequestParam(defaultValue = "true") final Boolean quantitySort,
             @RequestParam(defaultValue = "true") final Boolean dateSort
-
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<StorageFilterResponse> storages = storageService.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort);
+        Page<StorageFilterResponse> storages = storageService.searchStorages(pageable, warehouseCode, productCode, minQuantity, maxQuantity, startDate, endDate, quantitySort, dateSort);
         return ResponseEntity.ok(storages);
     }
 
