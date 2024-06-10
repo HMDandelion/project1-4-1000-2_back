@@ -7,7 +7,6 @@ import com.hmdandelion.project_1410002.auth.handler.JwtAuthenticationEntryPoint;
 import com.hmdandelion.project_1410002.auth.handler.LoginFailureHandler;
 import com.hmdandelion.project_1410002.auth.handler.LoginSuccessHandler;
 import com.hmdandelion.project_1410002.auth.service.AuthService;
-import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,12 +1,8 @@
 package com.hmdandelion.project_1410002.auth.type;
 
-import com.hmdandelion.project_1410002.employee.dto.EmployeeInfoDTO;
 import lombok.Getter;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 @Getter
 public class CustomUser extends User {
