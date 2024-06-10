@@ -53,7 +53,7 @@ public class LineService {
     @Transactional
     public void modify(Long lineCode, LineUpdateRequest lineUpdateRequest) {
 
-        Line line = (Line) lineRepo.findLineByLineCode(lineCode)
+        Line line = lineRepo.findLineByLineCode(lineCode)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_LINE_CODE));
 
         line.modify(
@@ -68,6 +68,11 @@ public class LineService {
     public void remove(Long lineCode) {
 
         lineRepo.deleteById(lineCode);
+    }
+
+    public String findNameByCode(Long lineCode) {
+        return lineRepo.findLineByLineCode(lineCode)
+                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_LINE_CODE)).getLineName();
     }
 }
 

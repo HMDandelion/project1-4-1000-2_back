@@ -55,4 +55,14 @@ public class MaterialStockRepoCustomImpl implements MaterialStockRepoCustom {
                 .fetchFirst();
     }
 
+    @Override
+    public List<Long> searchMaterialStockByMaterialName(String materialName) {
+        QMaterialStock materialStock = QMaterialStock.materialStock;
+        return queryFactory.select(materialStock.stockCode)
+                           .from(materialStock)
+                           .where(materialStock.materialSpec.materialName.contains(materialName))
+                           .fetch();
+
+    }
+
 }

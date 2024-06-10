@@ -91,4 +91,15 @@ public class MaterialStockService {
         stock.modifyFrom(request, warehouse);
         return stock.getStockCode();
     }
+
+    public List<Long> searchMaterialStockByMaterialName(String materialName) {
+
+        return materialStockRepo.searchMaterialStockByMaterialName(materialName);
+    }
+
+    public void modifyWithStockUsage(Long stockCode, int usedQuantity, String reason) {
+        MaterialStock stock = materialStockRepo.getStockByCode(stockCode);
+        stock.modifyWithStockUsage(usedQuantity, reason);
+
+    }
 }

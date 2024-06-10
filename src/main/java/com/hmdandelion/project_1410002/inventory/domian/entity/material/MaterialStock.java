@@ -1,10 +1,13 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.material;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
+import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 import com.hmdandelion.project_1410002.inventory.domian.type.StockDivision;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
+import com.hmdandelion.project_1410002.production.domain.entity.material.StockUsage;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -65,9 +69,20 @@ public class MaterialStock {
     }
 
     public void modifyFrom(MaterialStockModifyRequest request, Warehouse warehouse) {
+
         this.actualQuantity = request.getActualQuantity();
+
         this.modificationReason = request.getModificationReason();
         this.warehouse = warehouse;
+    }
+
+    public void modifyWithStockUsage(int usedQuantity, String reson) {
+
+        this.actualQuantity = (int)(actualQuantity - usedQuantity);
+        if (this.actualQuantity < 0) {
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_INSUFFICIENT_QUANTITY);
+        }
+        this.modificationReason = reson;
     }
 }
 
