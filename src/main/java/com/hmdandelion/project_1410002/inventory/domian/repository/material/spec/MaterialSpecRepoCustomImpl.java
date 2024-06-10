@@ -8,11 +8,14 @@ import com.hmdandelion.project_1410002.purchase.domain.entity.material.AssignedM
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.QAssignedMaterial;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -29,7 +32,7 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<MaterialSpec> searchMaterialSpec(final Pageable pageable, final String materialName) {
+    public Page<MaterialSpec> searchMaterialSpec(final Pageable pageable, final String materialName) {
         QMaterialSpec materialSpec = QMaterialSpec.materialSpec;
         BooleanBuilder builder = new BooleanBuilder();
 
@@ -37,14 +40,19 @@ public class MaterialSpecRepoCustomImpl implements MaterialSpecRepoCustom {
             log.info("검색값 확인됨...{}", materialName);
             builder.and(materialSpec.materialName.containsIgnoreCase(materialName));
         }
-
-        return queryFactory
+        List<MaterialSpec> list = queryFactory
                 .selectFrom(materialSpec)
                 .where(builder)
                 .orderBy(materialSpec.specCode.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+        JPAQuery<Long> countQuery = queryFactory
+                .select(materialSpec.count())
+                .from(materialSpec)
+                .orderBy(materialSpec.specCode.asc());
+
+        return PageableExecutionUtils.getPage(list,pageable, countQuery::fetchOne);
     }
 
     @Override
