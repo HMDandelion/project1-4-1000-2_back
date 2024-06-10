@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.domian.repository.material.sto
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.QMaterialStock;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
+import com.hmdandelion.project_1410002.inventory.domian.repository.material.stock.MaterialStockRepoCustom;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

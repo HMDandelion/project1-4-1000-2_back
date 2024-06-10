@@ -42,21 +42,22 @@ public class ProductionManagement {
     @Enumerated(value = EnumType.STRING)
     private ProductionStatusType productionStatus = ProductionStatusType.REGISTER_PRODUCTION;
 
-
     @OneToMany(mappedBy = "productionManagement")
     private List<ProductionDetail> productionDetails;
 
     public ProductionManagement(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus) {
+
         this.startAt = startAt;
         this.completedAt = completedAt;
         this.totalProductionQuantity = totalProductionQuantity;
         this.productionFile = productionFile;
-        this.productionStatus = productionStatus  ;
+        this.productionStatus = productionStatus;
     }
 
 
     public static ProductionManagement of(LocalDateTime startAt, LocalDateTime completedAt, int totalProductionQuantity, String productionFile, ProductionStatusType productionStatus) {
         return new ProductionManagement(
+
                 startAt,
                 completedAt,
                 totalProductionQuantity,
@@ -74,7 +75,5 @@ public class ProductionManagement {
         this.productionFile = productionFile;
         this.productionStatus = productionStatus;
     }
-
-
 }
 

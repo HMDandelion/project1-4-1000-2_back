@@ -21,16 +21,16 @@ public interface ProductionRepo extends JpaRepository<ProductionManagement, Long
     /* ProductionStatusCode와 ProductionStatus로 조회 */
     Page<ProductionManagement> findByProductionStatusCodeAndProductionStatus(Pageable pageable, Long productionStatusCode, ProductionStatusType productionStatusType);
 
-    /* 완료 날짜로 조회 */
-    Page<ProductionManagement> findByCompletedAtBetween(Pageable pageable, LocalDateTime startAt, LocalDateTime completedAt);
-
-    /* 작업 종료 날짜로 조회*/
-    Page<ProductionManagement> findByCompletedAt(Pageable pageable, LocalDateTime completedAt);
-
-    /*작업 시작 날짜로 조회 */
-    Page<ProductionManagement> findByStartAt(Pageable pageable, LocalDateTime startAt);
-
+//    /* 완료 날짜로 조회 */
+//    Page<ProductionManagement> findByCompletedAtBetween(Pageable pageable, LocalDateTime startAt, LocalDateTime completedAt);
+//
+//    /* 작업 종료 날짜로 조회*/
+//    Page<ProductionManagement> findByCompletedAt(Pageable pageable, LocalDateTime completedAt);
+//
+//    /*작업 시작 날짜로 조회 */
+//    Page<ProductionManagement> findByStartAt(Pageable pageable, LocalDateTime startAt);
 
     /* 상세 조회 */
-    Optional<ProductionManagement> findByProductionStatusCode(Long productionStatusCode);
+    Optional<ProductionManagement>findByProductionStatusCode(Long productionStatusCode);
+
 }
