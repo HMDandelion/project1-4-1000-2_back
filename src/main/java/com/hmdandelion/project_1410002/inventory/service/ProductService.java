@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.product.Produ
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.SimpleProductResponse;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.Order;
 import com.hmdandelion.project_1410002.sales.domain.entity.order.OrderProduct;
@@ -45,6 +46,12 @@ public class ProductService {
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10, Sort.by("productCode").descending());
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleProductResponse> getSimpleProducts() {
+        List<Product> products = productRepository.findByStatus(ProductStatus.IN_PRODUCTION);
+        return products.stream().map(SimpleProductResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
