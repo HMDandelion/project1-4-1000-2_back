@@ -12,5 +12,5 @@ public interface LineRepo extends JpaRepository<Line, Long> {
     Page<Line> findByLineStatusNot(LineStatusType lineStatusType, Pageable pageable);
 
 
-    Optional<Object> findLineByLineCode(Long lineCode);
+    Optional<Line> findLineByLineCode(Long lineCode);
 }

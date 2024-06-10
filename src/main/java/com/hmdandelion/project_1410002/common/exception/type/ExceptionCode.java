@@ -18,6 +18,7 @@ public enum ExceptionCode {
     NOT_FOUND_MATERIAL_NAME(3402, "자재 이름에 해당하는 스톡이 존재하지 않습니다." ),
     NOT_FOUND_WAREHOUSE_CODE(3403,"창고 코드에 맞는 창고가 존재하지 않습니다" ),
     NOT_FOUND_SPEC_CODE(3404,"스펙 코드에 맞는 스펙이 존재하지 않습니다." ),
+    NOT_FOUND_USAGE_CODE(3405,"사용코드에 맞는 사용이 존재하지 않습니다." ),
     NOT_FOUND_BOM_CODE(3501,"BOM 코드에 맞는 BOM이 존재하지 않습니다."),
     NOT_FOUND_STORAGE_CODE(3502,"저장 이력 코드가 존재하지 않습니다."),
     NOT_FOUND_PRODUCTION_CODE(3600, "상품 코드에 해당하는 생산 보고서가 존재하지 않습니다."),
@@ -36,11 +37,13 @@ public enum ExceptionCode {
     NO_CONTENTS_M_ORDERS(4401,"찾으시는 원자재 주문이 존재하지 않습니다." ),
     No_CONTENTS_CLIENT_CODE(4402,"조건에 맞는 거래처가 존재하지 않습니다." ),
     No_CONTENTS_M_ORDER_TODAY(4403,"금일 입고 예정인 주문이 없습니다." ),
+    NO_CONTENTS_MATERIAL_USE(4404,"조건에 맞는 원자재 사용이 존재하지 않습니다." ),
 
     BAD_REQUEST_ORDER_EXIST_CLIENT(6100, "주문건이 존재하는 거래처는 삭제할 수 없습니다."),
     BAD_REQUEST_ORDERED_ESTIMATE(6200, "주문이 진행된 견적은 삭제할 수 없습니다."),
     BAD_REQUEST_DEADLINE_PASSED(6201, "마감일자가 지난 견적은 주문으로 전환할 수 없습니다."),
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
+    BAD_REQUEST_INSUFFICIENT_QUANTITY(6401,"사용하려는 재고보다 실수량이 부족합니다" ),
     BAD_REQUEST_MORE_QUANTITY(6500,"보관 중인 재고가 재고 수량보다 큽니다."),
     BAD_REQUEST_MIN_QUANTITY(6500,"최소 수량이 최대 수량보다 큽니다."),
     BAD_REQUEST_DELETED_STOCK(6501,"삭제 된 재고 정보입니다."),
@@ -55,6 +58,8 @@ public enum ExceptionCode {
     NOT_FOUND_REFRESH_TOKEN(9901, "리프레시 토큰이 유효하지 않습니다."),
     UNAUTHORIZED(9902, "인증되지 않은 요청입니다."),
     ACCESS_DENIED(9903, "인가되지 않은 요청입니다.");
+
+
 
 
     private final int code;
