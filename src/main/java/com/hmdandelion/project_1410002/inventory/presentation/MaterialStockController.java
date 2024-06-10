@@ -37,12 +37,10 @@ public class MaterialStockController {
             @RequestParam(defaultValue = "10") final int size
     ) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        final List<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+        final Page<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(list);
 
-        final Page<MaterialStockSimpleDTO> toPage = new PageImpl<>(list, pageable, list.size());
-        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
-
-        PagingResponse res = PagingResponse.of(toPage.getContent(), pagingButtonInfo);
+        PagingResponse res = PagingResponse.of(list.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(res);
     }
 

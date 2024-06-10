@@ -17,6 +17,7 @@ import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialS
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,12 +35,12 @@ public class MaterialStockService {
     private final WarehouseService warehouseService;
 
 
-    public List<MaterialStockSimpleDTO> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
-        final List<MaterialStock> stocks = materialStockRepo.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+    public Page<MaterialStockSimpleDTO> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
+        final Page<MaterialStock> stocks = materialStockRepo.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
         if (stocks.isEmpty()) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_MATERIAL_NAME);
         }
-        return stocks.stream().map(MaterialStockSimpleDTO::from).toList();
+        return stocks.map(MaterialStockSimpleDTO::from);
     }
 
     public MaterialStockResponse findById(Long stockCode) {
