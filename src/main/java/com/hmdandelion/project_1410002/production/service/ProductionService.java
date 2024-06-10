@@ -70,12 +70,12 @@ public class ProductionService {
             productionManagements = productionRepo.findByProductionStatusCodeAndProductionStatus(getPageable(page), productionStatusCode, ProductionStatusType.REGISTER_PRODUCTION);
         } else if (productionStatusType != null) {
             productionManagements = productionRepo.findByProductionStatus(getPageable(page), productionStatusType);
-        } else if (completedAt != null && startAt != null) {
-            productionManagements = productionRepo.findByCompletedAtBetween(getPageable(page), startAt, completedAt);
-        } else if (completedAt != null) {
-            productionManagements = productionRepo.findByCompletedAt(getPageable(page), completedAt);
-        } else if (startAt != null) {
-            productionManagements = productionRepo.findByStartAt(getPageable(page), startAt);
+//        } else if (completedAt != null && startAt != null) {
+//            productionManagements = productionRepo.findByCompletedAtBetween(getPageable(page), startAt, completedAt);
+//        } else if (completedAt != null) {
+//            productionManagements = productionRepo.findByCompletedAt(getPageable(page), completedAt);
+//        } else if (startAt != null) {
+//            productionManagements = productionRepo.findByStartAt(getPageable(page), startAt);
         } else {
             productionManagements = productionRepo.findAll(getPageable(page));
         }
@@ -168,7 +168,7 @@ public class ProductionService {
             // 연관된 불량 상세 정보 수정
             /* 타겟 엔티티 조회 */
             List<DefectDetail> defectDetails = defectDetailRepo.findByProductionDetail(productionDetail);
-            Map<Long, DefectDetail> defectDetailMap = defectDetails.stream().collect(Collectors.toMap(DefectDetail::getId, Function.identity()));
+            Map<Long, DefectDetail> defectDetailMap = defectDetails.stream().collect(Collectors.toMap(DefectDetail::getDefectCode, Function.identity()));
 
             for (DefectDetailUpdateRequest defectDetailUpdateRequest : productionDetailRequest.getDefectDetailUpdateRequest()) {
                 if (defectDetailUpdateRequest.getId() != null) {

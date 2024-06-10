@@ -46,14 +46,12 @@ public class DefectDetail {
                 defectFile
         );
     }
+
     public void modifyDetail(String defectReason, DefectStatusType defectStatus, String defectFile) {
         this.defectReason = defectReason;
         this.defectStatus = defectStatus;
         this.defectFile = defectFile;
     }
 
-    public Long getId() {
-    return defectCode;
-    }
 }
 
