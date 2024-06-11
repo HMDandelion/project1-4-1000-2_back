@@ -116,6 +116,9 @@ public class ReleaseService {
             LocalDate now = LocalDate.now();
             Period period = Period.between(now, order.getDeadline());
             long daysDiff = period.getDays();
+            if(daysDiff<0){
+                daysDiff=0;
+            }
 
             ReleasePossible releasePossible = ReleasePossible.of(
                     order.getOrderCode(),
