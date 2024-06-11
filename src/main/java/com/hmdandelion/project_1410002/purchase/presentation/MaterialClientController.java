@@ -33,10 +33,9 @@ public class MaterialClientController {
             @RequestParam(required = false) final String clientName
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        List<MaterialClientDTO> clients = materialClientService.searchClients(pageable, clientName);
-        Page<MaterialClientDTO> toPage = new PageImpl<>(clients, pageable, clients.size());
+        Page<MaterialClientDTO> clients = materialClientService.searchClients(pageable, clientName);
 
-        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(clients);
         PagingResponse res = new PagingResponse(clients, pagingButtonInfo);
         return ResponseEntity.ok(res);
     }

@@ -12,6 +12,7 @@ import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSp
 import com.hmdandelion.project_1410002.purchase.domain.entity.material.AssignedMaterial;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,9 +27,8 @@ public class MaterialSpecService {
     private final MaterialSpecRepo materialSpecRepo;
     private final MaterialSpecCategoryService materialSpecCategoryService;
     @Transactional
-    public List<MaterialSpecDTO> searchMaterialSpec(Pageable pageable, String materialName) {
-        List<MaterialSpec> specs = materialSpecRepo.searchMaterialSpec(pageable, materialName);
-        return specs.stream().map(MaterialSpecDTO::from).toList();
+    public Page<MaterialSpecDTO> searchMaterialSpec(Pageable pageable, String materialName) {
+        return materialSpecRepo.searchMaterialSpec(pageable, materialName).map(MaterialSpecDTO::from);
     }
 
     @Transactional

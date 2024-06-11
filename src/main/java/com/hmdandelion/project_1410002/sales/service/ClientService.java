@@ -109,8 +109,8 @@ public class ClientService {
         );
     }
 
-    public List<MaterialClientDTO> searchMateClients(Pageable pageable, String clientName) {
-        List<MaterialClientDTO> clients = clientRepo.searchMaterialClient(pageable, clientName);
+    public Page<MaterialClientDTO> searchMateClients(Pageable pageable, String clientName) {
+        Page<MaterialClientDTO> clients = clientRepo.searchMaterialClient(pageable, clientName);
         if (clients.isEmpty()) {
             throw new NotFoundException(ExceptionCode.No_CONTENTS_CLIENT_CODE);
         }

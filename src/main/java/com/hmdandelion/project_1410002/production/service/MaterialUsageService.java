@@ -10,6 +10,7 @@ import com.hmdandelion.project_1410002.production.dto.material.MaterialUsageDTO;
 import com.hmdandelion.project_1410002.production.dto.material.StockUsageDTO;
 import com.hmdandelion.project_1410002.production.dto.material.response.MaterialUsageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +33,13 @@ public class MaterialUsageService {
     }
 
 
-    public List<MaterialUsageDTO> searchUse(Pageable pageable, String materialName, String sortType) {
+    public Page<MaterialUsageDTO> searchUse(Pageable pageable, String materialName, String sortType) {
         List<Long> stockCodes = new ArrayList<>();
         if (materialName != null) {
             stockCodes = materialStockService.searchMaterialStockByMaterialName(materialName);
         }
 
-        List<MaterialUsageDTO> list = materialUsageRepo.searchUse(pageable, stockCodes, sortType);
+        Page<MaterialUsageDTO> list = materialUsageRepo.searchUse(pageable, stockCodes, sortType);
         if (list.isEmpty()) {
             throw new NoContentsException(ExceptionCode.NO_CONTENTS_MATERIAL_USE);
         }

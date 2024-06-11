@@ -16,5 +16,5 @@ public interface ClientRepoCustom {
 
     List<MaterialClientDTO> getMaterialClientByCodes(List<Long> clientCodes);
 
-    List<MaterialClientDTO> searchMaterialClient(Pageable pageable, String clientName);
+    Page<MaterialClientDTO> searchMaterialClient(Pageable pageable, String clientName);
 }

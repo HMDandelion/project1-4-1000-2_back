@@ -11,6 +11,7 @@ import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialCl
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,9 +46,9 @@ public class MaterialClientService {
     }
 
 
-    public List<MaterialClientDTO> searchClients(Pageable pageable, String clientName) {
-        List<MaterialClientDTO> clients = clientService.searchMateClients(pageable, clientName);
-        addAssignedMaterial(clients);
+    public Page<MaterialClientDTO> searchClients(Pageable pageable, String clientName) {
+        Page<MaterialClientDTO> clients = clientService.searchMateClients(pageable, clientName);
+        addAssignedMaterial(clients.getContent());
         return clients;
     }
 

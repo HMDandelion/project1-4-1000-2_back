@@ -12,6 +12,8 @@ import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialOr
 import com.hmdandelion.project_1410002.purchase.service.MaterialOrderService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MaterialOrderController {
 
+    private static final Logger log = LoggerFactory.getLogger(MaterialOrderController.class);
     private final MaterialOrderService materialOrderService;
 
     //주문 조회(계획코드로 조회, 전체조회, 공급업체 명으로)
@@ -36,12 +39,12 @@ public class MaterialOrderController {
             @RequestParam(required = false) final Long planCode,
             @RequestParam(required = false) final String clientName
     ) {
+        log.info("전달받은 패이지 {}",page);
         Pageable pageable = PageRequest.of(page - 1, 10);
 
-        List<MaterialOrderDTO> orders = materialOrderService.getOrders(planCode, clientName, pageable);
-        Page<MaterialOrderDTO> toPage = new PageImpl<>(orders, pageable, orders.size());
+        Page<MaterialOrderDTO> orders = materialOrderService.getOrders(planCode, clientName, pageable);
 
-        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(orders);
         PagingResponse res = new PagingResponse(orders, pagingButtonInfo);
         return ResponseEntity.ok(res);
     }
@@ -91,10 +94,9 @@ public class MaterialOrderController {
     public ResponseEntity<PagingResponse> orderToday() {
         Pageable pageable = PageRequest.of(0, 100);
 
-        List<MaterialOrderDTO> orders = materialOrderService.getOrderToday(pageable);
-        Page<MaterialOrderDTO> toPage = new PageImpl<>(orders, pageable, orders.size());
+        Page<MaterialOrderDTO> orders = materialOrderService.getOrderToday(pageable);
 
-        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(orders);
         PagingResponse res = new PagingResponse(orders, pagingButtonInfo);
         return ResponseEntity.ok(res);
     }

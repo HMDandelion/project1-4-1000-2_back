@@ -33,10 +33,9 @@ public class MaterialUsageController {
             @RequestParam(defaultValue = "not_complete") String sortType
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        List<MaterialUsageDTO> list = materialUsageService.searchUse(pageable, materialName, sortType);
-        Page<MaterialUsageDTO> toPage = new PageImpl<>(list, pageable, list.size());
+        Page<MaterialUsageDTO> list = materialUsageService.searchUse(pageable, materialName, sortType);
 
-        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(list);
         PagingResponse res = new PagingResponse(list, pagingButtonInfo);
 
         return ResponseEntity.ok(res);
