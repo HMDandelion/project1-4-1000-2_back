@@ -48,6 +48,10 @@ public class MaterialSpecController {
         return ResponseEntity.ok(res);
     }
 
+    //스펙 상세
+
+
+
     //스펙 등록
     @PostMapping("/spec")
     public ResponseEntity<Void> createSpec(
