@@ -13,13 +13,17 @@ import com.hmdandelion.project_1410002.production.domain.type.MaterialUsageStatu
 import com.hmdandelion.project_1410002.production.dto.material.MaterialUsageDTO;
 import com.hmdandelion.project_1410002.production.dto.material.response.MaterialUsageResponse;
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 
 import java.util.List;
 
 import static com.hmdandelion.project_1410002.employee.domain.entity.QEmployee.employee;
+import static com.hmdandelion.project_1410002.production.domain.entity.QWorkOrder.workOrder;
 import static com.hmdandelion.project_1410002.production.domain.entity.material.QMaterialUsage.materialUsage;
 import static com.hmdandelion.project_1410002.production.domain.entity.material.QStockUsage.stockUsage;
 
@@ -29,7 +33,7 @@ public class MaterialUsageRepoCustomImpl implements MaterialUsageRepoCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<MaterialUsageDTO> searchUse(Pageable pageable, List<Long> stockCodes, String sortType) {
+    public Page<MaterialUsageDTO> searchUse(Pageable pageable, List<Long> stockCodes, String sortType) {
         BooleanBuilder builder = new BooleanBuilder();
         List<Long> targetCodes;
         if (!stockCodes.isEmpty()) {
@@ -54,8 +58,16 @@ public class MaterialUsageRepoCustomImpl implements MaterialUsageRepoCustom {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+        System.out.println(usages.get(0).getUsageCode());
+        System.out.println(usages.get(0).getWorkOrder());
+        JPAQuery<Long> count = queryFactory
+                .select(materialUsage.count())
+                .from(materialUsage)
+                .where(builder);
 
-        return usages.stream().map(MaterialUsageDTO::from).toList();
+        return PageableExecutionUtils.getPage(usages.stream()
+                                                    .map(MaterialUsageDTO::from)
+                                                    .toList(), pageable, count::fetchOne);
     }
 
     @Override

@@ -17,12 +17,14 @@ public class MaterialClientDTO {
     private final Long clientCode;
     private final String clientName;
     private final String representativeName;
+    private final String phone;
     private final List<MaterialSpecDTO> materials;
 
     protected MaterialClientDTO(Client client) {
         this.clientCode = client.getClientCode();
         this.clientName = client.getClientName();
         this.representativeName = client.getRepresentativeName();
+        this.phone = client.getPhone();
         this.materials = new ArrayList<>();
     }
 
@@ -31,6 +33,7 @@ public class MaterialClientDTO {
                 client.getClientCode(),
                 client.getClientName(),
                 client.getRepresentativeName(),
+                client.getPhone(),
                 new ArrayList<>()
         );
     }
