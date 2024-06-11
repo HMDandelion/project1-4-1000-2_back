@@ -58,6 +58,10 @@ public class ExceptionHandlingController {
                     code = 6902;
                     message = "알맞은 범위의 값이 입력되지 않았습니다.";
                     break;
+                case "Future" :
+                    code = 6903;
+                    message = "과거의 값을 입력할 수 없습니다.";
+                    break;
             }
         }
         ExceptionResponse exceptionResponse = new ExceptionResponse(code, message);

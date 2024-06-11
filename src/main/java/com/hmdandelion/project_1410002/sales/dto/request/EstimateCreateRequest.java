@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.sales.dto.request;
 
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EstimateCreateRequest {
     @NotNull
+    @Future
     private final LocalDate deadline;
     @Setter
     private Long clientCode;
