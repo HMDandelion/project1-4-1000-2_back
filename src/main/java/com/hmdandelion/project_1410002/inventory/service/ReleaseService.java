@@ -116,18 +116,22 @@ public class ReleaseService {
             LocalDate now = LocalDate.now();
             Period period = Period.between(now, order.getDeadline());
             long daysDiff = period.getDays();
+            String dday;
             if(daysDiff<0){
-                daysDiff=0;
+                dday="마감 기간 종료";
+            }else if(daysDiff==0){
+                dday="D-DAY";
+            }else{
+                dday= "D-"+String.valueOf(daysDiff);
             }
 
             ReleasePossible releasePossible = ReleasePossible.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     order.getDeadline(),
-                    daysDiff,
+                    dday,
                     result
             );
-
             releasePossibleList.add(releasePossible);
         }
 
