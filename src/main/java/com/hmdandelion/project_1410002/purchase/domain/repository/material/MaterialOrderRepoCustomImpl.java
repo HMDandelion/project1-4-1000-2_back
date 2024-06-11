@@ -1,7 +1,8 @@
 package com.hmdandelion.project_1410002.purchase.domain.repository.material;
 
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.*;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.MaterialOrder;
+import com.hmdandelion.project_1410002.purchase.domain.entity.material.OrderSpec;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
 import com.querydsl.core.BooleanBuilder;
@@ -17,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -123,7 +123,7 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
                 .orderBy(materialOrder.orderDate.desc())
                 .fetch();
 
-        return getMaterialOrderDTOS(orders,pageable);
+        return getMaterialOrderDTOS(orders, pageable);
     }
 
     @Override
@@ -140,8 +140,8 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
     public void setOrderSpec(Long orderCode, List<OrderSpecCreateDTO> orderSpecList) {
 
         List<Long> specCodes = orderSpecList.stream()
-                .map(OrderSpecCreateDTO::getSpecCode)
-                .toList();
+                                            .map(OrderSpecCreateDTO::getSpecCode)
+                                            .toList();
 
         List<MaterialSpec> specs = queryFactory
                 .selectFrom(materialSpec)
@@ -179,13 +179,13 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
                 .selectFrom(materialOrder)
                 .where(materialOrder.deliveryDueDate.eq(today))
                 .fetch();
-        return getMaterialOrderDTOS(orders,pageable);
+        return getMaterialOrderDTOS(orders, pageable);
     }
 
     @Override
     public Map<String, Long> orderWeekly(LocalDate targetDate) {
         Map<String, Long> orderThisWeek = new LinkedHashMap<>();
-        String[] dayOfWeekNames = {"월요일", "화요일","수요일","목요일","금요일","토요일","일요일"};
+        String[] dayOfWeekNames = {"월요일", "화요일", "수요일", "목요일", "금요일", "토요일", "일요일"};
         for (int i = 0; i < dayOfWeekNames.length; i++) {
             String dayOfWeekName = dayOfWeekNames[i];
             Long cal = queryFactory
@@ -202,17 +202,21 @@ public class MaterialOrderRepoCustomImpl implements MaterialOrderRepoCustom {
         return orderThisWeek;
     }
 
-    private Page<MaterialOrderDTO> getMaterialOrderDTOS(List<MaterialOrder> orders,Pageable pageable) {
+    private Page<MaterialOrderDTO> getMaterialOrderDTOS(List<MaterialOrder> orders, Pageable pageable) {
         List<OrderSpec> orderSpecs = queryFactory
                 .selectFrom(orderSpec)
                 .leftJoin(orderSpec.materialSpec).fetchJoin()
-                .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())))
+                .where(orderSpec.orderCode.in(orders.stream()
+                                                    .map(MaterialOrder::getOrderCode)
+                                                    .collect(Collectors.toList())))
                 .fetch();
 
         JPAQuery<Long> count = queryFactory
                 .select(orderSpec.count())
                 .from(orderSpec)
-                .where(orderSpec.orderCode.in(orders.stream().map(MaterialOrder::getOrderCode).collect(Collectors.toList())));
+                .where(orderSpec.orderCode.in(orders.stream()
+                                                    .map(MaterialOrder::getOrderCode)
+                                                    .collect(Collectors.toList())));
 
         Map<Long, List<OrderSpec>> specsMap = orderSpecs.stream()
                                                         .collect(Collectors.groupingBy(OrderSpec::getOrderCode));
