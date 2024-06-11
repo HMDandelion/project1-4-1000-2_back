@@ -2,7 +2,9 @@ package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
@@ -16,8 +18,7 @@ import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreate
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,9 @@ public class StorageService {
     private final WarehouseRepo warehouseRepo;
     private final ProductRepo productRepo;
 
+    private Pageable getPageable(final Integer page) {
+        return PageRequest.of(page - 1, 10, Sort.by("productCode"));
+    }
 
     public Long saveStorage(Long stockCode, StorageCreateRequest storageCreateRequest) {
 
@@ -175,14 +179,22 @@ public class StorageService {
         System.out.println("resultList = " + resultList);
         return resultList;
     }
+
+
     @Transactional(readOnly = true)
-    public List<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
+    public Page<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode, Integer page) {
+        // Pageable 객체 생성
+        Pageable pageable = getPageable(page);
+
         List<StorageWarehouseDTO> storageWarehouses = new ArrayList<>();
         List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode, false);
+
         if (storages.isEmpty() && storages == null) {
             throw new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE);
         }
-        Warehouse warehouse = warehouseRepo.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
+
+        Warehouse warehouse = warehouseRepo.findById(warehouseCode)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
 
         // createdAt의 내림차순으로 storages 리스트 정렬
         storages.sort(Comparator.comparing(Storage::getCreatedAt).reversed());
@@ -197,10 +209,16 @@ public class StorageService {
                     storage.getCreatedAt()
             );
             storageWarehouses.add(storageWarehouse);
-            System.out.println("storageWarehouse = " + storageWarehouse);
         }
-        return storageWarehouses;
+
+        // List에서 Page로 변환
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), storageWarehouses.size());
+        List<StorageWarehouseDTO> pagedList = storageWarehouses.subList(start, end);
+
+        return new PageImpl<>(pagedList, pageable, storageWarehouses.size());
     }
+
 
     public void modifyDestroyQuantity(Long storageCode, StorageDestroyRequest destroyQuantity) {
         Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storageCode,false);

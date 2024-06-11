@@ -1,5 +1,9 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.common.paging.Pagination;
+import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
+import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
@@ -70,13 +74,16 @@ public class StorageController {
 
     /*창고 별 이동 종류,상품명,수량,창고이름,등록 날짜*/
     @GetMapping("/storage/warehouse/{warehouseCode}")
-    public ResponseEntity<List<StorageWarehouseDTO>> getStorageWarehouseByWarehouseCode(
-            @PathVariable final Long warehouseCode
+    public ResponseEntity<PagingResponse> getStorageWarehouseByWarehouseCode(
+            @PathVariable final Long warehouseCode,
+            @RequestParam(defaultValue = "1") final Integer page
     ){
-        List<StorageWarehouseDTO> storageWarehouses = storageService.getStorageWarehouseByWarehouseCode(warehouseCode);
-        return ResponseEntity.ok(storageWarehouses);
-    }
+        Page<StorageWarehouseDTO> storageWarehouses = storageService.getStorageWarehouseByWarehouseCode(warehouseCode,page);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(storageWarehouses);
+        final PagingResponse pagingResponse = PagingResponse.of(storageWarehouses.getContent(), pagingButtonInfo);
 
+        return ResponseEntity.ok(pagingResponse);
+    }
     /*파손 등록*/
     @PutMapping("/storage/destroy/{storageCode}")
     public ResponseEntity<Void> modifyDestroyQuantity(
