@@ -57,18 +57,18 @@ public class StorageRepoCustomImpl implements StorageRepoCustom {
                 .join(storage.stock, stock)
                 .join(storage.stock.product, product)
                 .where(builder);
-
+        if (Boolean.TRUE.equals(dateSort)) {
+            query.orderBy(storage.createdAt.asc());
+        } else if (Boolean.FALSE.equals(dateSort)) {
+            query.orderBy(storage.createdAt.desc());
+        }
         if (quantitySort) {
             query.orderBy(storage.actualQuantity.asc());
         } else if (!quantitySort) {
             query.orderBy(storage.actualQuantity.desc());
         }
 
-        if (Boolean.TRUE.equals(dateSort)) {
-            query.orderBy(storage.createdAt.asc());
-        } else if (Boolean.FALSE.equals(dateSort)) {
-            query.orderBy(storage.createdAt.desc());
-        }
+
 
         QueryResults<Storage> queryResults = query
                 .offset(pageable.getOffset())

@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus.*;
@@ -177,13 +178,18 @@ public class StorageService {
     @Transactional(readOnly = true)
     public List<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
         List<StorageWarehouseDTO> storageWarehouses = new ArrayList<>();
-        List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode,false);
-        if(storages.isEmpty()&&storages==null){
+        List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode, false);
+        if (storages.isEmpty() && storages == null) {
             throw new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE);
         }
         Warehouse warehouse = warehouseRepo.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
-        for(Storage storage:storages){
+
+        // createdAt의 내림차순으로 storages 리스트 정렬
+        storages.sort(Comparator.comparing(Storage::getCreatedAt).reversed());
+
+        for (Storage storage : storages) {
             StorageWarehouseDTO storageWarehouse = StorageWarehouseDTO.of(
+                    storage.getStorageCode(),
                     "입고",
                     storage.getStock().getProduct().getProductName(),
                     storage.getInitialQuantity(),
@@ -195,7 +201,6 @@ public class StorageService {
         }
         return storageWarehouses;
     }
-
 
     public void modifyDestroyQuantity(Long storageCode, StorageDestroyRequest destroyQuantity) {
         Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storageCode,false);
@@ -314,4 +319,5 @@ public class StorageService {
         }
         return resultList;
     }
+
 }

@@ -32,7 +32,7 @@ public class StorageController {
             @RequestParam(defaultValue = "0") final Long startDate,
             @RequestParam(defaultValue = "100") final Long endDate,
             @RequestParam(defaultValue = "true") final Boolean quantitySort,
-            @RequestParam(defaultValue = "true") final Boolean dateSort
+            @RequestParam(defaultValue = "false") final Boolean dateSort
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
         Page<StorageFilterResponse> storages = storageService.searchStorages(pageable, warehouseCode, productCode, minQuantity, maxQuantity, startDate, endDate, quantitySort, dateSort);

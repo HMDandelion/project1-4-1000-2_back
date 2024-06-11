@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StorageWarehouseDTO {
+    Long storageCode;
     String moveType;
     String productName;
     Long storageQuantity;
@@ -17,8 +18,9 @@ public class StorageWarehouseDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     LocalDateTime createdAt;
 
-    public static StorageWarehouseDTO of(String moveType, String productName, Long initialQuantity, String name, LocalDateTime createdAt) {
+    public static StorageWarehouseDTO of(Long storageCode,String moveType, String productName, Long initialQuantity, String name, LocalDateTime createdAt) {
         return new StorageWarehouseDTO(
+                storageCode,
                 moveType,
                 productName,
                 initialQuantity,
