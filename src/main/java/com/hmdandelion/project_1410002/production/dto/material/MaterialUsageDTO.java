@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.production.dto.material;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.entity.material.MaterialUsage;
 import com.hmdandelion.project_1410002.production.domain.type.MaterialUsageStatus;
 import jakarta.persistence.EnumType;
@@ -19,6 +20,7 @@ public class MaterialUsageDTO {
     private final Long lineCode;
     private String lineName;
     private final List<StockUsageDTO> stockUsages;
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private final LocalDateTime usageDatetime;
     @Enumerated(value = EnumType.STRING)
     private final MaterialUsageStatus status;
