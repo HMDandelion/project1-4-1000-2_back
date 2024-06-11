@@ -11,6 +11,7 @@ import com.hmdandelion.project_1410002.sales.service.EstimateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -43,7 +44,7 @@ public class EstimateController {
     }
 
     @PostMapping("/estimates")
-    public ResponseEntity<Void> save(@RequestBody EstimateCreateRequest estimateRequest) {
+    public ResponseEntity<Void> save(@Validated @RequestBody EstimateCreateRequest estimateRequest) {
         final Long estimateCode = estimateService.save(estimateRequest);
         return ResponseEntity.created(URI.create("/api/v1/estimates/" + estimateCode)).build();
     }
@@ -51,7 +52,7 @@ public class EstimateController {
     @PutMapping("/estimates/{estimateCode}")
     public ResponseEntity<Void>  modify(
             @PathVariable final Long estimateCode,
-            @RequestBody EstimateUpdateRequest estimateRequest
+            @Validated @RequestBody EstimateUpdateRequest estimateRequest
     ) {
         estimateService.modify(estimateCode, estimateRequest);
         return ResponseEntity.created(URI.create("/api/v1/estimates/" + estimateCode)).build();
