@@ -43,6 +43,8 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                         client.clientType.eq(ClientType.PRODUCTS)
                 )
                 .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
