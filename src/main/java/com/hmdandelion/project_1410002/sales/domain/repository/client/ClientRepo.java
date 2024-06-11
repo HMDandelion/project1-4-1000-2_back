@@ -15,4 +15,6 @@ public interface ClientRepo extends JpaRepository<Client, Long>, ClientRepoCusto
     Optional<Client> findByClientCodeAndStatusNot(Long clientCode, ClientStatus clientStatus);
 
     List<Client> findByClientTypeAndStatusNot(ClientType clientType, ClientStatus clientStatus);
+
+    List<Client> findByClientCodeIn(List<Long> clientCodes);
 }

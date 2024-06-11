@@ -3,11 +3,16 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
+import com.hmdandelion.project_1410002.inventory.dto.material.response.SpecDetailResponse;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecCategoryService;
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
+import com.hmdandelion.project_1410002.purchase.service.MaterialClientService;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
+import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +35,7 @@ public class MaterialSpecController {
     private static final Logger log = LoggerFactory.getLogger(MaterialSpecController.class);
     private final MaterialSpecService materialSpecService;
     private final MaterialSpecCategoryService materialSpecCategoryService;
+    private final MaterialClientService materialClientService;
 
     //모든 스펙 조회
     @GetMapping("/spec")
@@ -49,8 +55,14 @@ public class MaterialSpecController {
     }
 
     //스펙 상세
-
-
+    @GetMapping("/spec/{specCode}")
+    public ResponseEntity<SpecDetailResponse> specDetail(
+            @PathVariable final Long specCode
+    ) {
+        final MaterialSpec spec =  materialSpecService.specDetail(specCode);
+        final List<Client> clients = materialClientService.findBySpecCode(specCode);
+        return ResponseEntity.ok(SpecDetailResponse.from(spec,clients));
+    }
 
     //스펙 등록
     @PostMapping("/spec")
