@@ -8,6 +8,7 @@ import com.hmdandelion.project_1410002.sales.dto.request.ClientCreateRequest;
 import com.hmdandelion.project_1410002.sales.dto.request.ClientUpdateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.SimpleClientResponse;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,6 +24,12 @@ import java.net.URI;
 public class ClientController {
 
     private final ClientService clientService;
+
+    @GetMapping("/clients/simple")
+    public ResponseEntity<List<SimpleClientResponse>> getSimpleClients() {
+        List<SimpleClientResponse> clients = clientService.getSimpleClients();
+        return ResponseEntity.ok(clients);
+    }
 
     @GetMapping("/clients")
     public ResponseEntity<PagingResponse> getSalesClients(

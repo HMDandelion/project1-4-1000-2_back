@@ -14,6 +14,7 @@ import com.hmdandelion.project_1410002.sales.dto.request.ClientUpdateRequest;
 import com.hmdandelion.project_1410002.sales.dto.response.ClientOrderDTO;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.SimpleClientResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +33,12 @@ public class ClientService {
 
     private Pageable getPageable(final Integer page) {
         return PageRequest.of(page - 1, 10);
+    }
+
+    @Transactional(readOnly = true)
+    public List<SimpleClientResponse> getSimpleClients() {
+        List<Client> clients = clientRepo.findByClientTypeAndStatusNot(ClientType.PRODUCTS, ClientStatus.DELETED);
+        return clients.stream().map(SimpleClientResponse::from).toList();
     }
 
     @Transactional(readOnly = true)

@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.SimpleProductResponse;
 import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,12 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+
+    @GetMapping("/product/simple")
+    public ResponseEntity<List<SimpleProductResponse>> getSimpleProducts() {
+        List<SimpleProductResponse> products = productService.getSimpleProducts();
+        return ResponseEntity.ok(products);
+    }
 
     @GetMapping("/product")
     public ResponseEntity<Page<Product>> getProducts(

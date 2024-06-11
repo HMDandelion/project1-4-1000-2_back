@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.common.exception.handler;
 
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.NoContentsException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.dto.response.ExceptionResponse;
@@ -27,5 +28,11 @@ public class ExceptionHandlingController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(res);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ExceptionResponse> badRequestException(BadRequestException e) {
+        final ExceptionResponse exceptionResponse = ExceptionResponse.of(e.getCode(), e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionResponse);
+    }
 
 }
