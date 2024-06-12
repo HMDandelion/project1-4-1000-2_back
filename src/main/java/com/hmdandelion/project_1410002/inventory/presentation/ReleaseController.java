@@ -78,12 +78,18 @@ public class ReleaseController {
 
     /*출고 대기 중인 재고 조회*/
     @GetMapping("/release/wait")
-    public ResponseEntity<List<ReleaseWaitDTO>> getReleaseWait(
+    public ResponseEntity<PagingResponse> getReleaseWait(
+            @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(defaultValue = "true") final Boolean deadlineSort
     ){
-        List<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(deadlineSort);
-        return ResponseEntity.ok(releaseWaits);
+        final Page<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(page, deadlineSort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(releaseWaits);
+        final PagingResponse pagingResponse = PagingResponse.of(releaseWaits.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
+
+
 
     /*출고 대기 중인 재고 배송*/
     @PutMapping("/release/shipping/{orderCode}")

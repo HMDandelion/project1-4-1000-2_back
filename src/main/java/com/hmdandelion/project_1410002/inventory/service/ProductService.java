@@ -47,7 +47,7 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<SimpleProductResponse> getSimpleProducts() {
-        List<Product> products = productRepository.findByStatus(ProductStatus.IN_PRODUCTION);
+        List<Product> products = productRepo.findByStatus(ProductStatus.IN_PRODUCTION);
         return products.stream().map(SimpleProductResponse::from).toList();
     }
 

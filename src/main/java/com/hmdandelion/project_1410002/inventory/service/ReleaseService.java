@@ -63,6 +63,9 @@ public class ReleaseService {
         Sort sort = createdSort ? Sort.by("dDay").ascending() : Sort.by("dDay").descending();
         return PageRequest.of(page - 1, 10, sort);
     }
+    private Pageable getPageableWait(final Integer page) {
+        return PageRequest.of(page - 1, 10);
+    }
     @Transactional(readOnly = true)
     public Page<ReleasePossible> getReleasePossibles(Integer page, Boolean isReleasePossible, Boolean createdSort) {
         List<Order> orders = orderRepo.findAllByStatus(ORDER_RECEIVED);
@@ -312,12 +315,13 @@ public class ReleaseService {
 
         return returnList;
     }
+
     @Transactional(readOnly = true)
-    public List<ReleaseWaitDTO> getReleaseWait(Boolean deadlineSort) {
+    public Page<ReleaseWaitDTO> getReleaseWait(Integer page, Boolean deadlineSort) {
         List<ReleaseWaitDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(WAIT);
-        for(Release release : releases){
+        for (Release release : releases) {
             Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
@@ -331,16 +335,25 @@ public class ReleaseService {
             resultList.add(releaseWait);
         }
 
-        // deadLineSort 값에 따라 resultList를 정렬
+        // deadlineSort 값에 따라 resultList를 정렬
         if (deadlineSort) {
-            // deadLineSort가 참이면 내림차순 정렬
+            // deadlineSort가 참이면 내림차순 정렬
             resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline).reversed());
         } else {
-            // deadLineSort가 거짓이면 오름차순 정렬
+            // deadlineSort가 거짓이면 오름차순 정렬
             resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline));
         }
 
-        return resultList;
+        // releaseCreatedAt을 기준으로 내림차순 정렬
+        resultList.sort(Comparator.comparing(ReleaseWaitDTO::getReleaseCreatedAt).reversed());
+
+        // 페이지 요청 생성 및 결과 리스트 페이징 처리
+        Pageable pageable = getPageableWait(page);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+        List<ReleaseWaitDTO> subList = resultList.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, resultList.size());
     }
 
     public void shippingOrder(Long orderCode) {
