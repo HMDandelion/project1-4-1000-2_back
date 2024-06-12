@@ -69,10 +69,12 @@ public class ReturnRepoCustomImpl implements ReturnRepoCustom{
                         containProductName(productName)
                 )
                 .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
-                .select(return$.count())
+                .select(return$.returnCode.countDistinct())
                 .from(return$)
                 .leftJoin(client).on(client.clientCode.eq(return$.clientCode))
                 .leftJoin(return$.returnProducts, returnProduct)

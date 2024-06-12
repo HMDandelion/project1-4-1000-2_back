@@ -41,14 +41,12 @@ public class MaterialSpecController {
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
 
-        final List<MaterialSpecDTO> list = materialSpecService.searchMaterialSpec(pageable, materialName);
+        final Page<MaterialSpecDTO> list = materialSpecService.searchMaterialSpec(pageable, materialName);
         for (MaterialSpecDTO dto : list) {
             log.info("조회된 객체...{}", dto.getMaterialName());
         }
-
-        final Page<MaterialSpecDTO> toPage = new PageImpl<>(list, pageable, list.size());
-        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
-        PagingResponse res = PagingResponse.of(toPage.getContent(), pagingButtonInfo);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(list);
+        PagingResponse res = PagingResponse.of(list.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(res);
     }
 

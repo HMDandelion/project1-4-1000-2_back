@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.sales.domain.type.ClientStatus;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ClientRepo extends JpaRepository<Client, Long>, ClientRepoCustom {
@@ -12,4 +13,6 @@ public interface ClientRepo extends JpaRepository<Client, Long>, ClientRepoCusto
     Optional<Client> findByClientCodeAndStatusNotAndClientType(Long clientCode, ClientStatus clientStatus, ClientType clientType);
 
     Optional<Client> findByClientCodeAndStatusNot(Long clientCode, ClientStatus clientStatus);
+
+    List<Client> findByClientTypeAndStatusNot(ClientType clientType, ClientStatus clientStatus);
 }

@@ -306,6 +306,7 @@ CREATE TABLE `tbl_production_detail` (
     `work_order_code` INT NOT NULL COMMENT '작업 지시서 코드',
     `production_status_code` BIGINT NOT NULL COMMENT '생산 현황 코드',
     `inspection_date` DATETIME NOT NULL COMMENT '품질 검수 일자',
+    `inspection_status`    VARCHAR(20) NOT NULL COMMENT '품질 검수 처리',
     `production_quantity` INT COMMENT '현재 생산량',
     `defect_quantity` INT COMMENT '불량 수량',
     `completely_quantity` INT COMMENT '양품 수',
@@ -323,7 +324,6 @@ CREATE TABLE IF NOT EXISTS `tbl_production_management`
     `total_production_quantity`  INT NOT NULL COMMENT '총 샌산 수량',
     `production_file`    VARCHAR(50) COMMENT '생산 관리 서류(첨부 서류)',
     `production_status`    VARCHAR(20) NOT NULL COMMENT '상태',
-    `inspection_status`    VARCHAR(20) NOT NULL COMMENT '품질 검수 처리',
     PRIMARY KEY ( `production_status_code` )
 ) COMMENT = '일일 생산 보고서';
 

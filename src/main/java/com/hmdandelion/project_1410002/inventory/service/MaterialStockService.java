@@ -5,22 +5,27 @@ import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialSpec;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.MaterialStock;
+import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCategory;
 import com.hmdandelion.project_1410002.inventory.domian.entity.warehouse.Warehouse;
 
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec.MaterialSpecRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.material.stock.MaterialStockRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.warehouse.WarehouseRepo;
+import com.hmdandelion.project_1410002.inventory.dto.DropDownResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.response.MaterialStockResponse;
+import com.hmdandelion.project_1410002.inventory.dto.warehouse.response.WarehouseResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,14 +37,15 @@ public class MaterialStockService {
     private final WarehouseRepo warehouseRepo;
     private final MaterialSpecRepo materialSpecRepo;
     private final WarehouseService warehouseService;
+    private final MaterialSpecCategoryService materialSpecCategoryService;
 
 
-    public List<MaterialStockSimpleDTO> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
-        final List<MaterialStock> stocks = materialStockRepo.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+    public Page<MaterialStockSimpleDTO> searchMaterialStock(Pageable pageable, String materialName, Long warehouseCode, Long specCategoryCode) {
+        final Page<MaterialStock> stocks = materialStockRepo.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
         if (stocks.isEmpty()) {
             throw new NotFoundException(ExceptionCode.NOT_FOUND_MATERIAL_NAME);
         }
-        return stocks.stream().map(MaterialStockSimpleDTO::from).toList();
+        return stocks.map(MaterialStockSimpleDTO::from);
     }
 
     public MaterialStockResponse findById(Long stockCode) {
@@ -90,5 +96,34 @@ public class MaterialStockService {
         }
         stock.modifyFrom(request, warehouse);
         return stock.getStockCode();
+    }
+
+    public List<Long> searchMaterialStockByMaterialName(String materialName) {
+
+        return materialStockRepo.searchMaterialStockByMaterialName(materialName);
+    }
+
+    public void modifyWithStockUsage(Long stockCode, int usedQuantity, String reason) {
+        MaterialStock stock = materialStockRepo.getStockByCode(stockCode);
+        stock.modifyWithStockUsage(usedQuantity, reason);
+
+    }
+
+    public List<DropDownResponse> dropdown(String searchType) {
+        List<DropDownResponse> list = new ArrayList<>();
+        switch (searchType) {
+            case "w" -> {
+                List<WarehouseResponse> warehouses = warehouseService.getWarehouses();
+                list = warehouses.stream().map(w -> DropDownResponse.of(w.getWarehouseCode(), w.getName())).toList();
+            }
+            case "c" -> {
+                List<SpecCategory> categories = materialSpecCategoryService.findAll();
+                list = categories.stream()
+                                 .map(c -> DropDownResponse.of(c.getCategoryCode(), c.getCategoryName()))
+                                 .toList();
+            }
+        }
+
+        return list;
     }
 }

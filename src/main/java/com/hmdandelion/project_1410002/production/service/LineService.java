@@ -24,14 +24,13 @@ public class LineService {
     @Transactional(readOnly = true)
     public Page<LineResponse> getLineInfo(final Long lineCode, final LineStatusType lineStatusType) {
         Pageable pageable = PageRequest.of(0, 10);
-
         Page<Line> lines = null;
+
         if (lineCode != null && lineCode > 0) {
             lines = lineRepo.findByLineStatusNot(LineStatusType.INACTIVE, pageable);
         } else {
             lines = lineRepo.findAll(pageable);
         }
-
         return lines.map(LineResponse::form);
     }
 
@@ -54,7 +53,7 @@ public class LineService {
     @Transactional
     public void modify(Long lineCode, LineUpdateRequest lineUpdateRequest) {
 
-        Line line = (Line) lineRepo.findLineByLineCode(lineCode)
+        Line line = lineRepo.findLineByLineCode(lineCode)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_LINE_CODE));
 
         line.modify(
@@ -69,6 +68,11 @@ public class LineService {
     public void remove(Long lineCode) {
 
         lineRepo.deleteById(lineCode);
+    }
+
+    public String findNameByCode(Long lineCode) {
+        return lineRepo.findLineByLineCode(lineCode)
+                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_LINE_CODE)).getLineName();
     }
 }
 

@@ -43,6 +43,8 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                         client.clientType.eq(ClientType.PRODUCTS)
                 )
                 .orderBy(orderSpecifier)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
 
         JPAQuery<Long> countQuery = queryFactory
@@ -116,7 +118,7 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
     }
 
     @Override
-    public List<MaterialClientDTO> searchMaterialClient(Pageable pageable, String clientName) {
+    public Page<MaterialClientDTO> searchMaterialClient(Pageable pageable, String clientName) {
         BooleanBuilder builder = new BooleanBuilder();
         if (clientName != null) {
             builder.and(client.clientName.contains(clientName));
@@ -130,7 +132,14 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .limit(pageable.getPageSize())
                 .fetch();
 
-        return clients.stream().map(MaterialClientDTO::from).toList();
+        JPAQuery<Long> count = queryFactory
+                .select(client.count())
+                .from(client)
+                .where(builder)
+                .where(client.clientType.eq(ClientType.RAW_MATERIALS))
+                .orderBy(client.clientName.asc());
+
+        return PageableExecutionUtils.getPage(clients.stream().map(MaterialClientDTO::from).toList(), pageable, count::fetchOne);
     }
     //endregion
 }

@@ -1,17 +1,20 @@
 package com.hmdandelion.project_1410002.production.presentation;
 
 import com.hmdandelion.project_1410002.common.paging.Pagination;
+import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
+import com.hmdandelion.project_1410002.production.domain.entity.material.MaterialUsage;
 import com.hmdandelion.project_1410002.production.dto.material.MaterialUsageDTO;
+import com.hmdandelion.project_1410002.production.dto.material.response.MaterialUsageResponse;
 import com.hmdandelion.project_1410002.production.service.MaterialUsageService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,5 +25,29 @@ public class MaterialUsageController {
 
     private final MaterialUsageService materialUsageService;
 
-    //
+    //사용 조회
+    @GetMapping("/use")
+    public ResponseEntity<PagingResponse> searchUse(
+            @RequestParam(defaultValue = "1") final int page,
+            @RequestParam(required = false) String materialName,
+            @RequestParam(defaultValue = "not_complete") String sortType
+    ) {
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        Page<MaterialUsageDTO> list = materialUsageService.searchUse(pageable, materialName, sortType);
+
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(list);
+        PagingResponse res = new PagingResponse(list, pagingButtonInfo);
+
+        return ResponseEntity.ok(res);
+    }
+
+    //상세조회
+    @GetMapping("/use/{usageCode}")
+    public ResponseEntity<MaterialUsageResponse> getUse(
+            @PathVariable final Long usageCode
+    ) {
+        final MaterialUsageResponse res = materialUsageService.findOne(usageCode);
+
+        return ResponseEntity.ok(res);
+    }
 }
