@@ -6,6 +6,7 @@ import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import com.hmdandelion.project_1410002.employee.domain.repository.EmployeeRepo;
 import com.hmdandelion.project_1410002.employee.domain.type.AuthorityType;
+import com.hmdandelion.project_1410002.employee.dto.EmployeeInfoDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,5 +68,9 @@ public class EmployeeService {
 
         List<AuthorityType> authorities = getEmployeeAuthorities(employee.getEmployeeCode());
         return LoginDTO.from(employee, authorities);
+    }
+
+    public EmployeeInfoDTO getInfoByEmployeeNo(String employeeNo) {
+        return employeeRepo.findInfoByEmployeeNo(employeeNo);
     }
 }

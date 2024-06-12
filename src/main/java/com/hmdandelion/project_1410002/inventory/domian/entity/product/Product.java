@@ -1,6 +1,7 @@
 package com.hmdandelion.project_1410002.inventory.domian.entity.product;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -27,14 +28,16 @@ public class Product {
     private Long productCode;
     private String productName;
     @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime launchDate;
     private Long price;
     private String unit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime updatedAt;
     @Enumerated(value = EnumType.STRING)
     private ProductStatus status = IN_PRODUCTION;
 
-    public Product(String productName, Long price, String unit) {
+    private Product(String productName, Long price, String unit) {
         this.productName = productName;
         this.price = price;
         this.unit = unit;

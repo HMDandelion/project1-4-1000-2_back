@@ -2,8 +2,10 @@ package com.hmdandelion.project_1410002.production.dto.response.production;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionManagement;
+import com.hmdandelion.project_1410002.production.domain.type.ProductionStatusType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -18,18 +20,16 @@ public class ProductionReportResponse {
     private LocalDateTime completedAt;
     private Integer totalProductionQuantity;
     private String productionFile;
-    private String productionStatus;
-    private String inspectionStatus;
+    private ProductionStatusType productionStatus;
 
-    public static ProductionReportResponse from(ProductionManagement productionManagement) {
+    public static ProductionReportResponse from(final ProductionManagement productionManagement) {
         return new ProductionReportResponse(
                 productionManagement.getProductionStatusCode(),
                 productionManagement.getStartAt(),
                 productionManagement.getCompletedAt(),
                 productionManagement.getTotalProductionQuantity(),
                 productionManagement.getProductionFile(),
-                productionManagement.getProductionStatus().toString(),
-                productionManagement.getInspectionStatus().toString()
+                productionManagement.getProductionStatus()
         );
     }
 }

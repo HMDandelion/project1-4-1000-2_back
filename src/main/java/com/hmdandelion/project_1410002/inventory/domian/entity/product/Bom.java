@@ -25,7 +25,7 @@ public class Bom {
     @JoinColumn(name="spec_code")
     private MaterialSpec materialSpec;
 
-    public Bom(Long quantity, Long sequence, Product product, MaterialSpec materialSpec) {
+    private Bom(Long quantity, Long sequence, Product product, MaterialSpec materialSpec) {
         this.quantity = quantity;
         this.sequence = sequence;
         this.product = product;

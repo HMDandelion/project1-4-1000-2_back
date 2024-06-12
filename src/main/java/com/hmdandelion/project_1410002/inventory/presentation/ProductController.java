@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.type.ProductStatus;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductsResponse;
+import com.hmdandelion.project_1410002.inventory.dto.product.response.SimpleProductResponse;
 import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,15 +24,22 @@ public class ProductController {
 
     private final ProductService productService;
 
+    @GetMapping("/product/simple")
+    public ResponseEntity<List<SimpleProductResponse>> getSimpleProducts() {
+        List<SimpleProductResponse> products = productService.getSimpleProducts();
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("/product")
     public ResponseEntity<Page<Product>> getProducts(
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false) final String productName,
             @RequestParam(required = false) final String unit,
-            @RequestParam(required = false) final ProductStatus status
+            @RequestParam(required = false) final ProductStatus status,
+            @RequestParam(defaultValue = "true") final Boolean createdAtSort
     ) {
         Pageable pageable = PageRequest.of(page - 1, 10);
-        Page<Product> products = productService.searchProducts(pageable, productName, unit, status);
+        Page<Product> products = productService.searchProducts(pageable, productName, unit, status,createdAtSort);
         return ResponseEntity.ok(products);
     }
 
@@ -69,5 +77,13 @@ public class ProductController {
         return ResponseEntity.noContent().build();
     }
 
+    /*상품을 거래하는 거래처 리스트*/
+    @GetMapping("/product/client/{productCode}")
+    public ResponseEntity<List<String>> getProductClient(
+            @PathVariable final Long productCode
+    ){
+        List<String> productClient = productService.getProductClient(productCode);
+        return ResponseEntity.ok(productClient);
+    }
 
 }

@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MaterialSpecCategoryService {
@@ -27,5 +29,9 @@ public class MaterialSpecCategoryService {
     @Transactional
     public void deleteByName(String categoryName) {
         materialSpecCategoryRepo.deleteByCategoryName(categoryName);
+    }
+
+    public List<SpecCategory> findAll() {
+        return materialSpecCategoryRepo.findAll();
     }
 }

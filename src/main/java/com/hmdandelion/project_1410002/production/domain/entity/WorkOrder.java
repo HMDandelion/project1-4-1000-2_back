@@ -1,5 +1,7 @@
 package com.hmdandelion.project_1410002.production.domain.entity;
 
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
+import com.hmdandelion.project_1410002.production.domain.entity.line.Line;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -87,5 +89,8 @@ public class WorkOrder {
         this.orderedQuantity = orderedQuantity;
         this.lineCode = lineCode;
         this.employeeCode = employeeCode;
+    }
+    public void setCompletionStatus(WorkOrderStatusType completionStatus) {
+        this.completionStatus = completionStatus;
     }
 }

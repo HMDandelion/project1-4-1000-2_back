@@ -3,6 +3,7 @@ package com.hmdandelion.project_1410002.inventory.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.inventory.dto.DropDownResponse;
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialStockSimpleDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialStockModifyRequest;
@@ -37,12 +38,10 @@ public class MaterialStockController {
             @RequestParam(defaultValue = "10") final int size
     ) {
         Pageable pageable = PageRequest.of(page - 1, size);
-        final List<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+        final Page<MaterialStockSimpleDTO> list = materialStockService.searchMaterialStock(pageable, materialName, warehouseCode, specCategoryCode);
+        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(list);
 
-        final Page<MaterialStockSimpleDTO> toPage = new PageImpl<>(list, pageable, list.size());
-        PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(toPage);
-
-        PagingResponse res = PagingResponse.of(toPage.getContent(), pagingButtonInfo);
+        PagingResponse res = PagingResponse.of(list.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(res);
     }
 
@@ -69,7 +68,7 @@ public class MaterialStockController {
     @PutMapping("/inventory")
     public ResponseEntity<Void> modifyStock(
             @RequestBody final MaterialStockModifyRequest request
-            ) {
+    ) {
 
         final Long stockCode = materialStockService.modify(request);
 
@@ -84,5 +83,14 @@ public class MaterialStockController {
         materialStockService.delete(stockCode);
 
         return ResponseEntity.noContent().build();
+    }
+
+    //드롭다운 조회
+    @GetMapping("/inventory/dropdown")
+    public List<DropDownResponse> dropdown(
+            @RequestParam final String searchType
+    ) {
+        System.out.println("--------------------------------------------------------------------------------------------");
+        return materialStockService.dropdown(searchType);
     }
 }

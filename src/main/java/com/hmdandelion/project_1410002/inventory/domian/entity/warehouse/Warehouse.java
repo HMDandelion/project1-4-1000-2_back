@@ -3,11 +3,13 @@ package com.hmdandelion.project_1410002.inventory.domian.entity.warehouse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Table(name = "tbl_warehouse")
 @Getter
 @NoArgsConstructor
+@ToString
 public class Warehouse {
 
     @Id
