@@ -38,8 +38,10 @@ public class WorkOrderRepoCustomImpl implements WorkOrderRepoCustom{
                 .leftJoin(product).on(workOrder.productCode.eq(product.productCode))
                 .leftJoin(employee).on(workOrder.employeeCode.eq(employee.employeeCode))
                 .leftJoin(line).on(workOrder.lineCode.eq(line.lineCode))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
-        JPAQuery<Long> countQuery = queryFactory
+                JPAQuery<Long> countQuery = queryFactory
                 .select(workOrder.count())
                 .from(workOrder)
                 .leftJoin(product).on(workOrder.productCode.eq(product.productCode))
