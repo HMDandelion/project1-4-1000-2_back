@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -25,7 +26,7 @@ public class ReturnController {
     private final ReturnService returnService;
 
     @PostMapping("/returns")
-    public ResponseEntity<Void> applyReturn(@RequestBody final ReturnCreateRequest returnRequest) {
+    public ResponseEntity<Void> applyReturn(@Validated @RequestBody final ReturnCreateRequest returnRequest) {
         final Long returnCode = returnService.save(returnRequest);
         return ResponseEntity.created(URI.create("/api/v1/returns/" + returnCode)).build();
     }
