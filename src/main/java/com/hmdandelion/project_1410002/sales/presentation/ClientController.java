@@ -13,6 +13,7 @@ import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -53,7 +54,7 @@ public class ClientController {
     }
 
     @PostMapping("/clients")
-    public ResponseEntity<Void> save(@RequestBody final ClientCreateRequest clientCreateRequest) {
+    public ResponseEntity<Void> save(@Validated @RequestBody final ClientCreateRequest clientCreateRequest) {
         final Long clientCode = clientService.save(clientCreateRequest, ClientType.PRODUCTS);
         return ResponseEntity.created(URI.create("/api/v1/clients/" + clientCode)).build();
     }
@@ -61,7 +62,7 @@ public class ClientController {
     @PutMapping("/clients/{clientCode}")
     public ResponseEntity<Void> modify(
             @PathVariable final Long clientCode,
-            @RequestBody final ClientUpdateRequest clientRequest
+            @Validated @RequestBody final ClientUpdateRequest clientRequest
     ) {
         clientService.modify(clientCode, clientRequest, ClientType.PRODUCTS);
         return ResponseEntity.created(URI.create("/api/v1/clients/" + clientCode)).build();
