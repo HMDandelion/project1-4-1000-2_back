@@ -2,7 +2,6 @@ package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
-import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.WorkOrderRepo;
 import com.hmdandelion.project_1410002.production.domain.type.WorkOrderStatusType;
@@ -55,7 +54,7 @@ public class WorkOrderService {
         return workOrder;
     }
 
-    public Long workOrderSave(WorkOrderCreateRequest workOrderCreateRequest, WorkOrderStatusType workOrderStatusType) {
+    public Long workOrderSave(WorkOrderCreateRequest workOrderCreateRequest, WorkOrderStatusType inProgress) {
         LocalDate workOrderDate = workOrderCreateRequest.getWorkOrderDate();
 
         // 이미 등록된 작업인지 확인
@@ -73,7 +72,6 @@ public class WorkOrderService {
         );
 
         final WorkOrder workOrder = workOrderRepo.save(newWorkOrder);
-        materialUsageService.usageCreate(workOrder);
 
         return workOrder.getWorkOrderCode();
     }
