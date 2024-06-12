@@ -326,11 +326,24 @@ public class ReleaseService {
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+
+            LocalDate now = LocalDate.now();
+            Period period = Period.between(now, order.getDeadline());
+            long daysDiff = period.getDays();
+            String dday;
+            if(daysDiff<0){
+                dday="마감 기간 종료";
+            }else if(daysDiff==0){
+                dday="D-DAY";
+            }else{
+                dday= "D-"+String.valueOf(daysDiff);
+            }
             ReleaseWaitDTO releaseWait = ReleaseWaitDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     release.getCreatedAt(),
-                    order.getDeadline()
+                    order.getDeadline(),
+                    dday
             );
             resultList.add(releaseWait);
         }
