@@ -39,9 +39,10 @@ public class MaterialSpecController {
     @GetMapping("/spec")
     public ResponseEntity<PagingResponse> findAllSpec(
             @RequestParam(defaultValue = "1") final Integer page,
-            @RequestParam(required = false) final String materialName
+            @RequestParam(required = false) final String materialName,
+            @RequestParam(defaultValue = "10") final int size
     ) {
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         final Page<MaterialSpecDTO> list = materialSpecService.searchMaterialSpec(pageable, materialName);
         for (MaterialSpecDTO dto : list) {
