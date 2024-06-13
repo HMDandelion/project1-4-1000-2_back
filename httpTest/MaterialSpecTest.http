@@ -57,3 +57,6 @@ POST http://localhost:8001/api/v1/material/spec/category?newCategoryName=새로�
 
 ### 분류 삭제 테스트
 DELETE http://localhost:8001/api/v1/material/spec/category?categoryName=새로운카테고리이름
+
+### 스펙 상세조회 테스트
+GET http://localhost:8001/api/v1/material/spec/3

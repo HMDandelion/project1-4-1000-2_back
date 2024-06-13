@@ -41,7 +41,7 @@ public enum ExceptionCode {
     NO_CONTENTS_MATERIAL_USE(4404,"조건에 맞는 원자재 사용이 존재하지 않습니다." ),
 
     BAD_REQUEST_ORDER_EXIST_CLIENT(6100, "주문건이 존재하는 거래처는 삭제할 수 없습니다."),
-    BAD_REQUEST_ORDERED_ESTIMATE(6200, "주문이 진행된 견적은 삭제할 수 없습니다."),
+    BAD_REQUEST_ORDERED_ESTIMATE(6200, "주문이 진행된 견적은 수정하거나 삭제할 수 없습니다."),
     BAD_REQUEST_DEADLINE_PASSED(6201, "마감일자가 지난 견적은 주문으로 전환할 수 없습니다."),
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
     BAD_REQUEST_INSUFFICIENT_QUANTITY(6401,"사용하려는 재고보다 실수량이 부족합니다" ),
