@@ -35,7 +35,10 @@ public class MaterialOrderResponse {
     public static MaterialOrderResponse of(
             ProductionPlan plan, MaterialOrder order, Employee employee, String positionName, String departmentName, List<OrderSpec> orderSpecList
     ) {
-        String planName = plan.getCreationAt() + "_" + plan.getPlanCode();
+        String planName = "지정된 생산계획 없음.";
+        if (plan != null) {
+         planName = plan.getCreationAt() + "_" + plan.getPlanCode();
+        }
         String dpName = departmentName + " " + positionName;
         String str_arrivalDatetime = "";
         if (order.getArrivalDatetime() != null) {

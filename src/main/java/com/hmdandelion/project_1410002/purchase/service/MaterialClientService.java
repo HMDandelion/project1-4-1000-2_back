@@ -8,6 +8,8 @@ import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientCreateRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialClientModifyRequest;
 import com.hmdandelion.project_1410002.purchase.dto.material.response.MaterialClientDetailResponse;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
+import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.domain.type.ClientType;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
@@ -93,5 +95,10 @@ public class MaterialClientService {
         clientService.modify(clientCode,request, ClientType.RAW_MATERIALS);
         assignedMaterialService.deleteAssignedByClientCode(clientCode);
         assignedMaterialService.insertAssignedByClientCodeAndSpecList(clientCode, request.getSpecCodes());
+    }
+
+    public List<Client> findBySpecCode(Long specCode) {
+        List<Long> clientCodes = assignedMaterialService.findBySpecCode(specCode);
+        return clientService.findByIds(clientCodes);
     }
 }

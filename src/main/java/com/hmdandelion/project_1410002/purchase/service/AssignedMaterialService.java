@@ -25,4 +25,9 @@ public class AssignedMaterialService {
     public void deleteAssignedByClientCode(Long clientCode) {
         assignedMaterialRepo.deleteAssignedByClientCode(clientCode);
     }
+
+    public List<Long> findBySpecCode(Long specCode) {
+        List<AssignedMaterial> assignedMaterials = assignedMaterialRepo.findBySpecCode(specCode);
+        return assignedMaterials.stream().map(AssignedMaterial::getClientCode).toList();
+    }
 }

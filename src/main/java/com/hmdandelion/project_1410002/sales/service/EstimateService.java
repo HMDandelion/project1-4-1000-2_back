@@ -89,6 +89,10 @@ public class EstimateService {
         Estimate estimate = estimateRepo.findByEstimateCodeAndStatusNot(estimateCode, EstimateStatus.DELETED)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ESTIMATE_CODE));
 
+        if(estimate.getIsOrdered()) {
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_ORDERED_ESTIMATE);
+        }
+
         Set<Long> productRequestCodes = estimateRequest.getProducts().stream()
                 .map(EstimateProductRequest::getEstimateProductCode)
                 .collect(Collectors.toSet());
