@@ -1,5 +1,6 @@
 package com.hmdandelion.project_1410002.inventory.service;
 
+import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
 import com.hmdandelion.project_1410002.inventory.domian.entity.material.SpecCategory;
@@ -27,8 +28,12 @@ public class MaterialSpecCategoryService {
     }
 
     @Transactional
-    public void deleteByName(String categoryName) {
-        materialSpecCategoryRepo.deleteByCategoryName(categoryName);
+    public void deleteById(Long categoryCode) {
+        if (materialSpecCategoryRepo.isCanDelete(categoryCode)) {
+            materialSpecCategoryRepo.deleteById(categoryCode);
+        } else {
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_CATEGORY_EXIST);
+        }
     }
 
     public List<SpecCategory> findAll() {

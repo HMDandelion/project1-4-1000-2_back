@@ -56,7 +56,7 @@ Content-Type: application/json
 POST http://localhost:8001/api/v1/material/spec/category?newCategoryName=새로운카테고리이름
 
 ### 분류 삭제 테스트
-DELETE http://localhost:8001/api/v1/material/spec/category?categoryName=새로운카테고리이름
+DELETE http://localhost:8001/api/v1/material/spec/category?categorycode=3
 
 ### 스펙 상세조회 테스트
 GET http://localhost:8001/api/v1/material/spec/3
