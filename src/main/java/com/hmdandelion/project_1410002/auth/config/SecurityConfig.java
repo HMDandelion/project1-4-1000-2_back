@@ -67,19 +67,19 @@ public class SecurityConfig {
 //                    auth.requestMatchers("/api/v1/stock/**").hasAuthority("PRODUCTION");
 //                    auth.requestMatchers("/api/v1/storage/**").hasAuthority("PRODUCTION");
 //                    auth.requestMatchers("/api/v1/warehouse/**").hasAuthority("PRODUCTION");
+                    //
+//                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
+//                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
+//                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
+//                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
+//                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
+
                     auth.anyRequest().permitAll();
-                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
-                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
-                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
-                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
-                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
-                    auth.anyRequest().authenticated();
-                    //auth.anyRequest().permitAll();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)

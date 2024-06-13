@@ -102,11 +102,15 @@ public class ReleaseController {
 
     /*배송 중인 재고 조회*/
     @GetMapping("/release/shipping")
-    public ResponseEntity<List<ReleaseShippingDTO>> getReleaseShipping(
+    public ResponseEntity<PagingResponse> getReleaseShipping(
+            @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(defaultValue = "true") final Boolean deadlineSort
     ){
-        List<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(deadlineSort);
-        return ResponseEntity.ok(releaseShipping);
+        Page<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(page,deadlineSort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(releaseShipping);
+        final PagingResponse pagingResponse = PagingResponse.of(releaseShipping.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 
     /*배송 완료*/
