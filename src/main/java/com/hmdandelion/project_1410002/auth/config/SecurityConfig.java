@@ -42,16 +42,16 @@ public class SecurityConfig {
                 .sessionManagement(sessionManage -> sessionManage.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
-                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
-                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
-                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
-                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
-                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
+//                    auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
+//                    auth.requestMatchers(HttpMethod.POST, "/api/v1/login").permitAll();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/clients/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/estimates/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/orders/**").authenticated();
+//                    auth.requestMatchers(HttpMethod.GET, "/api/v1/returns/**").authenticated();
+//                    auth.requestMatchers("/api/v1/clients/**").hasAuthority("SALES");
+//                    auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
+//                    auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
+//                    auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
                     //
 //                    auth.requestMatchers(HttpMethod.GET, "/api/v1/product/**").authenticated();
 //                    auth.requestMatchers(HttpMethod.GET, "/api/v1/products/**").authenticated();

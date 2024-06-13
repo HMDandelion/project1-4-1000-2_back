@@ -221,28 +221,39 @@ public class ReleaseService {
                 order
         );
 
-        List<Storage> resultList = new ArrayList<>();
+
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
         for(OrderProduct orderProduct : orderProducts){
+            List<Storage> resultList = new ArrayList<>();
             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
             for(Stock stock : stocks) {
                 List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
 
                 resultList.addAll(storages);
-                resultList.sort(Comparator.comparing(Storage::getCreatedAt));
+
             }
-
+            resultList.sort(Comparator.comparing(Storage::getCreatedAt));
             Long standard = 0L;
+            System.out.println("리저" + resultList);
 
-            for(Storage storage : resultList){
-                standard+=storage.getActualQuantity();
-                if(standard>orderProduct.getQuantity()){
-                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
-                    modifyStorage.minusActualQuantity(storage.getActualQuantity() - (standard-orderProduct.getQuantity()));
+            for (Storage storage : resultList) {
+                Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(), false);
+
+//                if (modifyStorage == null) {
+//                    // modifyStorage가 null인 경우 로그를 남기고 계속 진행
+//                    System.err.println("Storage not found for storageCode: " + storage.getStorageCode());
+//                    continue;
+//                }
+
+                if (standard + storage.getActualQuantity() >= orderProduct.getQuantity()) {
+                    // 필요한 양만큼만 가져오고, storage에서 남은 주문량 만큼만 감량
+                    Long remainingQuantity = orderProduct.getQuantity() - standard;
+                    modifyStorage.minusActualQuantity(remainingQuantity);
                     break;
-                }else{
-                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
-                    modifyStorage.modifyActualQuantity();
+                } else {
+                    // storage의 모든 양을 사용
+                    standard += storage.getActualQuantity(); // 먼저 standard에 더한 후
+                    modifyStorage.minusActualQuantity(storage.getActualQuantity()); // 실제 양을 줄임
                 }
             }
 
