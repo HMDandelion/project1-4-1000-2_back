@@ -26,6 +26,7 @@ import com.hmdandelion.project_1410002.sales.domain.entity.order.OrderProduct;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderProductRepo;
 import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderRepo;
+import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.*;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.SHIPPING;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
-import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.COMPLETED;
-import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.ORDER_RECEIVED;
+import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -270,9 +271,10 @@ public class ReleaseService {
             }
 
         }
-
+        order.modifyStatus(OrderStatus.WAIT_SHIPPING);
 
         Long releaseCode = releaseRepo.save(newRelease).getReleaseCode();
+
         return releaseCode;
     }
     @Transactional(readOnly = true)
@@ -392,6 +394,9 @@ public class ReleaseService {
                 LocalDateTime.now(),
                 release
         );
+
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,WAIT_SHIPPING).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        order.modifyStatus(OrderStatus.SHIPPING);
         releaseChangeRepo.save(releaseChange);
     }
     @Transactional(readOnly = true)
@@ -422,7 +427,7 @@ public class ReleaseService {
             ReleaseShippingDTO releaseShipping = ReleaseShippingDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
-                    releaseChange.getChangeAt(),
+                    release.getCreatedAt(),
                     order.getDeadline(),
                     dday
             );
