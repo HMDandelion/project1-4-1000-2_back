@@ -12,12 +12,10 @@ import com.hmdandelion.project_1410002.inventory.service.MaterialSpecCategorySer
 import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.purchase.service.MaterialClientService;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
-import com.hmdandelion.project_1410002.sales.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -104,8 +102,8 @@ public class MaterialSpecController {
 
     //스펙 분류 삭제
     @DeleteMapping("/spec/category")
-    public ResponseEntity<Void> deleteSpecCateogry(@RequestParam final String categoryName) {
-        materialSpecCategoryService.deleteByName(categoryName);
+    public ResponseEntity<Void> deleteSpecCategory(@RequestParam final Long categoryCode) {
+        materialSpecCategoryService.deleteById(categoryCode);
         return ResponseEntity.noContent().build();
     }
 }
