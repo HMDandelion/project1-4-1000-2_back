@@ -122,6 +122,10 @@ public class ClientService {
         return MaterialClientDetailResponse.from(client);
     }
 
+    public List<Client> findByIds(List<Long> clientCodes) {
+        return clientRepo.findByClientCodeIn(clientCodes);
+    }
+
 
     //endregion
 }

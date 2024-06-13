@@ -115,7 +115,10 @@ public class MaterialOrderService {
         MaterialOrder order = materialOrderRepo.findById(orderCode).orElseThrow(
                 ()-> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE)
         );
-        ProductionPlan plan = planService.findById(order.getPlanCode());
+        ProductionPlan plan = null;
+        if (order.getPlanCode() != null) {
+            plan = planService.findById(order.getPlanCode());
+        }
         Employee employee = employeeService.findById(order.getEmployeeCode());
         String departmentName = employeeService.findDepartmentNameById(employee.getDepartmentCode());
         String positionName = employeeService.findPositionNameById(employee.getPositionCode());
