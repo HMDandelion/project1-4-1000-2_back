@@ -124,11 +124,15 @@ public class ReleaseController {
 
     /*배송 완료 재고 조회*/
     @GetMapping("/release/complete")
-    public ResponseEntity<List<ReleaseCompleteDTO>> getReleaseComplete(
+    public ResponseEntity<PagingResponse> getReleaseComplete(
+            @RequestParam(defaultValue = "1") final Integer page,
         @RequestParam(defaultValue = "true") final  Boolean isCompleted
     ){
-        List<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(isCompleted);
-        return ResponseEntity.ok(releaseComplete);
+        Page<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(page,isCompleted);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(releaseComplete);
+        final PagingResponse pagingResponse = PagingResponse.of(releaseComplete.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 
 }

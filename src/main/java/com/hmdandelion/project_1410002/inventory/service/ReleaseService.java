@@ -335,7 +335,7 @@ public class ReleaseService {
 
         List<Release> releases = releaseRepo.findByStatus(WAIT);
         for (Release release : releases) {
-            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
+            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), WAIT_SHIPPING)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
@@ -406,7 +406,7 @@ public class ReleaseService {
 
         List<Release> releases = releaseRepo.findByStatus(SHIPPING);
         for (Release release : releases) {
-            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
+            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), OrderStatus.SHIPPING)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             System.out.println("release.getReleaseCode() = " + release.getReleaseCode());
             ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(), SHIPPING);
@@ -469,32 +469,40 @@ public class ReleaseService {
 
     }
     @Transactional(readOnly = true)
-    public List<ReleaseCompleteDTO> getReleaseComplete(
-            Boolean isCompleted
-    ) {
-
+    public Page<ReleaseCompleteDTO> getReleaseComplete(Integer page, Boolean isCompleted) {
+        Pageable pageable = getPageableWait(page);
 
         List<ReleaseCompleteDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(DELIVERY_COMPLETED);
-        for(Release release : releases){
-            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), COMPLETED)
-                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        for (Release release : releases) {
+            try {
+                Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), COMPLETED)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
 
-            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),DELIVERY_COMPLETED);
-            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
-                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
-            Boolean isDeadline = true;
-            if(order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())){
-                isDeadline=false;
+                // 상태 값이 RETURNED인 경우 반복문을 건너뛰기
+                if (order.getStatus().equals(RETURNED)) {
+                    continue;
+                }
+
+                ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(), DELIVERY_COMPLETED);
+                Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+                Boolean isDeadline = true;
+                if (order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())) {
+                    isDeadline = false;
+                }
+                ReleaseCompleteDTO releaseComplete = ReleaseCompleteDTO.of(
+                        order.getOrderCode(),
+                        client.getClientName(),
+                        releaseChange.getChangeAt(),
+                        isDeadline
+                );
+                resultList.add(releaseComplete);
+            } catch (NotFoundException e) {
+                // 예외가 발생하면 현재 반복문을 건너뜀
+                continue;
             }
-            ReleaseCompleteDTO releaseComplete = ReleaseCompleteDTO.of(
-                    order.getOrderCode(),
-                    client.getClientName(),
-                    releaseChange.getChangeAt(),
-                    isDeadline
-            );
-            resultList.add(releaseComplete);
         }
 
         // deadLineSort 값에 따라 resultList를 정렬
@@ -506,6 +514,11 @@ public class ReleaseService {
             resultList.sort(Comparator.comparing(ReleaseCompleteDTO::getCompletedAt));
         }
 
-        return resultList;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+        Page<ReleaseCompleteDTO> pageResult = new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
+
+        return pageResult;
     }
+
 }
