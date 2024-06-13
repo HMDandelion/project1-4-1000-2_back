@@ -37,7 +37,7 @@ public class MaterialOrderResponse {
     ) {
         String planName = "지정된 생산계획 없음.";
         if (plan != null) {
-         planName = plan.getCreationAt() + "_" + plan.getPlanCode();
+         planName = plan.getCreationAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + "_" + plan.getPlanCode();
         }
         String dpName = departmentName + " " + positionName;
         String str_arrivalDatetime = "";

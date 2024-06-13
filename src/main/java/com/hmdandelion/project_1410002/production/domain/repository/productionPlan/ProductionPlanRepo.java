@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -29,4 +30,6 @@ public interface ProductionPlanRepo extends JpaRepository<ProductionPlan, Long> 
     /* 생산 계획 기간 겹치지 않게 */
     @Query("SELECT COUNT(p) > 0 FROM ProductionPlan p WHERE :endAt >= p.startAt AND :startAt <= p.endAt")
     boolean existsByDateRange(@Param("startAt") LocalDate startAt, @Param("endAt") LocalDate endAt);
+
+    List<ProductionPlan> findByStartAtAfter(LocalDate today);
 }
