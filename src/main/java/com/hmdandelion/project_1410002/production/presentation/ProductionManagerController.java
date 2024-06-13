@@ -16,6 +16,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,7 +45,8 @@ public class ProductionManagerController {
         if (page == null || page <= 0) {
             page = 1;
         }
-        final Page<ProductionReportResponse> productionReportResponses = productionService.getProductionReportRecords(page, productionStatusCode, productionStatusType, startAt, completedAt);
+        Pageable pageable = PageRequest.of(page - 1, 10);
+        final Page<ProductionReportResponse> productionReportResponses = productionService.getProductionReportRecords(pageable, productionStatusCode, productionStatusType, startAt, completedAt);
         final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(productionReportResponses);
         final PagingResponse pagingResponse = PagingResponse.of(productionReportResponses.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(pagingResponse);

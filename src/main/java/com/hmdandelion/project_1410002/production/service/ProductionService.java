@@ -3,10 +3,12 @@ package com.hmdandelion.project_1410002.production.service;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
+import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.entity.production.DefectDetail;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionDetail;
@@ -27,6 +29,7 @@ import com.hmdandelion.project_1410002.production.dto.response.production.Defect
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionReportResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +49,7 @@ import static com.hmdandelion.project_1410002.inventory.domian.type.StockType.RE
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class ProductionService {
 
@@ -55,6 +59,9 @@ public class ProductionService {
     private final WorkOrderRepo workOrderRepo;
     private final StockRepo stockRepo;
     private final ProductRepo productRepo;
+    private final LineService lineService;
+    private final EmployeeService employeeService; // 수정된 부분
+    private final ProductService productService; // 수정된 부분
 
     /* 페이징 */
     private Pageable getPageable(final Integer page) {
@@ -63,24 +70,49 @@ public class ProductionService {
 
     /* 전체 조회*/
     @Transactional(readOnly = true)
-    public Page<ProductionReportResponse> getProductionReportRecords(final Integer page, final Long productionStatusCode, final ProductionStatusType productionStatusType, final LocalDateTime startAt, final LocalDateTime completedAt) {
+    public Page<ProductionReportResponse> getProductionReportRecords(final Pageable page, final Long productionStatusCode, final ProductionStatusType productionStatusType, final LocalDateTime startAt, final LocalDateTime completedAt) {
         Page<ProductionManagement> productionManagements = null;
 
         if (productionStatusCode != null && productionStatusCode > 0) {
-            productionManagements = productionRepo.findByProductionStatusCodeAndProductionStatus(getPageable(page), productionStatusCode, ProductionStatusType.REGISTER_PRODUCTION);
+//            log.info("findByProductionStatusCodeAndProductionStatus 실행됨");
+            productionManagements = productionRepo.findByProductionStatusCodeAndProductionStatus(page, productionStatusCode, ProductionStatusType.REGISTER_PRODUCTION);
         } else if (productionStatusType != null) {
-            productionManagements = productionRepo.findByProductionStatus(getPageable(page), productionStatusType);
-//        } else if (completedAt != null && startAt != null) {
-//            productionManagements = productionRepo.findByCompletedAtBetween(getPageable(page), startAt, completedAt);
-//        } else if (completedAt != null) {
-//            productionManagements = productionRepo.findByCompletedAt(getPageable(page), completedAt);
-//        } else if (startAt != null) {
-//            productionManagements = productionRepo.findByStartAt(getPageable(page), startAt);
+//            log.info("findByProductionStatus 실행됨");
+            productionManagements = productionRepo.findByProductionStatus(page, productionStatusType);
         } else {
-            productionManagements = productionRepo.findAll(getPageable(page));
+            productionManagements = productionRepo.findAll(page);
+//            log.info("findAll로 실행됨");
         }
-        return productionManagements.map(ProductionReportResponse::from);
+        return productionManagements.map(productionManagement -> {
+            List<String> productNames = productionManagement.getProductionDetails().stream()
+                    .map(detail -> productService.getProduct(detail.getWorkOrder().getProductCode()).getProductName())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            String stylizationName = formatProductNames(productNames);
+            int totalOrderedQuantity = productionManagement.getProductionDetails().stream()
+                    .mapToInt(detail -> detail.getWorkOrder().getOrderedQuantity())
+                    .sum();
+
+            return ProductionReportResponse.of(
+                    productionManagement.getProductionStatusCode(),
+                    productionManagement.getStartAt(),
+                    productionManagement.getCompletedAt(),
+                    stylizationName,
+                    totalOrderedQuantity,
+                    productionManagement.getTotalProductionQuantity(),
+                    productionManagement.getProductionFile(),
+                    productionManagement.getProductionStatus()
+            );
+        });
     }
+    private String formatProductNames(List<String> productNames) {
+        if (productNames.size() == 1) {
+            return productNames.get(0);
+        }
+        return productNames.get(0) + " 외 " + (productNames.size() - 1) + "개";
+    }
+
 
     /* 상세 조회 */
     @Transactional(readOnly = true)
@@ -90,7 +122,27 @@ public class ProductionService {
 
         List<ProductionDetailResponse> productionDetails = new ArrayList<>();
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
-            productionDetails.add(ProductionDetailResponse.from(productionDetail));
+            final String lineName = lineService.findNameByCode(productionDetail.getWorkOrder().getLineCode());
+            final String employeeName = employeeService.findById(productionDetail.getWorkOrder().getEmployeeCode()).getEmployeeName();
+            final String productName = productService.getProduct(productionDetail.getWorkOrder().getProductCode()).getProductName();
+
+            final ProductionDetailResponse productionDetailResponse = ProductionDetailResponse.of(
+                    productionDetail.getProductionDetailCode(),
+                    productionDetail.getWorkOrder().getWorkOrderCode(),
+                    lineName,
+                    employeeName,
+                    productName,
+                    productionDetail.getWorkOrder().getOrderedQuantity(),
+                    productionDetail.getProductionQuantity(),
+                    productionDetail.getDefectQuantity(),
+                    productionDetail.getCompletelyQuantity(),
+                    productionDetail.getInspectionDate(),
+                    productionDetail.getInspectionStatus(),
+                    productionDetail.getProductionMemo(),
+                    productionDetail.getProductionStatus()
+            );
+            productionDetails.add(productionDetailResponse);
+            //            productionDetails.add(ProductionDetailResponse.from(productionDetail));
         }
         return productionDetails;
     }
@@ -231,3 +283,9 @@ public class ProductionService {
 //        return totalProductionQuantity;
 //    }
 
+//   } else if (completedAt != null && startAt != null) {
+//            productionManagements = productionRepo.findByCompletedAtBetween(getPageable(page), startAt, completedAt);
+//        } else if (completedAt != null) {
+//            productionManagements = productionRepo.findByCompletedAt(getPageable(page), completedAt);
+//        } else if (startAt != null) {
+//            productionManagements = productionRepo.findByStartAt(getPageable(page), startAt);
