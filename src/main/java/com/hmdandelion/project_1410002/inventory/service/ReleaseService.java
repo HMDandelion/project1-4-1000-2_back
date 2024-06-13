@@ -464,7 +464,7 @@ public class ReleaseService {
 
         releaseChangeRepo.save(releaseChange);
 
-        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,OrderStatus.SHIPPING).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         order.orderCompleteWork(COMPLETED,LocalDateTime.now());
 
     }
