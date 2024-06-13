@@ -127,6 +127,7 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .selectFrom(client)
                 .where(builder)
                 .where(client.clientType.eq(ClientType.RAW_MATERIALS))
+                .where(client.status.ne(ClientStatus.DELETED))
                 .orderBy(client.clientName.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -137,6 +138,7 @@ public class ClientRepoCustomImpl implements ClientRepoCustom {
                 .from(client)
                 .where(builder)
                 .where(client.clientType.eq(ClientType.RAW_MATERIALS))
+                .where(client.status.ne(ClientStatus.DELETED))
                 .orderBy(client.clientName.asc());
 
         return PageableExecutionUtils.getPage(clients.stream().map(MaterialClientDTO::from).toList(), pageable, count::fetchOne);
