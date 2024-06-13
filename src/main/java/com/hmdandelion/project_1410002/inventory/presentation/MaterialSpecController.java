@@ -85,12 +85,12 @@ public class MaterialSpecController {
     }
 
     //스펙 삭제
-    @DeleteMapping("/spec")
+    @DeleteMapping("/spec/{specCode}")
     public ResponseEntity<Void> deleteSpec(
-            @RequestBody(required = false) final List<Long> specCodes
+            @PathVariable final Long specCode
     ) {
-
-        String message = materialSpecService.removeByList(specCodes);
+        log.info("전달받은 코드값 : {}", specCode);
+        String message = materialSpecService.removeByList(specCode);
         log.info(message);
         return ResponseEntity.noContent().build();
     }
