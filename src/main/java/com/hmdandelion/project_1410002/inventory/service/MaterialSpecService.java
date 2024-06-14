@@ -81,4 +81,11 @@ public class MaterialSpecService {
 
         return spec;
     }
+    public MaterialSpec findSpec(Long specCode) {
+        return materialSpecRepo.findBySpecCode(specCode);
+    }
+
+    public List<MaterialSpec> findAllSpecList() {
+        return materialSpecRepo.findAll();
+    }
 }

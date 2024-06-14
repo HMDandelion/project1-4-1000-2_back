@@ -1,5 +1,8 @@
 package com.hmdandelion.project_1410002.inventory.presentation;
 
+import com.hmdandelion.project_1410002.common.paging.Pagination;
+import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
+import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.BomCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.request.BomRequest;
@@ -7,6 +10,7 @@ import com.hmdandelion.project_1410002.inventory.dto.product.request.BomUpdateRe
 import com.hmdandelion.project_1410002.inventory.dto.product.response.BomResponse;
 import com.hmdandelion.project_1410002.inventory.service.BomService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +49,19 @@ public class BomController {
         List<Bom> boms = bomService.getBomByProductCode(productCode);
 
         return ResponseEntity.ok(boms);
+    }
+
+    /*상품 코드로 BOM조회(BOM상세 보기) 페이징*/
+    @GetMapping("/bom/product/page/{productCode}")
+    public ResponseEntity<PagingResponse> getBomByPageProductCode(
+            @PathVariable final Long productCode,
+            @RequestParam(defaultValue = "1") final Integer page
+    ){
+        Page<Bom> boms = bomService.getBomByPageProductCode(productCode,page);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(boms);
+        final PagingResponse pagingResponse = PagingResponse.of(boms.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 
     /*productCode에 해당하는 상품의 BOM 추가*/

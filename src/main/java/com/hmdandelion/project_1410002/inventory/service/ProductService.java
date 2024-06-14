@@ -26,10 +26,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.ACTIVE;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
@@ -39,7 +36,7 @@ import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DEL
 @Transactional
 public class ProductService {
 
-    private final ProductRepo productRepository;
+    private final ProductRepo productRepo;
     private final OrderProductRepo orderProductRepo;
     private final OrderRepo orderRepo;
     private final ClientRepo clientRepo;
@@ -50,19 +47,19 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public List<SimpleProductResponse> getSimpleProducts() {
-        List<Product> products = productRepository.findByStatus(ProductStatus.IN_PRODUCTION);
+        List<Product> products = productRepo.findByStatus(ProductStatus.IN_PRODUCTION);
         return products.stream().map(SimpleProductResponse::from).toList();
     }
 
     @Transactional(readOnly = true)
     public Page<ProductsResponse> getProducts(Integer page) {
-        Page<Product> products = productRepository.findAll(getPageable(page));
+        Page<Product> products = productRepo.findAll(getPageable(page));
         return products.map(ProductsResponse::from);
     }
 
     @Transactional(readOnly = true)
     public ProductsResponse getProduct(Long productCode) {
-        Product product = productRepository.findById(productCode)
+        Product product = productRepo.findById(productCode)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         return ProductsResponse.from(product);
     }
@@ -75,13 +72,13 @@ public class ProductService {
                 productRequest.getUnit()
         );
 
-        final Product product = productRepository.save(newProduct);
+        final Product product = productRepo.save(newProduct);
 
         return product.getProductCode();
     }
 
     public void modifyProduct(Long productCode, ProductRequest productRequest) {
-        Product product = productRepository.findById(productCode)
+        Product product = productRepo.findById(productCode)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         product.modify(
                 productRequest.getProductName(),
@@ -91,25 +88,34 @@ public class ProductService {
     }
 
     public void updateStatus(Long productCode) {
-        Product product = productRepository.findById(productCode)
+        Product product = productRepo.findById(productCode)
                                            .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
         product.updateStatus(product);
     }
     @Transactional(readOnly = true)
     public Page<Product> searchProducts(Pageable pageable, String productName, String unit, ProductStatus status,Boolean createdAtSort) {
-        return productRepository.searchProducts(pageable, productName, unit, status,createdAtSort);
+        return productRepo.searchProducts(pageable, productName, unit, status,createdAtSort);
     }
     @Transactional(readOnly = true)
     public List<String> getProductClient(Long productCode) {
         Set<String> resultSet = new HashSet<>();
         List<OrderProduct> orderProducts = orderProductRepo.findByProductCode(productCode);
-        for(OrderProduct orderProduct : orderProducts){
-            Order order = orderRepo.findByOrderCodeAndStatus(orderProduct.getOrder().getOrderCode(), OrderStatus.ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
-            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+        for(OrderProduct orderProduct : orderProducts) {
+            try {
+                Order order = orderRepo.findByOrderCodeAndStatus(orderProduct.getOrder().getOrderCode(), OrderStatus.ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+                Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
 
-            resultSet.add(client.getClientName());
+                resultSet.add(client.getClientName());
+            } catch (NotFoundException e) {
+                return Collections.emptyList();
+            }
         }
         return new ArrayList<>(resultSet);
     }
 
+    @Transactional(readOnly = true)
+    public List<Product> getAllProducts() {
+        List<Product> productList = productRepo.findAll();
+        return productList;
+    }
 }

@@ -10,6 +10,10 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.product.Produ
 import com.hmdandelion.project_1410002.inventory.dto.product.request.ProductSpecRequest;
 import com.hmdandelion.project_1410002.inventory.dto.product.response.ProductSpecResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,9 @@ public class ProductSpecService {
     private final ProductSpecRepo productSpecRepo;
     private final ProductRepo productRepo;
 
+    private Pageable getPageable(final Integer page) {
+        return PageRequest.of(page - 1, 10, Sort.by("code"));
+    }
 
     public void saveProductSpec(Long productCode, ProductSpecRequest productSpecRequest) {
         productRepo.findById(productCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
@@ -45,6 +52,7 @@ public class ProductSpecService {
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
 
             return  ProductSpecResponse.of(
+                    productSpec.getCode(),
                     productSpec.getColor(),
                     productSpec.getType(),
                     productSpec.getSize(),
@@ -60,25 +68,33 @@ public class ProductSpecService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProductSpecResponse> getProductSpec(final Long productCode) {
+    public Page<ProductSpecResponse> getProductSpec(final Long productCode, final Integer page) {
         Product product = productRepo.findById(productCode)
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
-        List<ProductSpec> productSpecs = productSpecRepo.findProductSpecsByProductCode(productCode)
-                .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
+        Page<ProductSpec> productSpecs = productSpecRepo.findProductSpecsByProductCode(getPageable(page), productCode);
 
-        return productSpecs.stream().map(productSpec -> ProductSpecResponse.of(
-                productSpec.getColor(),
-                productSpec.getType(),
-                productSpec.getSize(),
-                productSpec.getProductCode(),
-                product.getProductName(), // Product에서 조회한 정보를 설정
-                product.getLaunchDate(),
-                product.getPrice(),
-                product.getUnit(),
-                product.getUpdatedAt(),
-                product.getStatus()
-        )).collect(Collectors.toList());
+        // ProductSpec 객체를 ProductSpecResponse 객체로 변환
+        Page<ProductSpecResponse> productSpecResponses = productSpecs.map(productSpec -> {
+            // 여기서는 ProductSpecResponse의 모든 필드를 채우기 위해 예시로 Product 객체의 일부 정보를 사용합니다.
+            // 실제 구현에서는 필요에 맞게 Product 정보를 가져와야 할 수도 있습니다.
+            return ProductSpecResponse.of(
+                    productSpec.getCode(),
+                    productSpec.getColor(),
+                    productSpec.getType(),
+                    productSpec.getSize(),
+                    productSpec.getProductCode(),
+                    product.getProductName(), // 예시로 Product의 이름을 사용합니다. 실제로는 별도의 로직이 필요할 수 있습니다.
+                    product.getLaunchDate(),
+                    product.getPrice(),
+                    product.getUnit(),
+                    product.getUpdatedAt(),
+                    product.getStatus()
+            );
+        });
+
+        return productSpecResponses;
     }
+
 
 
     public void modifyProductSpecByProductSpecCode(Long code,ProductSpecRequest productSpecRequest) {

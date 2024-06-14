@@ -13,6 +13,7 @@ import com.hmdandelion.project_1410002.inventory.service.MaterialSpecService;
 import com.hmdandelion.project_1410002.purchase.service.MaterialClientService;
 import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import com.hmdandelion.project_1410002.sales.service.ClientService;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,6 +54,13 @@ public class MaterialSpecController {
         PagingResponse res = PagingResponse.of(list.getContent(), pagingButtonInfo);
         return ResponseEntity.ok(res);
     }
+
+    @GetMapping("/spec/list")
+    public ResponseEntity<List<MaterialSpec>> findAllSpecList(){
+        List<MaterialSpec> materialSpecs = materialSpecService.findAllSpecList();
+        return ResponseEntity.ok(materialSpecs);
+    }
+
 
     //스펙 상세
     @GetMapping("/spec/{specCode}")

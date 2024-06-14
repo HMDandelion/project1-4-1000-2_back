@@ -70,6 +70,10 @@ public class EmployeeService {
         return LoginDTO.from(employee, authorities);
     }
 
+    public List<Employee> getEmployee() {
+        return employeeRepo.findByStatus("ACTIVE");
+    }
+
     public EmployeeInfoDTO getInfoByEmployeeNo(String employeeNo) {
         return employeeRepo.findInfoByEmployeeNo(employeeNo);
     }

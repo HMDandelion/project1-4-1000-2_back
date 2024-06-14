@@ -2,6 +2,7 @@ package com.hmdandelion.project_1410002.production.service;
 
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.repository.productionPlan.WorkOrderRepo;

@@ -17,10 +17,10 @@ public class ReleasePossible {
     private String clientName;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate deadline;
-    private Long dDay;
+    private String dDay;
     private Boolean isReleasePossible;
 
-    public static ReleasePossible of(Long orderCode, String clientName, LocalDate deadline,Long dDay, Boolean result) {
+    public static ReleasePossible of(Long orderCode, String clientName, LocalDate deadline,String dDay, Boolean result) {
 
         return new ReleasePossible(
                 orderCode,

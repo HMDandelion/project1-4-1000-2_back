@@ -26,6 +26,7 @@ import com.hmdandelion.project_1410002.sales.domain.entity.order.OrderProduct;
 import com.hmdandelion.project_1410002.sales.domain.repository.client.ClientRepo;
 import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderProductRepo;
 import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderRepo;
+import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -41,9 +42,9 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.*;
+import static com.hmdandelion.project_1410002.inventory.domian.type.ReleaseStatus.SHIPPING;
 import static com.hmdandelion.project_1410002.sales.domain.type.ClientStatus.DELETED;
-import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.COMPLETED;
-import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.ORDER_RECEIVED;
+import static com.hmdandelion.project_1410002.sales.domain.type.OrderStatus.*;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +63,9 @@ public class ReleaseService {
     private Pageable getPageable(final Integer page, final Boolean createdSort) {
         Sort sort = createdSort ? Sort.by("dDay").ascending() : Sort.by("dDay").descending();
         return PageRequest.of(page - 1, 10, sort);
+    }
+    private Pageable getPageableWait(final Integer page) {
+        return PageRequest.of(page - 1, 10);
     }
     @Transactional(readOnly = true)
     public Page<ReleasePossible> getReleasePossibles(Integer page, Boolean isReleasePossible, Boolean createdSort) {
@@ -116,15 +120,22 @@ public class ReleaseService {
             LocalDate now = LocalDate.now();
             Period period = Period.between(now, order.getDeadline());
             long daysDiff = period.getDays();
+            String dday;
+            if(daysDiff<0){
+                dday="마감 기간 종료";
+            }else if(daysDiff==0){
+                dday="D-DAY";
+            }else{
+                dday= "D-"+String.valueOf(daysDiff);
+            }
 
             ReleasePossible releasePossible = ReleasePossible.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     order.getDeadline(),
-                    daysDiff,
+                    dday,
                     result
             );
-
             releasePossibleList.add(releasePossible);
         }
 
@@ -211,28 +222,39 @@ public class ReleaseService {
                 order
         );
 
-        List<Storage> resultList = new ArrayList<>();
+
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
         for(OrderProduct orderProduct : orderProducts){
+            List<Storage> resultList = new ArrayList<>();
             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
             for(Stock stock : stocks) {
                 List<Storage> storages = storageRepo.findStoragesByStockStockCodeAndIsDelete(stock.getStockCode(),false);
 
                 resultList.addAll(storages);
-                resultList.sort(Comparator.comparing(Storage::getCreatedAt));
+
             }
-
+            resultList.sort(Comparator.comparing(Storage::getCreatedAt));
             Long standard = 0L;
+            System.out.println("리저" + resultList);
 
-            for(Storage storage : resultList){
-                standard+=storage.getActualQuantity();
-                if(standard>orderProduct.getQuantity()){
-                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
-                    modifyStorage.minusActualQuantity(storage.getActualQuantity() - (standard-orderProduct.getQuantity()));
+            for (Storage storage : resultList) {
+                Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(), false);
+
+//                if (modifyStorage == null) {
+//                    // modifyStorage가 null인 경우 로그를 남기고 계속 진행
+//                    System.err.println("Storage not found for storageCode: " + storage.getStorageCode());
+//                    continue;
+//                }
+
+                if (standard + storage.getActualQuantity() >= orderProduct.getQuantity()) {
+                    // 필요한 양만큼만 가져오고, storage에서 남은 주문량 만큼만 감량
+                    Long remainingQuantity = orderProduct.getQuantity() - standard;
+                    modifyStorage.minusActualQuantity(remainingQuantity);
                     break;
-                }else{
-                    Storage modifyStorage = storageRepo.findStorageByStorageCodeAndIsDelete(storage.getStorageCode(),false);
-                    modifyStorage.modifyActualQuantity();
+                } else {
+                    // storage의 모든 양을 사용
+                    standard += storage.getActualQuantity(); // 먼저 standard에 더한 후
+                    modifyStorage.minusActualQuantity(storage.getActualQuantity()); // 실제 양을 줄임
                 }
             }
 
@@ -249,9 +271,10 @@ public class ReleaseService {
             }
 
         }
-
+        order.modifyStatus(OrderStatus.WAIT_SHIPPING);
 
         Long releaseCode = releaseRepo.save(newRelease).getReleaseCode();
+
         return releaseCode;
     }
     @Transactional(readOnly = true)
@@ -260,8 +283,8 @@ public class ReleaseService {
         List<ReleaseStorage> returnList = new ArrayList<>();
 
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
-        System.out.println("orderProducts = " + orderProducts);
-        System.out.println("orderProducts.get(0).getProductCode() = " + orderProducts.get(0).getProductCode());
+//        System.out.println("orderProducts = " + orderProducts);
+//        System.out.println("orderProducts.get(0).getProductCode() = " + orderProducts.get(0).getProductCode());
         for(OrderProduct orderProduct : orderProducts){
             List<Stock> stocks = stockRepo.findByProductProductCodeAndIsDelete(orderProduct.getProductCode(),false);
             Product product = productRepo.findById(orderProduct.getProductCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PRODUCT_CODE));
@@ -305,35 +328,58 @@ public class ReleaseService {
 
         return returnList;
     }
+
     @Transactional(readOnly = true)
-    public List<ReleaseWaitDTO> getReleaseWait(Boolean deadlineSort) {
+    public Page<ReleaseWaitDTO> getReleaseWait(Integer page, Boolean deadlineSort) {
         List<ReleaseWaitDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(WAIT);
-        for(Release release : releases){
-            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
+        for (Release release : releases) {
+            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), WAIT_SHIPPING)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+
+            LocalDate now = LocalDate.now();
+            Period period = Period.between(now, order.getDeadline());
+            long daysDiff = period.getDays();
+            String dday;
+            if(daysDiff<0){
+                dday="마감 기간 종료";
+            }else if(daysDiff==0){
+                dday="D-DAY";
+            }else{
+                dday= "D-"+String.valueOf(daysDiff);
+            }
             ReleaseWaitDTO releaseWait = ReleaseWaitDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
                     release.getCreatedAt(),
-                    order.getDeadline()
+                    order.getDeadline(),
+                    dday
             );
             resultList.add(releaseWait);
         }
 
-        // deadLineSort 값에 따라 resultList를 정렬
+        // deadlineSort 값에 따라 resultList를 정렬
         if (deadlineSort) {
-            // deadLineSort가 참이면 내림차순 정렬
+            // deadlineSort가 참이면 내림차순 정렬
             resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline).reversed());
         } else {
-            // deadLineSort가 거짓이면 오름차순 정렬
+            // deadlineSort가 거짓이면 오름차순 정렬
             resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline));
         }
 
-        return resultList;
+        // releaseCreatedAt을 기준으로 내림차순 정렬
+        resultList.sort(Comparator.comparing(ReleaseWaitDTO::getReleaseCreatedAt).reversed());
+
+        // 페이지 요청 생성 및 결과 리스트 페이징 처리
+        Pageable pageable = getPageableWait(page);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+        List<ReleaseWaitDTO> subList = resultList.subList(start, end);
+
+        return new PageImpl<>(subList, pageable, resultList.size());
     }
 
     public void shippingOrder(Long orderCode) {
@@ -348,26 +394,42 @@ public class ReleaseService {
                 LocalDateTime.now(),
                 release
         );
+
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,WAIT_SHIPPING).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        order.modifyStatus(OrderStatus.SHIPPING);
         releaseChangeRepo.save(releaseChange);
     }
     @Transactional(readOnly = true)
-    public List<ReleaseShippingDTO> getReleaseShipping(Boolean deadlineSort) {
+    public Page<ReleaseShippingDTO> getReleaseShipping(Integer page, Boolean deadlineSort) {
+        Pageable pageable = getPageableWait(page);
         List<ReleaseShippingDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(SHIPPING);
-        for(Release release : releases){
-            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), ORDER_RECEIVED)
+        for (Release release : releases) {
+            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), OrderStatus.SHIPPING)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
             System.out.println("release.getReleaseCode() = " + release.getReleaseCode());
-            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),SHIPPING);
+            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(), SHIPPING);
             System.out.println("releaseChange = " + releaseChange);
             Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
                     .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+            LocalDate now = LocalDate.now();
+            Period period = Period.between(now, order.getDeadline());
+            long daysDiff = period.getDays();
+            String dday;
+            if (daysDiff < 0) {
+                dday = "마감 기간 종료";
+            } else if (daysDiff == 0) {
+                dday = "D-DAY";
+            } else {
+                dday = "D-" + String.valueOf(daysDiff);
+            }
             ReleaseShippingDTO releaseShipping = ReleaseShippingDTO.of(
                     order.getOrderCode(),
                     client.getClientName(),
-                    releaseChange.getChangeAt(),
-                    order.getDeadline()
+                    release.getCreatedAt(),
+                    order.getDeadline(),
+                    dday
             );
             resultList.add(releaseShipping);
         }
@@ -381,7 +443,12 @@ public class ReleaseService {
             resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline));
         }
 
-        return resultList;
+        // 페이징 처리
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+        List<ReleaseShippingDTO> pageContent = resultList.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, resultList.size());
     }
 
     public void completeOrder(Long orderCode) {
@@ -397,37 +464,45 @@ public class ReleaseService {
 
         releaseChangeRepo.save(releaseChange);
 
-        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,ORDER_RECEIVED).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode,OrderStatus.SHIPPING).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
         order.orderCompleteWork(COMPLETED,LocalDateTime.now());
 
     }
     @Transactional(readOnly = true)
-    public List<ReleaseCompleteDTO> getReleaseComplete(
-            Boolean isCompleted
-    ) {
-
+    public Page<ReleaseCompleteDTO> getReleaseComplete(Integer page, Boolean isCompleted) {
+        Pageable pageable = getPageableWait(page);
 
         List<ReleaseCompleteDTO> resultList = new ArrayList<>();
 
         List<Release> releases = releaseRepo.findByStatus(DELIVERY_COMPLETED);
-        for(Release release : releases){
-            Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), COMPLETED)
-                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+        for (Release release : releases) {
+            try {
+                Order order = orderRepo.findByOrderCodeAndStatus(release.getOrder().getOrderCode(), COMPLETED)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
 
-            ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(),DELIVERY_COMPLETED);
-            Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
-                    .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
-            Boolean isDeadline = true;
-            if(order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())){
-                isDeadline=false;
+                // 상태 값이 RETURNED인 경우 반복문을 건너뛰기
+                if (order.getStatus().equals(RETURNED)) {
+                    continue;
+                }
+
+                ReleaseChange releaseChange = releaseChangeRepo.findByReleaseReleaseCodeAndStatus(release.getReleaseCode(), DELIVERY_COMPLETED);
+                Client client = clientRepo.findByClientCodeAndStatusNot(order.getClientCode(), DELETED)
+                        .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE));
+                Boolean isDeadline = true;
+                if (order.getDeadline().atStartOfDay().isBefore(releaseChange.getChangeAt())) {
+                    isDeadline = false;
+                }
+                ReleaseCompleteDTO releaseComplete = ReleaseCompleteDTO.of(
+                        order.getOrderCode(),
+                        client.getClientName(),
+                        releaseChange.getChangeAt(),
+                        isDeadline
+                );
+                resultList.add(releaseComplete);
+            } catch (NotFoundException e) {
+                // 예외가 발생하면 현재 반복문을 건너뜀
+                continue;
             }
-            ReleaseCompleteDTO releaseComplete = ReleaseCompleteDTO.of(
-                    order.getOrderCode(),
-                    client.getClientName(),
-                    releaseChange.getChangeAt(),
-                    isDeadline
-            );
-            resultList.add(releaseComplete);
         }
 
         // deadLineSort 값에 따라 resultList를 정렬
@@ -439,6 +514,11 @@ public class ReleaseService {
             resultList.sort(Comparator.comparing(ReleaseCompleteDTO::getCompletedAt));
         }
 
-        return resultList;
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), resultList.size());
+        Page<ReleaseCompleteDTO> pageResult = new PageImpl<>(resultList.subList(start, end), pageable, resultList.size());
+
+        return pageResult;
     }
+
 }
