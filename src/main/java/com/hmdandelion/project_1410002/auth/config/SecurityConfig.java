@@ -52,8 +52,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/estimates/**").hasAuthority("SALES");
                     auth.requestMatchers("/api/v1/orders/**").hasAuthority("SALES");
                     auth.requestMatchers("/api/v1/returns/**").hasAuthority("SALES");
-//                    auth.anyRequest().authenticated();
-                    auth.anyRequest().permitAll();
+                    auth.anyRequest().authenticated();
+//                    auth.anyRequest().permitAll();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)

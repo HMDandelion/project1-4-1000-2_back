@@ -5,12 +5,15 @@ import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecCreateDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.OrderSpecDTO;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@ToString
 @RequiredArgsConstructor
 public class MaterialOrderCreateRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -18,7 +21,9 @@ public class MaterialOrderCreateRequest {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private final LocalDate deliveryDueDate;
     private final Long clientCode;
-    private final Long employeeCode;
+    @Setter
+    private Long employeeCode;
     private final Long planCode;
     private final List<OrderSpecCreateDTO> orderSpecList;
+
 }
