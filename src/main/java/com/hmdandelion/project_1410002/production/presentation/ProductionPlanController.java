@@ -3,16 +3,19 @@ package com.hmdandelion.project_1410002.production.presentation;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.production.dto.request.PlannedOrderListRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
 import com.hmdandelion.project_1410002.production.service.PlanService;
+import com.hmdandelion.project_1410002.sales.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -20,6 +23,8 @@ import java.net.URI;
 public class ProductionPlanController {
 
     private final PlanService planService;
+
+    private final OrderService orderService;
 
     /* 내가 설정한 시작날짜 종료날짜에 대한 생산 계획 조회 start */
     @GetMapping("/production/planning")
@@ -43,8 +48,10 @@ public class ProductionPlanController {
       {
             final Long planCode = planService.planSave(productionPlanCreateRequest);
 
-          // 생산 계획 등록 후에 해당 주문 건을 삭제
-//          orderService.deleteOrder(productionPlanCreateRequest.getOrderId());
+          List<PlannedOrderListRequest> plannedOrderListRequests = productionPlanCreateRequest.getPlannedOrderListRequests();
+          for (PlannedOrderListRequest orderRequest : plannedOrderListRequests) {
+              orderService.updateOrderStatusToInProduction(orderRequest.getOrderCode());
+          }
 
             return ResponseEntity.created(URI.create("/api/v1/production/planning/" + planCode)).build();
     }
@@ -72,5 +79,6 @@ public class ProductionPlanController {
                 return ResponseEntity.noContent().build();
             }
     /* 생산 계획 삭제 end */
+
 
 }
