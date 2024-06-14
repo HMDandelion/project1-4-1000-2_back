@@ -68,7 +68,7 @@ public class WorkOrderService {
                 workOrderCreateRequest.getProductCode(),
                 workOrderCreateRequest.getEmployeeCode(),
                 workOrderCreateRequest.getOrderedQuantity(),
-                workOrderCreateRequest.getCompletionStatus()
+                inProgress
         );
 
         final WorkOrder workOrder = workOrderRepo.save(newWorkOrder);

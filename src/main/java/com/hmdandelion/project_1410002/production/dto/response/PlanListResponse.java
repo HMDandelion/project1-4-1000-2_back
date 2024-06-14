@@ -15,6 +15,7 @@ import java.time.LocalDate;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlanListResponse {
 
+    private final Long planCode;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate startAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
@@ -27,6 +28,7 @@ public class PlanListResponse {
 
     public PlanListResponse(ProductionPlannedList productionPlannedList
             , Product product, ProductionPlan productionPlan) {
+        this.planCode = productionPlan.getPlanCode();
         this.startAt = productionPlan.getStartAt();
         this.endAt = productionPlan.getEndAt();
         this.requiredQuantity = productionPlannedList.getRequiredQuantity();

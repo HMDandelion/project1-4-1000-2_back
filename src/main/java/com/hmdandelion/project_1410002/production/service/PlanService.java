@@ -59,8 +59,7 @@ public class PlanService {
             throw new NotFoundException(ALREADY_EXIST_PRODUCTION_PLAN);
         }
 
-        List<ProductionPlannedList> productionPlanList = productionPlanCreateRequest.getProductionPlannedLists().stream()
-                                                                                    .map(productionPlannedListRequest -> {
+        List<ProductionPlannedList> productionPlanList = productionPlanCreateRequest.getProductionPlannedLists().stream().map(productionPlannedListRequest -> {
                     return ProductionPlannedList.of(
                             productionPlannedListRequest.getProductCode(),
                             productionPlannedListRequest.getPlannedQuantity(),
@@ -97,8 +96,7 @@ public class PlanService {
 
 
     public void planModify(Long planCode, ProductionPlanUpdateRequest productionPlanUpdateRequest) {
-        ProductionPlan productionPlan = productionPlanRepo.findByPlanCode(planCode)
-                                                          .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
+        ProductionPlan productionPlan = productionPlanRepo.findByPlanCode(planCode).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
 
         productionPlanUpdateRequest.getProductionPlannedLists().forEach(
                 productionPlannedListRequest -> {
@@ -113,6 +111,7 @@ public class PlanService {
                     );
                 }
         );
+
         productionPlan.planModify(
                 productionPlanUpdateRequest.getStartAt(),
                 productionPlanUpdateRequest.getEndAt()
