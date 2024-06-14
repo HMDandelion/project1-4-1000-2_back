@@ -75,10 +75,10 @@ public class ReleaseService {
 
         System.out.println("orders = " + orders.size());
 
-        for(Order order : orders){
-            for(Release release : releases){
-                if(Objects.equals(release.getOrder().getOrderCode(), order.getOrderCode())){
-                   filterOrders.add(order);
+        for (Order order : orders) {
+            for (Release release : releases) {
+                if (Objects.equals(release.getOrder().getOrderCode(), order.getOrderCode())) {
+                    filterOrders.add(order);
                 }
             }
         }
@@ -121,12 +121,12 @@ public class ReleaseService {
             Period period = Period.between(now, order.getDeadline());
             long daysDiff = period.getDays();
             String dday;
-            if(daysDiff<0){
-                dday="마감 기간 종료";
-            }else if(daysDiff==0){
-                dday="D-DAY";
-            }else{
-                dday= "D-"+String.valueOf(daysDiff);
+            if (daysDiff < 0) {
+                dday = "마감 기간 종료";
+            } else if (daysDiff == 0) {
+                dday = "D-DAY";
+            } else {
+                dday = "D-" + daysDiff;
             }
 
             ReleasePossible releasePossible = ReleasePossible.of(
@@ -155,6 +155,27 @@ public class ReleaseService {
             releasePossibleList.sort(comparator);
         }
 
+        releasePossibleList.sort((rp1, rp2) -> {
+            String dday1 = rp1.getDDay();
+            String dday2 = rp2.getDDay();
+
+            if (dday1.equals("마감 기간 종료") && !dday2.equals("마감 기간 종료")) {
+                return 1;
+            } else if (!dday1.equals("마감 기간 종료") && dday2.equals("마감 기간 종료")) {
+                return -1;
+            } else if (dday1.equals("D-DAY") && !dday2.equals("D-DAY")) {
+                return -1;
+            } else if (!dday1.equals("D-DAY") && dday2.equals("D-DAY")) {
+                return 1;
+            } else if (dday1.startsWith("D-") && dday2.startsWith("D-")) {
+                int days1 = Integer.parseInt(dday1.substring(2));
+                int days2 = Integer.parseInt(dday2.substring(2));
+                return Integer.compare(days1, days2);
+            } else {
+                return rp2.getDeadline().compareTo(rp1.getDeadline());
+            }
+        });
+
         // pageable을 생성할 때 createdSort 값을 반영
         Pageable pageable = getPageable(page, createdSort);
         int start = (int) pageable.getOffset();
@@ -163,6 +184,8 @@ public class ReleaseService {
 
         return new PageImpl<>(sublist, pageable, releasePossibleList.size());
     }
+
+
     @Transactional(readOnly = true)
     public List<ReleaseOrderProduct> getReleaseOrderProduct(Long orderCode) {
         List<OrderProduct> orderProducts = orderProductRepo.findByOrderCode(orderCode);
@@ -344,12 +367,12 @@ public class ReleaseService {
             Period period = Period.between(now, order.getDeadline());
             long daysDiff = period.getDays();
             String dday;
-            if(daysDiff<0){
-                dday="마감 기간 종료";
-            }else if(daysDiff==0){
-                dday="D-DAY";
-            }else{
-                dday= "D-"+String.valueOf(daysDiff);
+            if (daysDiff < 0) {
+                dday = "마감 기간 종료";
+            } else if (daysDiff == 0) {
+                dday = "D-DAY";
+            } else {
+                dday = "D-" + String.valueOf(daysDiff);
             }
             ReleaseWaitDTO releaseWait = ReleaseWaitDTO.of(
                     order.getOrderCode(),
@@ -361,17 +384,27 @@ public class ReleaseService {
             resultList.add(releaseWait);
         }
 
-        // deadlineSort 값에 따라 resultList를 정렬
-        if (deadlineSort) {
-            // deadlineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline).reversed());
-        } else {
-            // deadlineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseWaitDTO::getDeadline));
-        }
+        // 정렬 조건을 적용
+        resultList.sort((rp1, rp2) -> {
+            String dday1 = rp1.getDday();
+            String dday2 = rp2.getDday();
 
-        // releaseCreatedAt을 기준으로 내림차순 정렬
-        resultList.sort(Comparator.comparing(ReleaseWaitDTO::getReleaseCreatedAt).reversed());
+            if (dday1.equals("마감 기간 종료") && !dday2.equals("마감 기간 종료")) {
+                return 1;
+            } else if (!dday1.equals("마감 기간 종료") && dday2.equals("마감 기간 종료")) {
+                return -1;
+            } else if (dday1.equals("D-DAY") && !dday2.equals("D-DAY")) {
+                return -1;
+            } else if (!dday1.equals("D-DAY") && dday2.equals("D-DAY")) {
+                return 1;
+            } else if (dday1.startsWith("D-") && dday2.startsWith("D-")) {
+                int days1 = Integer.parseInt(dday1.substring(2));
+                int days2 = Integer.parseInt(dday2.substring(2));
+                return Integer.compare(days1, days2);
+            } else {
+                return rp2.getDeadline().compareTo(rp1.getDeadline());
+            }
+        });
 
         // 페이지 요청 생성 및 결과 리스트 페이징 처리
         Pageable pageable = getPageableWait(page);
@@ -381,6 +414,7 @@ public class ReleaseService {
 
         return new PageImpl<>(subList, pageable, resultList.size());
     }
+
 
     public void shippingOrder(Long orderCode) {
 
@@ -422,7 +456,7 @@ public class ReleaseService {
             } else if (daysDiff == 0) {
                 dday = "D-DAY";
             } else {
-                dday = "D-" + String.valueOf(daysDiff);
+                dday = "D-" + daysDiff;
             }
             ReleaseShippingDTO releaseShipping = ReleaseShippingDTO.of(
                     order.getOrderCode(),
@@ -434,14 +468,36 @@ public class ReleaseService {
             resultList.add(releaseShipping);
         }
 
-        // deadLineSort 값에 따라 resultList를 정렬
-        if (deadlineSort) {
-            // deadLineSort가 참이면 내림차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline).reversed());
-        } else {
-            // deadLineSort가 거짓이면 오름차순 정렬
-            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline));
-        }
+        // dday 값에 따라 정렬
+        resultList.sort((rs1, rs2) -> {
+            String dday1 = rs1.getDday();
+            String dday2 = rs2.getDday();
+
+            if (dday1.equals("마감 기간 종료") && !dday2.equals("마감 기간 종료")) {
+                return 1;
+            } else if (!dday1.equals("마감 기간 종료") && dday2.equals("마감 기간 종료")) {
+                return -1;
+            } else if (dday1.equals("D-DAY") && !dday2.equals("D-DAY")) {
+                return -1;
+            } else if (!dday1.equals("D-DAY") && dday2.equals("D-DAY")) {
+                return 1;
+            } else if (dday1.startsWith("D-") && dday2.startsWith("D-")) {
+                int days1 = Integer.parseInt(dday1.substring(2));
+                int days2 = Integer.parseInt(dday2.substring(2));
+                return Integer.compare(days1, days2); // D-숫자 오름차순 정렬
+            } else {
+                return rs1.getDeadline().compareTo(rs2.getDeadline());
+            }
+        });
+
+//        // deadLineSort 값에 따라 deadline 정렬
+//        if (deadlineSort) {
+//            // deadLineSort가 참이면 내림차순 정렬
+//            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline).reversed());
+//        } else {
+//            // deadLineSort가 거짓이면 오름차순 정렬
+//            resultList.sort(Comparator.comparing(ReleaseShippingDTO::getDeadline));
+//        }
 
         // 페이징 처리
         int start = (int) pageable.getOffset();
@@ -450,6 +506,8 @@ public class ReleaseService {
 
         return new PageImpl<>(pageContent, pageable, resultList.size());
     }
+
+
 
     public void completeOrder(Long orderCode) {
         Release release = releaseRepo.findByOrderOrderCode(orderCode);
