@@ -11,13 +11,17 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class OrdersResponse {
+public class PlanningOrderResponse {
+
     private final Long orderCode;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private final LocalDateTime orderDatetime;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private final LocalDate deadline;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private final LocalDateTime completedAt;
     private final String clientName;
     private final OrderStatus status;
-    private final LocalDate deadline;
-
-    // private final List<String> productName;
+    private final List<OrderProductResponse> orderProducts;
 }
+
