@@ -30,9 +30,10 @@ public class MaterialClientController {
     @GetMapping("/clients")
     public ResponseEntity<PagingResponse> searchClients(
             @RequestParam(defaultValue = "1") final int page,
-            @RequestParam(required = false) final String clientName
+            @RequestParam(required = false) final String clientName,
+            @RequestParam(defaultValue = "10") final int size
     ) {
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, size);
         Page<MaterialClientDTO> clients = materialClientService.searchClients(pageable, clientName);
 
         PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(clients);

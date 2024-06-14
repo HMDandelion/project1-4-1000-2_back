@@ -37,10 +37,11 @@ public class MaterialOrderController {
     public ResponseEntity<PagingResponse> getOrders(
             @RequestParam(defaultValue = "1") final int page,
             @RequestParam(required = false) final Long planCode,
-            @RequestParam(required = false) final String clientName
+            @RequestParam(required = false) final String clientName,
+            @RequestParam(defaultValue = "10") final int size
     ) {
         log.info("전달받은 패이지 {}",page);
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         Page<MaterialOrderDTO> orders = materialOrderService.getOrders(planCode, clientName, pageable);
 
