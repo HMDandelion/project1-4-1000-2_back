@@ -11,6 +11,7 @@ import com.hmdandelion.project_1410002.sales.domain.repository.order.OrderRepo;
 import com.hmdandelion.project_1410002.sales.domain.type.OrderStatus;
 import com.hmdandelion.project_1410002.sales.dto.response.OrderResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.OrdersResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.PlanningOrderResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -85,5 +86,19 @@ public class OrderService {
                 .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
 
         order.modifyStatus(OrderStatus.CANCELED);
+    }
+
+    public void updateOrderStatusToInProduction(Long orderCode) {
+        Order order = orderRepo.findByOrderCodeAndStatus(orderCode, OrderStatus.ORDER_RECEIVED)
+               .orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_ORDER_CODE));
+
+        order.modifyStatus(OrderStatus.IN_PRODUCTION);
+    }
+
+    public Page<PlanningOrderResponse> getPlanningOrders(Integer page, LocalDate startDate, LocalDate endDate, String clientName, String status, String productName, String sort) {
+
+        Page<PlanningOrderResponse> planningOrders = orderRepo.getPlanningOrders(getPageable(page), startDate, endDate, clientName, status, productName, sort);
+
+        return planningOrders;
     }
 }

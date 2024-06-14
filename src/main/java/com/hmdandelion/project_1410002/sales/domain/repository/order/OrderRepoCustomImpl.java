@@ -1,9 +1,6 @@
 package com.hmdandelion.project_1410002.sales.domain.repository.order;
 
-import com.hmdandelion.project_1410002.sales.dto.response.OrderClientDTO;
-import com.hmdandelion.project_1410002.sales.dto.response.OrderProductResponse;
-import com.hmdandelion.project_1410002.sales.dto.response.OrderResponse;
-import com.hmdandelion.project_1410002.sales.dto.response.OrdersResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.*;
 import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -21,11 +18,14 @@ import org.springframework.data.support.PageableExecutionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import static com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct.product;
+import static com.hmdandelion.project_1410002.inventory.domian.entity.stock.QStock.stock;
+import static com.hmdandelion.project_1410002.inventory.domian.entity.stock.QStorage.storage;
 import static com.hmdandelion.project_1410002.sales.domain.entity.estimate.QEstimate.estimate;
 import static com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder.order;
 import static com.hmdandelion.project_1410002.sales.domain.entity.client.QClient.client;
@@ -46,7 +46,7 @@ public class OrderRepoCustomImpl implements OrderRepoCustom{
     }
 
     @Override
-    public Page<OrdersResponse> search(
+    public Page<OrdersResponse> search (
             Pageable pageable, LocalDate startDate, LocalDate endDate,
             String clientName, String status, String productName, String sort
     ) {
@@ -131,6 +131,59 @@ public class OrderRepoCustomImpl implements OrderRepoCustom{
 
         return Optional.ofNullable(result.get(orderCode));
     }
+
+    /* 나윤 */
+    @Override
+    public Page<PlanningOrderResponse> getPlanningOrders(Pageable pageable, LocalDate startDate, LocalDate endDate, String clientName, String status, String productName, String sort) {
+        Map<Long, PlanningOrderResponse> planningOrderMap = queryFactory
+                .from(order)
+                .leftJoin(client).on(order.clientCode.eq(client.clientCode))
+                .leftJoin(order.orderProducts, orderProduct)
+                .leftJoin(product).on(orderProduct.productCode.eq(product.productCode))
+                .where(
+                        containClientName(clientName),
+                        containProductName(productName),
+                        searchDateFilter(startDate, endDate)
+                )
+                .transform(GroupBy.groupBy(order.orderCode).as(
+                        Projections.constructor(PlanningOrderResponse.class,
+                                order.orderCode,
+                                order.orderDatetime,
+                                order.deadline,
+                                order.completedAt,
+                                client.clientName,
+                                order.status,
+                                GroupBy.list(Projections.constructor(OrderProductResponse.class,
+                                        product.productCode,
+                                        product.productName,
+                                        orderProduct.quantity,
+                                        orderProduct.price
+                                ))
+                        )
+                ));
+
+        List<PlanningOrderResponse> planningOrders = new ArrayList<>(planningOrderMap.values());
+
+        // Count 쿼리
+        JPAQuery<Long> countQuery = queryFactory
+                .select(order.orderCode.countDistinct())
+                .from(order)
+                .leftJoin(client).on(order.clientCode.eq(client.clientCode))
+                .leftJoin(order.orderProducts, orderProduct)
+                .leftJoin(product).on(orderProduct.productCode.eq(product.productCode))
+                .where(
+                        containClientName(clientName),
+                        containProductName(productName),
+                        searchDateFilter(startDate, endDate)
+                );
+
+        return PageableExecutionUtils.getPage(planningOrders, pageable, countQuery::fetchOne);
+    }
+
+
+
+
+
 
     private BooleanExpression containClientName(String clientName) {
         if (clientName == null || clientName.isEmpty()) {
