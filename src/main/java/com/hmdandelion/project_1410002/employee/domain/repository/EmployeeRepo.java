@@ -30,4 +30,6 @@ public interface EmployeeRepo extends JpaRepository<Employee, Long>, EmployeeRep
                     "WHERE e.employeeNo = :employeeNo"
     )
     EmployeeInfoDTO findInfoByEmployeeNo(String employeeNo);
+
+    List<Employee> findByStatus(String status);
 }

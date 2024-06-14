@@ -5,6 +5,7 @@ import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.OrderResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.OrdersResponse;
+import com.hmdandelion.project_1410002.sales.dto.response.PlanningOrderResponse;
 import com.hmdandelion.project_1410002.sales.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -29,7 +30,7 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
-    public ResponseEntity<PagingResponse> getOrders(
+    public ResponseEntity<PagingResponse> getOrders (
             @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(required = false, defaultValue = "1900-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate startDate,
             @RequestParam(required = false, defaultValue = "2999-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate endDate,
@@ -55,5 +56,23 @@ public class OrderController {
     public ResponseEntity<Void> cancelOrder(@PathVariable final Long orderCode) {
         orderService.cancel(orderCode);
         return ResponseEntity.created(URI.create("/api/v1/orders/" + orderCode)).build();
+    }
+
+    /* 나윤 */
+    @GetMapping("/orders/production/planning/list")
+    public ResponseEntity<PagingResponse> getPlanningOrders (
+            @RequestParam(defaultValue = "1") final Integer page,
+            @RequestParam(required = false, defaultValue = "1900-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate startDate,
+            @RequestParam(required = false, defaultValue = "2999-01-01") @DateTimeFormat(pattern = "yyyy-MM-dd") final LocalDate endDate,
+            @RequestParam(required = false) final String clientName,
+            @RequestParam(required = false) final String status,
+            @RequestParam(required = false) final String productName,
+            @RequestParam(required = false) final String sort
+    ) {
+        Page<PlanningOrderResponse> orders = orderService.getPlanningOrders(page, startDate, endDate, clientName, status, productName, sort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(orders);
+        final PagingResponse pagingResponse = PagingResponse.of(orders.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 }

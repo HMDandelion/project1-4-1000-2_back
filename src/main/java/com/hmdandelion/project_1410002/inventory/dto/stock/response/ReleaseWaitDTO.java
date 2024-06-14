@@ -18,13 +18,15 @@ public class ReleaseWaitDTO {
     private LocalDateTime releaseCreatedAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate deadline;
+    private String dday;
 
-    public static ReleaseWaitDTO of(Long orderCode, String clientName, LocalDateTime createdAt, LocalDate deadline) {
+    public static ReleaseWaitDTO of(Long orderCode, String clientName, LocalDateTime createdAt, LocalDate deadline,String dday) {
         return new ReleaseWaitDTO(
                 orderCode,
                 clientName,
                 createdAt,
-                deadline
+                deadline,
+                dday
         );
     }
 }

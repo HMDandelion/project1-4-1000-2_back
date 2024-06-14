@@ -18,13 +18,15 @@ public class ReleaseShippingDTO {
     private LocalDateTime shippingStartAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate deadline;
+    private String dday;
 
-    public static ReleaseShippingDTO of(Long orderCode, String clientName, LocalDateTime changeAt, LocalDate deadline) {
+    public static ReleaseShippingDTO of(Long orderCode, String clientName, LocalDateTime changeAt, LocalDate deadline,String dday) {
         return new ReleaseShippingDTO(
                 orderCode,
                 clientName,
                 changeAt,
-                deadline
+                deadline,
+                dday
         );
     }
 }
