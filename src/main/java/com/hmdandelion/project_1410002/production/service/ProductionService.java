@@ -90,8 +90,15 @@ public class ProductionService {
                     .collect(Collectors.toList());
 
             String stylizationName = formatProductNames(productNames);
-            int totalOrderedQuantity = productionManagement.getProductionDetails().stream()
-                    .mapToInt(detail -> detail.getWorkOrder().getOrderedQuantity())
+            Map<Long, Integer> orderedQuantityMap = productionManagement.getProductionDetails().stream()
+                    .collect(Collectors.groupingBy(
+                            detail -> detail.getWorkOrder().getWorkOrderCode(),
+                            Collectors.summingInt(detail -> detail.getWorkOrder().getOrderedQuantity())
+                    ));
+
+// 각 그룹의 주문 수량을 합산하여 총 주문 수량을 계산합니다.
+            int totalOrderedQuantity = orderedQuantityMap.values().stream()
+                    .mapToInt(Integer::intValue)
                     .sum();
 
             return ProductionReportResponse.of(
@@ -107,11 +114,18 @@ public class ProductionService {
         });
     }
     private String formatProductNames(List<String> productNames) {
+        if (productNames == null || productNames.isEmpty()) {
+            return "";
+        }
+
         if (productNames.size() == 1) {
             return productNames.get(0);
         }
+
         return productNames.get(0) + " 외 " + (productNames.size() - 1) + "개";
     }
+
+
 
 
     /* 상세 조회 */
@@ -163,18 +177,24 @@ public class ProductionService {
     /* 보고서 등록 */
     public Long reportSave(ReportCreateRequest reportCreateRequest) {
         // ProductionManagement 생성 및 저장
-        final ProductionManagement newProductionManagement = ProductionManagement.of(reportCreateRequest.getProductionManagementCreateRequest().getStartAt(), reportCreateRequest.getProductionManagementCreateRequest().getCompletedAt(), reportCreateRequest.getProductionManagementCreateRequest().getTotalProductionQuantity(), reportCreateRequest.getProductionManagementCreateRequest().getProductionFile(), reportCreateRequest.getProductionManagementCreateRequest().getProductionStatus());
+        final ProductionManagement newProductionManagement = ProductionManagement.
+                of(
+                        reportCreateRequest.getStartAt(),
+                        reportCreateRequest.getCompletedAt(),
+                        reportCreateRequest.getTotalProductionQuantity(),
+                        reportCreateRequest.getProductionFile(),
+                        reportCreateRequest.getProductionStatus());
         productionRepo.save(newProductionManagement);
 
         // ProductionDetail 생성 및 저장
-        for (ProductionDetailCreateRequest productionDetailRequest : reportCreateRequest.getProductionDetailCreateRequest()) {
+        for (ProductionDetailCreateRequest productionDetailRequest : reportCreateRequest.getProductionDetails()) {
             WorkOrder workOrder = workOrderRepo.findByWorkOrderCode(productionDetailRequest.getWorkOrderCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER));
             ProductionDetail newProductionDetail = ProductionDetail.of(newProductionManagement, workOrder, productionDetailRequest.getProductionQuantity(), productionDetailRequest.getDefectQuantity(), productionDetailRequest.getCompletelyQuantity(), productionDetailRequest.getInspectionDate(), productionDetailRequest.getInspectionStatusType(), productionDetailRequest.getProductionMemo(), productionDetailRequest.getProductionStatusType()
             );
             productionDetailRepo.save(newProductionDetail);
 
             // 해당 ProductionDetail 에 대한 DefectDetail 생성 및 저장
-            for (DefectDetailCreateRequest defectDetailRequest : productionDetailRequest.getDefectDetailCreateRequest()) {
+            for (DefectDetailCreateRequest defectDetailRequest : productionDetailRequest.getDefectDetails()) {
                 DefectDetail newDefectDetail = DefectDetail.of(newProductionDetail, defectDetailRequest.getDefectReason(), defectDetailRequest.getDefectStatus(), defectDetailRequest.getDefectFile());
                 defectDetailRepo.save(newDefectDetail);
             }
