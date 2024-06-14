@@ -5,8 +5,8 @@ public enum ManageStatus {
     REFUNDED,           // 환불됨
     IN_PRODUCTION,      // 생산중
     INSPECTING,         // 검수중
-    READY_FOR_SHIPMENT, // 출고 대기
-    SHIPPED,            // 출고 완료
+    WAIT_SHIPPING,      // 배송대기
+    SHIPPING,            // 배송중
     COMPLETED,          // 완료됨
     CANCELED            // 취소됨
 

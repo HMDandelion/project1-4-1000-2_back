@@ -43,6 +43,12 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getAllProducts(){
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
     @GetMapping("/product/{productCode}")
     public ResponseEntity<ProductsResponse> getProduct(
             @PathVariable final Long productCode

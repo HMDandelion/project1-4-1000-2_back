@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 public class ProductSpecResponse {
+    private Long specCode;
     private String color;
     private String type;
     private String size;
@@ -41,8 +42,9 @@ public class ProductSpecResponse {
         );
     }
 
-    public static ProductSpecResponse of(String color, String type, String size, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status) {
+    public static ProductSpecResponse of(Long specCode,String color, String type, String size, Long productCode, String productName, LocalDateTime launchDate, Long price, String unit, LocalDateTime updatedAt, ProductStatus status) {
         return new ProductSpecResponse(
+                specCode,
                 color,
                 type,
                 size,

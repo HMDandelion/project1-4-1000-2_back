@@ -9,8 +9,9 @@ import com.hmdandelion.project_1410002.inventory.domian.repository.material.spec
 import com.hmdandelion.project_1410002.inventory.dto.material.dto.MaterialSpecDTO;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecCreateRequest;
 import com.hmdandelion.project_1410002.inventory.dto.material.request.MaterialSpecModifyRequest;
-import com.hmdandelion.project_1410002.purchase.domain.entity.material.AssignedMaterial;
-import com.hmdandelion.project_1410002.sales.service.ClientService;
+import com.hmdandelion.project_1410002.inventory.dto.material.response.SpecDetailResponse;
+import com.hmdandelion.project_1410002.purchase.service.MaterialClientService;
+import com.hmdandelion.project_1410002.sales.domain.entity.client.Client;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -75,4 +76,16 @@ public class MaterialSpecService {
     }
 
 
+    public MaterialSpec specDetail(Long specCode) {
+        final MaterialSpec spec = materialSpecRepo.findBySpecCode(specCode);
+
+        return spec;
+    }
+    public MaterialSpec findSpec(Long specCode) {
+        return materialSpecRepo.findBySpecCode(specCode);
+    }
+
+    public List<MaterialSpec> findAllSpecList() {
+        return materialSpecRepo.findAll();
+    }
 }

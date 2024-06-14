@@ -25,6 +25,7 @@ import java.util.Optional;
 
 import static com.hmdandelion.project_1410002.inventory.domian.entity.product.QProduct.product;
 import static com.hmdandelion.project_1410002.sales.domain.entity.client.QClient.client;
+import static com.hmdandelion.project_1410002.sales.domain.entity.estimate.QEstimate.estimate;
 import static com.hmdandelion.project_1410002.sales.domain.entity.order.QOrder.order;
 import static com.hmdandelion.project_1410002.sales.domain.entity.returns.QReturn.return$;
 import static com.hmdandelion.project_1410002.sales.domain.entity.returns.QReturnProduct.returnProduct;
@@ -68,6 +69,7 @@ public class ReturnRepoCustomImpl implements ReturnRepoCustom{
                         containClientName(clientName),
                         containProductName(productName)
                 )
+                .groupBy(return$.returnCode)
                 .orderBy(orderSpecifier)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())

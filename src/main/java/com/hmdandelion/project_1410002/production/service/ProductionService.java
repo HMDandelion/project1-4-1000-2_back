@@ -3,10 +3,12 @@ package com.hmdandelion.project_1410002.production.service;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
 import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.employee.service.EmployeeService;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.repository.product.ProductRepo;
 import com.hmdandelion.project_1410002.inventory.domian.repository.stock.StockRepo;
+import com.hmdandelion.project_1410002.inventory.service.ProductService;
 import com.hmdandelion.project_1410002.production.domain.entity.WorkOrder;
 import com.hmdandelion.project_1410002.production.domain.entity.production.DefectDetail;
 import com.hmdandelion.project_1410002.production.domain.entity.production.ProductionDetail;
@@ -27,6 +29,7 @@ import com.hmdandelion.project_1410002.production.dto.response.production.Defect
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionDetailResponse;
 import com.hmdandelion.project_1410002.production.dto.response.production.ProductionReportResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -46,6 +49,7 @@ import static com.hmdandelion.project_1410002.inventory.domian.type.StockType.RE
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 @Transactional
 public class ProductionService {
 
@@ -55,6 +59,9 @@ public class ProductionService {
     private final WorkOrderRepo workOrderRepo;
     private final StockRepo stockRepo;
     private final ProductRepo productRepo;
+    private final LineService lineService;
+    private final EmployeeService employeeService; // 수정된 부분
+    private final ProductService productService; // 수정된 부분
 
     /* 페이징 */
     private Pageable getPageable(final Integer page) {
@@ -63,24 +70,63 @@ public class ProductionService {
 
     /* 전체 조회*/
     @Transactional(readOnly = true)
-    public Page<ProductionReportResponse> getProductionReportRecords(final Integer page, final Long productionStatusCode, final ProductionStatusType productionStatusType, final LocalDateTime startAt, final LocalDateTime completedAt) {
+    public Page<ProductionReportResponse> getProductionReportRecords(final Pageable page, final Long productionStatusCode, final ProductionStatusType productionStatusType, final LocalDateTime startAt, final LocalDateTime completedAt) {
         Page<ProductionManagement> productionManagements = null;
 
         if (productionStatusCode != null && productionStatusCode > 0) {
-            productionManagements = productionRepo.findByProductionStatusCodeAndProductionStatus(getPageable(page), productionStatusCode, ProductionStatusType.REGISTER_PRODUCTION);
+//            log.info("findByProductionStatusCodeAndProductionStatus 실행됨");
+            productionManagements = productionRepo.findByProductionStatusCodeAndProductionStatus(page, productionStatusCode, ProductionStatusType.REGISTER_PRODUCTION);
         } else if (productionStatusType != null) {
-            productionManagements = productionRepo.findByProductionStatus(getPageable(page), productionStatusType);
-//        } else if (completedAt != null && startAt != null) {
-//            productionManagements = productionRepo.findByCompletedAtBetween(getPageable(page), startAt, completedAt);
-//        } else if (completedAt != null) {
-//            productionManagements = productionRepo.findByCompletedAt(getPageable(page), completedAt);
-//        } else if (startAt != null) {
-//            productionManagements = productionRepo.findByStartAt(getPageable(page), startAt);
+//            log.info("findByProductionStatus 실행됨");
+            productionManagements = productionRepo.findByProductionStatus(page, productionStatusType);
         } else {
-            productionManagements = productionRepo.findAll(getPageable(page));
+            productionManagements = productionRepo.findAll(page);
+//            log.info("findAll로 실행됨");
         }
-        return productionManagements.map(ProductionReportResponse::from);
+        return productionManagements.map(productionManagement -> {
+            List<String> productNames = productionManagement.getProductionDetails().stream()
+                    .map(detail -> productService.getProduct(detail.getWorkOrder().getProductCode()).getProductName())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            String stylizationName = formatProductNames(productNames);
+            Map<Long, Integer> orderedQuantityMap = productionManagement.getProductionDetails().stream()
+                    .collect(Collectors.groupingBy(
+                            detail -> detail.getWorkOrder().getWorkOrderCode(),
+                            Collectors.summingInt(detail -> detail.getWorkOrder().getOrderedQuantity())
+                    ));
+
+// 각 그룹의 주문 수량을 합산하여 총 주문 수량을 계산합니다.
+            int totalOrderedQuantity = orderedQuantityMap.values().stream()
+                    .mapToInt(Integer::intValue)
+                    .sum();
+
+            return ProductionReportResponse.of(
+                    productionManagement.getProductionStatusCode(),
+                    productionManagement.getStartAt(),
+                    productionManagement.getCompletedAt(),
+                    stylizationName,
+                    totalOrderedQuantity,
+                    productionManagement.getTotalProductionQuantity(),
+                    productionManagement.getProductionFile(),
+                    productionManagement.getProductionStatus()
+            );
+        });
     }
+    private String formatProductNames(List<String> productNames) {
+        if (productNames == null || productNames.isEmpty()) {
+            return "";
+        }
+
+        if (productNames.size() == 1) {
+            return productNames.get(0);
+        }
+
+        return productNames.get(0) + " 외 " + (productNames.size() - 1) + "개";
+    }
+
+
+
 
     /* 상세 조회 */
     @Transactional(readOnly = true)
@@ -90,7 +136,27 @@ public class ProductionService {
 
         List<ProductionDetailResponse> productionDetails = new ArrayList<>();
         for (ProductionDetail productionDetail : productionManagement.getProductionDetails()) {
-            productionDetails.add(ProductionDetailResponse.from(productionDetail));
+            final String lineName = lineService.findNameByCode(productionDetail.getWorkOrder().getLineCode());
+            final String employeeName = employeeService.findById(productionDetail.getWorkOrder().getEmployeeCode()).getEmployeeName();
+            final String productName = productService.getProduct(productionDetail.getWorkOrder().getProductCode()).getProductName();
+
+            final ProductionDetailResponse productionDetailResponse = ProductionDetailResponse.of(
+                    productionDetail.getProductionDetailCode(),
+                    productionDetail.getWorkOrder().getWorkOrderCode(),
+                    lineName,
+                    employeeName,
+                    productName,
+                    productionDetail.getWorkOrder().getOrderedQuantity(),
+                    productionDetail.getProductionQuantity(),
+                    productionDetail.getDefectQuantity(),
+                    productionDetail.getCompletelyQuantity(),
+                    productionDetail.getInspectionDate(),
+                    productionDetail.getInspectionStatus(),
+                    productionDetail.getProductionMemo(),
+                    productionDetail.getProductionStatus()
+            );
+            productionDetails.add(productionDetailResponse);
+            //            productionDetails.add(ProductionDetailResponse.from(productionDetail));
         }
         return productionDetails;
     }
@@ -111,18 +177,24 @@ public class ProductionService {
     /* 보고서 등록 */
     public Long reportSave(ReportCreateRequest reportCreateRequest) {
         // ProductionManagement 생성 및 저장
-        final ProductionManagement newProductionManagement = ProductionManagement.of(reportCreateRequest.getProductionManagementCreateRequest().getStartAt(), reportCreateRequest.getProductionManagementCreateRequest().getCompletedAt(), reportCreateRequest.getProductionManagementCreateRequest().getTotalProductionQuantity(), reportCreateRequest.getProductionManagementCreateRequest().getProductionFile(), reportCreateRequest.getProductionManagementCreateRequest().getProductionStatus());
+        final ProductionManagement newProductionManagement = ProductionManagement.
+                of(
+                        reportCreateRequest.getStartAt(),
+                        reportCreateRequest.getCompletedAt(),
+                        reportCreateRequest.getTotalProductionQuantity(),
+                        reportCreateRequest.getProductionFile(),
+                        reportCreateRequest.getProductionStatus());
         productionRepo.save(newProductionManagement);
 
         // ProductionDetail 생성 및 저장
-        for (ProductionDetailCreateRequest productionDetailRequest : reportCreateRequest.getProductionDetailCreateRequest()) {
+        for (ProductionDetailCreateRequest productionDetailRequest : reportCreateRequest.getProductionDetails()) {
             WorkOrder workOrder = workOrderRepo.findByWorkOrderCode(productionDetailRequest.getWorkOrderCode()).orElseThrow(() -> new NotFoundException(ExceptionCode.NOT_FOUND_WORK_ORDER));
             ProductionDetail newProductionDetail = ProductionDetail.of(newProductionManagement, workOrder, productionDetailRequest.getProductionQuantity(), productionDetailRequest.getDefectQuantity(), productionDetailRequest.getCompletelyQuantity(), productionDetailRequest.getInspectionDate(), productionDetailRequest.getInspectionStatusType(), productionDetailRequest.getProductionMemo(), productionDetailRequest.getProductionStatusType()
             );
             productionDetailRepo.save(newProductionDetail);
 
             // 해당 ProductionDetail 에 대한 DefectDetail 생성 및 저장
-            for (DefectDetailCreateRequest defectDetailRequest : productionDetailRequest.getDefectDetailCreateRequest()) {
+            for (DefectDetailCreateRequest defectDetailRequest : productionDetailRequest.getDefectDetails()) {
                 DefectDetail newDefectDetail = DefectDetail.of(newProductionDetail, defectDetailRequest.getDefectReason(), defectDetailRequest.getDefectStatus(), defectDetailRequest.getDefectFile());
                 defectDetailRepo.save(newDefectDetail);
             }
@@ -231,3 +303,9 @@ public class ProductionService {
 //        return totalProductionQuantity;
 //    }
 
+//   } else if (completedAt != null && startAt != null) {
+//            productionManagements = productionRepo.findByCompletedAtBetween(getPageable(page), startAt, completedAt);
+//        } else if (completedAt != null) {
+//            productionManagements = productionRepo.findByCompletedAt(getPageable(page), completedAt);
+//        } else if (startAt != null) {
+//            productionManagements = productionRepo.findByStartAt(getPageable(page), startAt);

@@ -2,7 +2,9 @@ package com.hmdandelion.project_1410002.inventory.service;
 
 import com.hmdandelion.project_1410002.common.exception.BadRequestException;
 import com.hmdandelion.project_1410002.common.exception.CustomException;
+import com.hmdandelion.project_1410002.common.exception.NotFoundException;
 import com.hmdandelion.project_1410002.common.exception.type.ExceptionCode;
+import com.hmdandelion.project_1410002.inventory.domian.entity.product.Bom;
 import com.hmdandelion.project_1410002.inventory.domian.entity.product.Product;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Stock;
 import com.hmdandelion.project_1410002.inventory.domian.entity.stock.Storage;
@@ -16,14 +18,14 @@ import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageCreate
 import com.hmdandelion.project_1410002.inventory.dto.stock.request.StorageDestroyRequest;
 import com.hmdandelion.project_1410002.inventory.dto.stock.response.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static com.hmdandelion.project_1410002.inventory.domian.type.AssignmentStatus.*;
@@ -38,6 +40,9 @@ public class StorageService {
     private final WarehouseRepo warehouseRepo;
     private final ProductRepo productRepo;
 
+    private Pageable getPageable(final Integer page) {
+        return PageRequest.of(page - 1, 10, Sort.by("productCode"));
+    }
 
     public Long saveStorage(Long stockCode, StorageCreateRequest storageCreateRequest) {
 
@@ -174,16 +179,29 @@ public class StorageService {
         System.out.println("resultList = " + resultList);
         return resultList;
     }
+
+
     @Transactional(readOnly = true)
-    public List<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode) {
+    public Page<StorageWarehouseDTO> getStorageWarehouseByWarehouseCode(Long warehouseCode, Integer page) {
+        // Pageable 객체 생성
+        Pageable pageable = getPageable(page);
+
         List<StorageWarehouseDTO> storageWarehouses = new ArrayList<>();
-        List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode,false);
-        if(storages.isEmpty()&&storages==null){
+        List<Storage> storages = storageRepo.findStoragesByWarehouseWarehouseCodeAndIsDelete(warehouseCode, false);
+
+        if (storages.isEmpty() && storages == null) {
             throw new CustomException(ExceptionCode.NOT_FOUND_STORAGE_CODE);
         }
-        Warehouse warehouse = warehouseRepo.findById(warehouseCode).orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
-        for(Storage storage:storages){
+
+        Warehouse warehouse = warehouseRepo.findById(warehouseCode)
+                .orElseThrow(() -> new CustomException(ExceptionCode.NOT_FOUND_WAREHOUSE_CODE));
+
+        // createdAt의 내림차순으로 storages 리스트 정렬
+        storages.sort(Comparator.comparing(Storage::getCreatedAt).reversed());
+
+        for (Storage storage : storages) {
             StorageWarehouseDTO storageWarehouse = StorageWarehouseDTO.of(
+                    storage.getStorageCode(),
                     "입고",
                     storage.getStock().getProduct().getProductName(),
                     storage.getInitialQuantity(),
@@ -191,9 +209,14 @@ public class StorageService {
                     storage.getCreatedAt()
             );
             storageWarehouses.add(storageWarehouse);
-            System.out.println("storageWarehouse = " + storageWarehouse);
         }
-        return storageWarehouses;
+
+        // List에서 Page로 변환
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), storageWarehouses.size());
+        List<StorageWarehouseDTO> pagedList = storageWarehouses.subList(start, end);
+
+        return new PageImpl<>(pagedList, pageable, storageWarehouses.size());
     }
 
 
@@ -248,11 +271,11 @@ public class StorageService {
         return storageWarehouse;
     }
 
-    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long productCode, Long minQuantity, Long maxQuantity,Long startDate,Long endDate,Boolean quantitySort, Boolean dateSort) {
-        if(minQuantity>maxQuantity){
+    public Page<StorageFilterResponse> searchStorages(Pageable pageable, Long warehouseCode, Long productCode, Long minQuantity, Long maxQuantity, Long startDate, Long endDate, Boolean quantitySort, Boolean dateSort) {
+        if(minQuantity > maxQuantity){
             throw new BadRequestException(ExceptionCode.BAD_REQUEST_MIN_QUANTITY);
         }
-        return storageRepo.searchStorages(pageable,productCode,minQuantity,maxQuantity,startDate,endDate,quantitySort,dateSort);
+        return storageRepo.searchStorages(pageable, warehouseCode, productCode, minQuantity, maxQuantity, startDate, endDate, quantitySort, dateSort);
     }
 
 
@@ -281,6 +304,8 @@ public class StorageService {
 
         for(Product product : products){
             List<Stock> stocks = stockRepo.findByProductProductCode(product.getProductCode());
+            Long bigSum = 0L;
+            Long bigDestroySum = 0L;
             for(Stock stock : stocks) {
                 List<Storage> storages = storageRepo.findStoragesByStockStockCode(stock.getStockCode());
                 Long productSum = 0L;
@@ -293,22 +318,24 @@ public class StorageService {
                 System.out.println("product.getProductName() = " + product.getProductName());
                 System.out.println("productSum = " + productSum);
                 System.out.println("productDestroySum = " + productDestroySum);
-
-                Double ratio;
-                if (productSum == 0) {
-                    ratio = 0.0;
-                } else {
-                    ratio = (double)productDestroySum / productSum;
-                }
-                BigDecimal ratioRounded = new BigDecimal(ratio).setScale(10, RoundingMode.HALF_UP);
-                ProductDestroyDTO productDestroy = ProductDestroyDTO.of(
-                        product.getProductName(),
-                        productSum,
-                        ratioRounded.doubleValue()
-                );
-                resultList.add(productDestroy);
+                bigSum+=productSum;
+                bigDestroySum+=productDestroySum;
             }
+            Double ratio;
+            if (bigSum == 0) {
+                ratio = 0.0;
+            } else {
+                ratio = (double)bigDestroySum / bigSum;
+            }
+            BigDecimal ratioRounded = new BigDecimal(ratio).setScale(10, RoundingMode.HALF_UP);
+            ProductDestroyDTO productDestroy = ProductDestroyDTO.of(
+                    product.getProductName(),
+                    bigDestroySum,
+                    ratioRounded.doubleValue()
+            );
+            resultList.add(productDestroy);
         }
         return resultList;
     }
+
 }

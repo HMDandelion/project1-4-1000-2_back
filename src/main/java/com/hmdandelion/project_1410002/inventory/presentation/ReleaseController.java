@@ -78,12 +78,18 @@ public class ReleaseController {
 
     /*출고 대기 중인 재고 조회*/
     @GetMapping("/release/wait")
-    public ResponseEntity<List<ReleaseWaitDTO>> getReleaseWait(
+    public ResponseEntity<PagingResponse> getReleaseWait(
+            @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(defaultValue = "true") final Boolean deadlineSort
     ){
-        List<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(deadlineSort);
-        return ResponseEntity.ok(releaseWaits);
+        final Page<ReleaseWaitDTO> releaseWaits = releaseService.getReleaseWait(page, deadlineSort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(releaseWaits);
+        final PagingResponse pagingResponse = PagingResponse.of(releaseWaits.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
+
+
 
     /*출고 대기 중인 재고 배송*/
     @PutMapping("/release/shipping/{orderCode}")
@@ -96,11 +102,15 @@ public class ReleaseController {
 
     /*배송 중인 재고 조회*/
     @GetMapping("/release/shipping")
-    public ResponseEntity<List<ReleaseShippingDTO>> getReleaseShipping(
+    public ResponseEntity<PagingResponse> getReleaseShipping(
+            @RequestParam(defaultValue = "1") final Integer page,
             @RequestParam(defaultValue = "true") final Boolean deadlineSort
     ){
-        List<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(deadlineSort);
-        return ResponseEntity.ok(releaseShipping);
+        Page<ReleaseShippingDTO> releaseShipping = releaseService.getReleaseShipping(page,deadlineSort);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(releaseShipping);
+        final PagingResponse pagingResponse = PagingResponse.of(releaseShipping.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 
     /*배송 완료*/
@@ -114,11 +124,15 @@ public class ReleaseController {
 
     /*배송 완료 재고 조회*/
     @GetMapping("/release/complete")
-    public ResponseEntity<List<ReleaseCompleteDTO>> getReleaseComplete(
+    public ResponseEntity<PagingResponse> getReleaseComplete(
+            @RequestParam(defaultValue = "1") final Integer page,
         @RequestParam(defaultValue = "true") final  Boolean isCompleted
     ){
-        List<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(isCompleted);
-        return ResponseEntity.ok(releaseComplete);
+        Page<ReleaseCompleteDTO> releaseComplete = releaseService.getReleaseComplete(page,isCompleted);
+        final PagingButtonInfo pagingButtonInfo = Pagination.getPagingButtonInfo(releaseComplete);
+        final PagingResponse pagingResponse = PagingResponse.of(releaseComplete.getContent(), pagingButtonInfo);
+
+        return ResponseEntity.ok(pagingResponse);
     }
 
 }
