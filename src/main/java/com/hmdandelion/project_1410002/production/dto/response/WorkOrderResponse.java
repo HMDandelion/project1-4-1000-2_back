@@ -10,7 +10,7 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 
 @Getter
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class WorkOrderResponse {
 
     private final Long workOrderCode;
@@ -19,7 +19,7 @@ public class WorkOrderResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate workWrittenDate;
 
-    private final int orderedQuantity;
+    private final Integer orderedQuantity;
 
     private final WorkOrderStatusType completionStatus;
 
