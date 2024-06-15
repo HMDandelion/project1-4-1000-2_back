@@ -18,7 +18,7 @@ public class WorkOrderResponse {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private final LocalDate workWrittenDate;
 
-    private final int orderedQuantity;
+    private final Integer orderedQuantity;
 
     private final WorkOrderStatusType completionStatus;
 
