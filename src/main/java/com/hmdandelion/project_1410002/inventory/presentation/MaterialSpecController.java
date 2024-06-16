@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -42,9 +41,10 @@ public class MaterialSpecController {
     @GetMapping("/spec")
     public ResponseEntity<PagingResponse> findAllSpec(
             @RequestParam(defaultValue = "1") final Integer page,
-            @RequestParam(required = false) final String materialName
+            @RequestParam(required = false) final String materialName,
+            @RequestParam(defaultValue = "10") final int size
     ) {
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         final Page<MaterialSpecDTO> list = materialSpecService.searchMaterialSpec(pageable, materialName);
         for (MaterialSpecDTO dto : list) {
@@ -93,12 +93,12 @@ public class MaterialSpecController {
     }
 
     //스펙 삭제
-    @DeleteMapping("/spec")
+    @DeleteMapping("/spec/{specCode}")
     public ResponseEntity<Void> deleteSpec(
-            @RequestBody(required = false) final List<Long> specCodes
+            @PathVariable final Long specCode
     ) {
-
-        String message = materialSpecService.removeByList(specCodes);
+        log.info("전달받은 코드값 : {}", specCode);
+        String message = materialSpecService.removeByList(specCode);
         log.info(message);
         return ResponseEntity.noContent().build();
     }
@@ -112,8 +112,8 @@ public class MaterialSpecController {
 
     //스펙 분류 삭제
     @DeleteMapping("/spec/category")
-    public ResponseEntity<Void> deleteSpecCateogry(@RequestParam final String categoryName) {
-        materialSpecCategoryService.deleteByName(categoryName);
+    public ResponseEntity<Void> deleteSpecCategory(@RequestParam final Long categoryCode) {
+        materialSpecCategoryService.deleteById(categoryCode);
         return ResponseEntity.noContent().build();
     }
 }

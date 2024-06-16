@@ -16,6 +16,8 @@ import com.hmdandelion.project_1410002.sales.dto.response.SalesClientResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SalesClientsResponse;
 import com.hmdandelion.project_1410002.sales.dto.response.SimpleClientResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ import java.util.List;
 @Transactional
 public class ClientService {
 
+    private static final Logger log = LoggerFactory.getLogger(ClientService.class);
     private final ClientRepo clientRepo;
 
     private Pageable getPageable(final Integer page) {
@@ -104,6 +107,7 @@ public class ClientService {
     //region MaterialClient...
 
     public Client findById(Long clientCode) {
+        log.info("전달받은 clientCode : {}",clientCode);
         return clientRepo.findById(clientCode).orElseThrow(
                 () -> new NotFoundException(ExceptionCode.NOT_FOUND_CLIENT_CODE)
         );

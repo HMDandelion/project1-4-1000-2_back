@@ -45,6 +45,8 @@ public enum ExceptionCode {
     BAD_REQUEST_DEADLINE_PASSED(6201, "마감일자가 지난 견적은 주문으로 전환할 수 없습니다."),
     BAD_REQUEST_NO_OPTIONS(6400, "스펙 삭제에 필요한 정보를 제공하지 않았습니다." ),
     BAD_REQUEST_INSUFFICIENT_QUANTITY(6401,"사용하려는 재고보다 실수량이 부족합니다" ),
+    BAD_REQUEST_CATEGORY_EXIST(6402,"사용중인 스펙이 있어 삭제할수 없습니다"),
+    BAD_REQUEST_SPEC_EXIST(6403,"사용중인 재고는 삭제할 수 없습니다" ),
     BAD_REQUEST_MORE_QUANTITY(6500,"보관 중인 재고가 재고 수량보다 큽니다."),
     BAD_REQUEST_MIN_QUANTITY(6500,"최소 수량이 최대 수량보다 큽니다."),
     BAD_REQUEST_DELETED_STOCK(6501,"삭제 된 재고 정보입니다."),

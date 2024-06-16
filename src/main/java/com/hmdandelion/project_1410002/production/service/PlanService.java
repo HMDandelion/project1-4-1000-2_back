@@ -9,6 +9,7 @@ import com.hmdandelion.project_1410002.production.domain.repository.productionPl
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
+import com.hmdandelion.project_1410002.production.dto.response.production.SimplePlanResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -126,5 +127,14 @@ public class PlanService {
     //플랜코드로 플랜을 조회하는 코드 (by한결)
     public ProductionPlan findById(Long planCode) {
         return productionPlanRepo.findById(planCode).orElseThrow(()-> new NotFoundException(ExceptionCode.NOT_FOUND_PLAN_CODE));
+    }
+
+    //금일 이후의 플랜을 가져오는 코드(by한결)
+    public List<SimplePlanResponse> getPlanTodayAfter() {
+        LocalDate today = LocalDate.now();
+        return productionPlanRepo.findByStartAtAfter(today)
+                                 .stream()
+                                 .map(SimplePlanResponse::from)
+                                 .toList();
     }
 }

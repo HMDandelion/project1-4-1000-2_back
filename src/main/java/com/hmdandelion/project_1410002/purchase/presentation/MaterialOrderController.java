@@ -1,8 +1,10 @@
 package com.hmdandelion.project_1410002.purchase.presentation;
 
+import com.hmdandelion.project_1410002.auth.type.CustomUser;
 import com.hmdandelion.project_1410002.common.paging.Pagination;
 import com.hmdandelion.project_1410002.common.paging.PagingButtonInfo;
 import com.hmdandelion.project_1410002.common.paging.PagingResponse;
+import com.hmdandelion.project_1410002.employee.domain.entity.Employee;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialClientDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.MaterialOrderDTO;
 import com.hmdandelion.project_1410002.purchase.dto.material.request.MaterialOrderCreateRequest;
@@ -19,6 +21,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -37,10 +40,11 @@ public class MaterialOrderController {
     public ResponseEntity<PagingResponse> getOrders(
             @RequestParam(defaultValue = "1") final int page,
             @RequestParam(required = false) final Long planCode,
-            @RequestParam(required = false) final String clientName
+            @RequestParam(required = false) final String clientName,
+            @RequestParam(defaultValue = "10") final int size
     ) {
         log.info("전달받은 패이지 {}",page);
-        Pageable pageable = PageRequest.of(page - 1, 10);
+        Pageable pageable = PageRequest.of(page - 1, size);
 
         Page<MaterialOrderDTO> orders = materialOrderService.getOrders(planCode, clientName, pageable);
 
@@ -72,8 +76,11 @@ public class MaterialOrderController {
     //주문 등록
     @PostMapping("/orders")
     public ResponseEntity<Void> createOrder(
-            @RequestBody final MaterialOrderCreateRequest request
+            @RequestBody final MaterialOrderCreateRequest request,
+            @AuthenticationPrincipal CustomUser user
     ) {
+        log.info("요청된 응답 {}",request);
+        request.setEmployeeCode(user.getEmployeeCode());
         final Long orderCode = materialOrderService.createOrder(request);
 
         return ResponseEntity.created(URI.create("api/vi/material/orders/" + orderCode)).build();

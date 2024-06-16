@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,15 +48,17 @@ public class MaterialSpecService {
     }
 
     @Transactional
-    public String removeByList(List<Long> specCodes) {
-        if (specCodes.isEmpty()) {
+    public String removeByList(Long specCode) {
+        if (specCode == null) {
             throw new BadRequestException(ExceptionCode.BAD_REQUEST_NO_OPTIONS);
         }
-        Long useThisSpec = materialSpecRepo.getUsingSepcCode(specCodes);
+        List<Long> list = new ArrayList<>();
+        list.add(specCode);
+        Long useThisSpec = materialSpecRepo.getUsingSepcCode(list);
         if (useThisSpec > 0) {
-            throw new IllegalStateException("스펙을 사용중인 재고가 있어 삭제할 수 없음.");
+            throw new BadRequestException(ExceptionCode.BAD_REQUEST_SPEC_EXIST);
         }
-        long affectRows = materialSpecRepo.removeByList(specCodes);
+        long affectRows = materialSpecRepo.removeByList(list);
         return affectRows + "의 콘텐츠가 삭제되었습니다.";
     }
 

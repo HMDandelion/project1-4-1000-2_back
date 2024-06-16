@@ -7,7 +7,9 @@ import com.hmdandelion.project_1410002.production.dto.request.PlannedOrderListRe
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanCreateRequest;
 import com.hmdandelion.project_1410002.production.dto.request.ProductionPlanUpdateRequest;
 import com.hmdandelion.project_1410002.production.dto.response.PlanListResponse;
+import com.hmdandelion.project_1410002.production.dto.response.production.SimplePlanResponse;
 import com.hmdandelion.project_1410002.production.service.PlanService;
+import lombok.Getter;
 import com.hmdandelion.project_1410002.sales.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +17,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.net.URI;
+import java.util.List;
+import java.util.Optional;
 import java.util.List;
 
 @RestController
@@ -80,5 +84,12 @@ public class ProductionPlanController {
             }
     /* 생산 계획 삭제 end */
 
+
+    // 한결 : 금일 이후의 생산계획을 조회하는 기능
+    @GetMapping("/production/planning/today-after")
+    public ResponseEntity<List<SimplePlanResponse>> getPlanTodayAfter() {
+        final List<SimplePlanResponse> list = planService.getPlanTodayAfter();
+        return ResponseEntity.of(Optional.ofNullable(list));
+    }
 
 }
