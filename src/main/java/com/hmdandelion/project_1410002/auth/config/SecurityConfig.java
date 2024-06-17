@@ -73,8 +73,8 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/storage/**").hasAuthority("PRODUCTION");
                     auth.requestMatchers("/api/v1/warehouse/**").hasAuthority("PRODUCTION");
                     auth.requestMatchers("/api/v1/release/**").hasAuthority("PRODUCTION");
-                    //auth.anyRequest().authenticated();
-                    auth.anyRequest().permitAll();
+                    auth.anyRequest().authenticated();
+//                    auth.anyRequest().permitAll();
                 })
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtAuthenticationFilter(), BasicAuthenticationFilter.class)
